@@ -53,9 +53,21 @@ def setup_cells(bundle: str, digest: str, deps: str) -> list[dict]:
     ]
 
 
+DATASETS = '''\
+# ===== DATASET TRÊN CAMBER — None = tự động (local state hoặc tag duy nhất trên Camber) =====
+EXTERNAL_STAGE = None   # vd "v6p5_ext_0123456789ab"
+COMPOSE        = None   # vd "v6p5_compose_0123456789ab"
+from yolov11sdi.camber import CamberClient
+from yolov11sdi.reporting import status
+cfg = pipeline.load(stage_tag=EXTERNAL_STAGE, compose_tag=COMPOSE)
+cam = CamberClient(paths, cfg.get("camber.stash_prefix"), cfg.runtime("camber_bin"))
+assert cam.available(), "Camber CLI/key not working"
+display(status.dataset_card(cfg, paths, cam))'''
+
+
 def launchers(bundle: str, digest: str) -> dict[str, list[dict]]:
     return {
-        "KAGGLE_V6P5_EXTERNAL_STAGE.ipynb": [
+        "KAGGLE_03_build_external_stage_v6p5.ipynb": [
             md("""
             # V6.5 external stage (Kaggle launcher, generated)
             Runs parent → openimages → mpcd → power_equipment → synthetic → dedup → external_freeze with the
@@ -64,12 +76,13 @@ def launchers(bundle: str, digest: str) -> dict[str, list[dict]]:
             Restart-safe: rerun all; finished stages in this session are reused.
             """),
             *setup_cells(bundle, digest, STAGE_DEPS),
+            code(DATASETS),
             code('''\
             for s in ["parent", "openimages", "mpcd", "power_equipment", "synthetic", "dedup", "external_freeze"]:
-                print(pipeline.run_stage(s))'''),
+                print(pipeline.run_stage(s, cfg))'''),
             code('print(pipeline.StateStore(paths.state).load("external_freeze").summary)'),
         ],
-        "KAGGLE_V6P5_COMPOSE_QA.ipynb": [
+        "KAGGLE_04_review_and_compose_v6p5.ipynb": [
             md("""
             # V6.5 compose QA (Kaggle launcher, generated)
             Selects the single `v6p5_ext_*` on Camber (or `compose.stage_tag`), applies the human decisions
@@ -77,18 +90,19 @@ def launchers(bundle: str, digest: str) -> dict[str, list[dict]]:
             `DECISIONS_CSV` below. Stops with `needs_review` while TRAIN candidates are pending.
             """),
             *setup_cells(bundle, digest, STAGE_DEPS),
+            code(DATASETS),
             code('''\
             DECISIONS_CSV = None   # e.g. "/kaggle/input/v65-review/v6p5_review_decisions.csv"
             if DECISIONS_CSV:
                 dst = paths.resolve("artifacts/qa/v6p5_review_decisions.csv")
                 dst.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(DECISIONS_CSV, dst)
-            outcome = pipeline.run_stage("compose")
+            outcome = pipeline.run_stage("compose", cfg)
             print(outcome)'''),
             code('''\
             # Download this file from the Kaggle output panel to review locally if needed.
             print(paths.resolve("artifacts/qa/v6p5_review_decisions.csv"))'''),
         ],
-        "KAGGLE_V6P5_YOLO11N_ABLATION.ipynb": [
+        "KAGGLE_05_train_yolo11n_640_ablation.ipynb": [
             md("""
             # V6.5 YOLO11n@640 data ablation (Kaggle GPU launcher, generated)
             NOT the final V6.5-vs-V6.4 benchmark. Auto-discovers exactly one `v6p5_compose_*` (or set
@@ -96,10 +110,11 @@ def launchers(bundle: str, digest: str) -> dict[str, list[dict]]:
             restart, rerun all — `last.pt` is restored from Camber and training resumes.
             """),
             *setup_cells(bundle, digest, TRAIN_DEPS),
+            code(DATASETS),
             code('''\
-            outcome = pipeline.run_stage("yolo11n_ablation")
+            outcome = pipeline.run_stage("yolo11n_ablation", cfg)
             print(outcome)'''),
-            code('print(pipeline.run_stage("evaluate"))'),
+            code('print(pipeline.run_stage("evaluate", cfg))'),
         ],
     }
 

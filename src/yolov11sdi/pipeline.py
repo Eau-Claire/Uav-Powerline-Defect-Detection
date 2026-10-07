@@ -213,6 +213,10 @@ def stage_parent(ctx: Context) -> StageOutcome:
             run.progress(len(pool), int(cfg.get("parent_prepare.bg_pool_max")), force=True, step="background_pool")
 
             ph_fails = []
+            ph_remote = _phash_remote(cfg)
+            if not L.phash_cache(cfg).exists() and ctx.camber.available() and ctx.camber.exists(ph_remote):
+                ctx.log.info("VAL/TEST pHash cache found on Camber; downloading instead of recomputing")
+                ctx.camber.fetch(ph_remote, L.phash_cache(cfg))
             if L.phash_cache(cfg).exists():
                 ph_df = v6p2e.load_phash_cache(L.phash_cache(cfg))
                 ctx.log.info("reuse VAL/TEST pHash cache (%d rows)", len(ph_df))
@@ -222,6 +226,11 @@ def stage_parent(ctx: Context) -> StageOutcome:
                     tick=lambda n, t: run.progress(n, t, step="val_test_phash"))
             if ph_fails:
                 atomic_write_csv(ctx.paths.manifests / "parent_phash_failures.csv", pd.DataFrame(ph_fails))
+        uploaded = 0
+        if ctx.upload_enabled():
+            uploaded = len(ctx.camber.put_many([(L.phash_cache(cfg), _phash_remote(cfg)),
+                                                (L.bg_pool_csv, _phash_remote(cfg).rsplit("/", 1)[0]
+                                                 + "/parent_train_background_pool.csv")]))
 
         if ctx.cfg.runtime("clean_parent_archives_after_qa", True):
             for p in (base_p, overlay_p, recon_p):
@@ -233,8 +242,8 @@ def stage_parent(ctx: Context) -> StageOutcome:
             ctx.rec("freeze", freeze_p, remotes["freeze"]),
             ctx.rec("manifest", manifest_p, remotes["manifest"]),
             ctx.rec("bg_pool_csv", L.bg_pool_csv),
-            ctx.rec("phash_cache", L.phash_cache(cfg)),
-        ], tag=cfg.get("v6p2e.tag"), split_counts={k: int(v) for k, v in counts.items()},
+            ctx.rec("phash_cache", L.phash_cache(cfg), _phash_remote(cfg)),
+        ], tag=cfg.get("v6p2e.tag"), uploaded=uploaded, split_counts={k: int(v) for k, v in counts.items()},
             bg_pool=int(len(pool)), bg_pool_failures=int(len(fails)),
             phash_rows=int(len(ph_df)), phash_failures=int(len(ph_fails)))
     except BaseException as e:
@@ -509,6 +518,7 @@ def stage_compose(ctx: Context) -> StageOutcome:
     stage_tag = _select_stage_tag(ctx)
     srem = StageRemote(cfg.get("v6p5.remote.stage_root"), stage_tag)
     decisions_path = ctx.paths.resolve(cfg.get("compose.decisions_file"))
+    _pull_decisions(ctx, stage_tag, decisions_path)
     inputs = [{"name": "stage_tag", "sha256": stage_tag},
               {"name": "decisions", "path": ctx.paths.rel(decisions_path),
                "sha256": sha256_file(decisions_path) if decisions_path.exists() else None}]
@@ -542,11 +552,13 @@ def stage_compose(ctx: Context) -> StageOutcome:
         except cp.PHashReviewRequired as e:
             atomic_write_csv(ctx.paths.compose / "phash_candidates_to_review.csv", near)
             _write_decisions_template(ctx, review, decisions_path)
+            _push_decisions(ctx, stage_tag, decisions_path)
             run.needs_review(pending_reason="phash", phash_candidates=e.n, stage_tag=stage_tag,
                              exact_duplicates=int(len(exact)))
             return StageOutcome("compose", "needs_review", str(e), run.state.summary)
 
         decisions = _write_decisions_template(ctx, review, decisions_path)
+        _push_decisions(ctx, stage_tag, decisions_path)
         res = rv.resolve_decisions(review, decisions, bool(cfg.get("compose.auto_approve_recommended")))
         if not res.complete:
             atomic_write_csv(ctx.paths.compose / "pending_review.csv", res.pending_train)
@@ -788,6 +800,9 @@ def stage_evaluate(ctx: Context) -> StageOutcome:
         report = read_json(ctx.output_path(t["experiment"], "report"))
         table = comparison_table(report, ctx.cfg.get("baseline"))
         out_csv = atomic_write_csv(ctx.paths.exports / f"{t['experiment']}_vs_baseline.csv", table)
+        remote_root = ctx.summary(t["experiment"]).get("remote_root")
+        if remote_root and ctx.upload_enabled():
+            ctx.camber.put_many([(out_csv, f"{remote_root}/{out_csv.name}")])
         gate = report.get("promotion_gate", {})
         return _done(run, ctx, [ctx.rec("comparison", out_csv)], promotion_gate=gate,
                      candidate_pass=bool(gate.get("candidate_pass")),
@@ -899,6 +914,30 @@ def _write_decisions_template(ctx: Context, review: pd.DataFrame, path: Path) ->
     return read_csv_safe(path)
 
 
+def _phash_remote(cfg) -> str:
+    return (f"{cfg.get('v6p5.remote.stage_root')}/parent_cache/{cfg.get('v6p2e.tag')}/"
+            f"{cfg.get('parent_prepare.phash_cache_name')}")
+
+
+def _decisions_remote(cfg, stage_tag: str) -> str:
+    return f"{cfg.get('v6p5.remote.compose_root')}/review_decisions/{stage_tag}/v6p5_review_decisions.csv"
+
+
+def _pull_decisions(ctx: Context, stage_tag: str, path: Path) -> None:
+    """Local file is where you edit; Camber holds the shared copy (Kaggle <-> local)."""
+    if path.exists() or not ctx.camber.available():
+        return
+    remote = _decisions_remote(ctx.cfg, stage_tag)
+    if ctx.camber.exists(remote):
+        ctx.camber.fetch(remote, path, reuse=False)
+        ctx.log.info("review decisions restored from Camber: %s", remote)
+
+
+def _push_decisions(ctx: Context, stage_tag: str, path: Path) -> None:
+    if path.exists() and ctx.upload_enabled():
+        ctx.camber.put_many([(path, _decisions_remote(ctx.cfg, stage_tag))])
+
+
 def _ensure_direct_archives(ctx: Context, stage_freeze: dict, srem) -> None:
     """Legacy repair step: fixed direct archives must exist for the train worker."""
     for key in ("mpcd_direct_archive", "power_equipment_direct_archive"):
@@ -937,6 +976,33 @@ STAGES: dict[str, StageSpec] = {s.name: s for s in [
 ]}
 
 STAGE_CONFIG = {"yolo11n_ablation": "yolo11n_ablation", "evaluate": "yolo11n_ablation"}
+
+
+def load(stage_tag: str | None = None, compose_tag: str | None = None, parent_tag: str | None = None,
+         config: str = DEFAULT_CONFIG) -> Config:
+    """Config with the dataset names a notebook selected (None = automatic)."""
+    cfg = load_config(config)
+    if parent_tag and parent_tag != cfg.get("v6p2e.tag"):
+        raise ValueError(f"Parent dataset is immutable: {cfg.get('v6p2e.tag')} (got {parent_tag})")
+    overrides: dict = {}
+    if stage_tag:
+        overrides.setdefault("compose", {})["stage_tag"] = stage_tag
+    if compose_tag:
+        overrides.setdefault("training", {})["compose_tag"] = compose_tag
+    return load_config(config, overrides=overrides) if overrides else cfg
+
+
+def verify_on_camber(stage: str, config: str | Config = DEFAULT_CONFIG) -> pd.DataFrame:
+    """Which outputs of a stage are really stored on Camber (read-only check)."""
+    ctx = make_context(config, stage="verify")
+    st = ctx.store.load(stage)
+    rows = []
+    for o in (st.outputs if st else []):
+        if not o.get("remote"):
+            continue
+        rows.append({"output": o["name"], "camber": o["remote"],
+                     "on_camber": ctx.camber.exists(o["remote"]) if ctx.camber.available() else None})
+    return pd.DataFrame(rows, columns=["output", "camber", "on_camber"])
 
 
 def run_stage(name: str, config: str | Config | None = None, force: bool = False,

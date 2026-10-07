@@ -126,3 +126,50 @@ def remote_tags(cfg, camber) -> dict:
         "v6p2e_freeze_exists": camber.exists(
             f"{cfg.get('v6p2e.root')}/v6p2e/{cfg.get('v6p2e.tag')}/{cfg.get('v6p2e.files.freeze')}"),
     }
+
+
+def dataset_card(cfg, paths: ProjectPaths, camber=None) -> pd.DataFrame:
+    """Every dataset in the training chain: tag, Camber location, where the tag comes from.
+
+    Tags are only shown when proven by config, state files or a Camber listing.
+    """
+    from ..dataset.compose import COMPOSE_PREFIX
+    from ..dataset.external_stage import EXT_PREFIX
+
+    s = StateStore(paths.state)
+    ok = camber is not None and camber.available()
+    remote_r = cfg.get("v6p5.remote")
+
+    def pick(explicit, stage, prefix, root):
+        if explicit:
+            return explicit, "set in notebook/config"
+        st = s.load(stage)
+        if st and st.status == "complete" and st.summary.get("tag"):
+            return st.summary["tag"], f"local state/{stage}.json"
+        if ok:
+            tags = camber.discover_tags(root, prefix)
+            if len(tags) == 1:
+                return tags[0], "only one on Camber"
+            if tags:
+                return None, f"{len(tags)} on Camber -> choose one: {tags}"
+        return None, "not produced yet" + ("" if ok else " (Camber not checked)")
+
+    parent_dir = f"{cfg.get('v6p2e.root')}/v6p2e/{cfg.get('v6p2e.tag')}/"
+    ext, ext_src = pick(cfg.get("compose.stage_tag", None), "external_freeze", EXT_PREFIX, remote_r["stage_root"])
+    comp, comp_src = pick(cfg.get("training.compose_tag", None), "compose", COMPOSE_PREFIX, remote_r["compose_root"])
+    exp = cfg.get("training.experiment")
+    tr = s.load(exp)
+    run_root = (tr.summary.get("remote_root") if tr else None) or f"{remote_r['train_root']}/{cfg.get('training.remote_tag_prefix')}<12hex>/"
+    rows = [
+        ("V6.2E parent (immutable)", cfg.get("v6p2e.tag"), parent_dir, "configs/v6p2e.yaml", "02 input"),
+        ("V6.5 external stage", ext or "—", f"{remote_r['stage_root']}/{ext or EXT_PREFIX + '<12hex>'}/", ext_src, "03 output, 04 input"),
+        ("MPCD direct (fixed)", "mpcd_broken_strand_stage", remote_r["mpcd_direct_archive"], "written by 03", "05 input"),
+        ("PowerEquipment direct (fixed)", "power_equipment_stage", remote_r["power_equipment_direct_archive"], "written by 03", "05 input"),
+        ("V6.5 compose (reviewed)", comp or "—", f"{remote_r['compose_root']}/{comp or COMPOSE_PREFIX + '<12hex>'}/", comp_src, "04 output, 05 input"),
+        (f"Training run {exp}", (tr.summary.get("run_tag") if tr else None) or "—", run_root,
+         f"state/{exp}.json" if tr else "not trained yet", "05 output, 06 input"),
+    ]
+    df = pd.DataFrame(rows, columns=["dataset", "tag", "camber", "tag source", "used by step"])
+    if ok:
+        df["on_camber"] = [camber.exists(c) if "<12hex>" not in c else None for c in df["camber"]]
+    return df

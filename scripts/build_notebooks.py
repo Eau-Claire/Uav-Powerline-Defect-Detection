@@ -1,8 +1,11 @@
 #!/usr/bin/env python
-"""(Re)generate the thin local notebooks in notebooks/ from one definition.
+"""(Re)generate notebooks/: ONLY the ordered steps needed to train on the newest dataset.
 
     python scripts/build_notebooks.py
-Notebooks hold no business logic; edit src/yolov11sdi instead.
+
+01 setup -> 02 parent -> 03 external stage -> 04 review+compose -> 05 train -> 06 evaluate.
+Each notebook starts with the Camber datasets it reads/writes. Notebooks hold no
+business logic; edit src/yolov11sdi instead.
 """
 from __future__ import annotations
 
@@ -10,31 +13,72 @@ from pathlib import Path
 
 import _bootstrap  # noqa: F401
 
+from yolov11sdi.config import load_config
 from yolov11sdi.nbgen import LOCAL_BOOTSTRAP, check_compiles, code, md, notebook, write_notebook
 
 ROOT = Path(__file__).resolve().parents[1]
+CFG = load_config("yolo11n_ablation", ROOT / "configs")
+R = CFG.get("v6p5.remote")
+DS = CFG.get("v6p2e.root")
+TAG = CFG.get("v6p2e.tag")
+LIN = CFG.get("v6p2e.expected_lineage")
+OLD_NOTEBOOKS = ["00_environment_and_status", "10_v6p2e_parent_prepare", "20_v6p5_external_stage",
+                 "30_v6p5_compose_qa", "40_yolo11n_640_data_ablation", "50_evaluate_and_compare",
+                 "60_freeze_v6p5_candidate", "70_yolo11m_1024", "80_rtdetr_r50_b0", "99_pipeline_status"]
 
-SHOW_OUTCOME = '''\
-print(outcome)
-display(pd.Series(outcome.summary, dtype=object).to_frame("value"))'''
+DATASETS = f'''\
+# ===== DATASET TRÊN CAMBER — điền tag nếu muốn chọn tay, None = tự động =====
+PARENT_DATASET = "{TAG}"   # V6.2E: cố định, KHÔNG đổi
+EXTERNAL_STAGE = None   # vd "v6p5_ext_0123456789ab"     (tạo ở bước 03)
+COMPOSE        = None   # vd "v6p5_compose_0123456789ab" (tạo ở bước 04)
+REQUIRE_CAMBER = True   # lưu chính trên Camber -> dừng nếu chưa đăng nhập
 
-STATUS_CELL = '''\
+from yolov11sdi.camber import CamberClient
+from yolov11sdi.environment import load_camber_api_key
 from yolov11sdi.reporting import status
-cfg = load_config("yolo11n_ablation")
-display(status.stage_table(cfg, paths))
-ov = status.overview(cfg, paths)
-display(pd.Series({k: v for k, v in ov.items() if k != "disk"}, dtype=object).to_frame("value"))
-d = ov["disk"]; print(f"disk free {d['free_gb']:.1f} / {d['total_gb']:.1f} GB at {d['path']}")'''
+cfg = pipeline.load(stage_tag=EXTERNAL_STAGE, compose_tag=COMPOSE, parent_tag=PARENT_DATASET)
+load_camber_api_key(paths.env)
+cam = CamberClient(paths, cfg.get("camber.stash_prefix"), cfg.runtime("camber_bin"))
+if REQUIRE_CAMBER and not cam.available():
+    raise RuntimeError("Camber chưa sẵn sàng: chạy `camber login` hoặc export CAMBER_API_KEY "
+                       "(CAMBER_BIN=... nếu CLI không nằm trong PATH). Chỉ chạy local: REQUIRE_CAMBER=False")
+display(status.dataset_card(cfg, paths, cam))'''
 
 
-def nb00():
+def run_cell(stage: str) -> str:
+    return (f'outcome = pipeline.run_stage("{stage}", cfg, force=FORCE_REBUILD, dry_run=DRY_RUN)\n'
+            'print(outcome)\n'
+            'display(pd.Series(outcome.summary, dtype=object).to_frame("value"))')
+
+
+def verify_cell(*stages: str) -> str:
+    lines = ["# Kiểm tra output đã thật sự nằm trên Camber chưa"]
+    lines += [f'display(pipeline.verify_on_camber("{s}", cfg))' for s in stages]
+    return "\n".join(lines)
+
+
+def io_table(inputs: list[str], outputs: list[str]) -> str:
+    rows = ["| | Camber Stash |", "|---|---|"]
+    rows += [f"| **Input** | `{p}` |" for p in inputs]
+    rows += [f"| **Output** | `{p}` |" for p in outputs]
+    return "\n".join(rows)
+
+
+def header(step: str, title: str, body: str, inputs: list[str], outputs: list[str], nxt: str) -> dict:
+    return md(f"""# Bước {step} — {title}
+
+{body}
+
+{io_table(inputs, outputs)}
+
+Chạy lại notebook bất cứ lúc nào: bước đã xong + đúng config sẽ được **reuse**, bước dở dang sẽ **resume**.
+Bước tiếp theo: **{nxt}**""")
+
+
+def nb01():
     return [
-        md("""
-        # 00 — Environment and status
-        Checks the runtime (LOCAL / KAGGLE / CAMBER), paths, optional dependencies,
-        Camber CLI/auth and shows what state files prove so far.
-        Nothing here downloads or changes data.
-        """),
+        header("01/06", "Setup + kiểm tra", "Kiểm tra môi trường, thư viện, đăng nhập Camber và trạng thái pipeline. "
+               "Không tải / không sửa dữ liệu.", [f"{DS}/v6p2e/{TAG}/"], ["—"], "02_prepare_parent_v6p2e"),
         code(LOCAL_BOOTSTRAP),
         code('''\
         import importlib
@@ -45,135 +89,132 @@ def nb00():
             try:
                 mod = importlib.import_module(m); rows.append((m, extra, getattr(mod, "__version__", "ok")))
             except Exception as e:
-                rows.append((m, extra, f"MISSING ({type(e).__name__})"))
+                rows.append((m, extra, f"MISSING -> pip install -e '.[{extra}]'"))
         display(pd.DataFrame(rows, columns=["module", "extra", "version"]))'''),
+        code(DATASETS),
         code('''\
-        from yolov11sdi.camber import CamberClient
-        from yolov11sdi.environment import load_camber_api_key
-        cfg = load_config("yolo11n_ablation")
-        load_camber_api_key(paths.env)
-        cam = CamberClient(paths, cfg.get("camber.stash_prefix"), cfg.runtime("camber_bin"))
-        print("camber binary:", cam.binary)
-        print("camber usable:", cam.available(), "(key from env/Kaggle secret or `camber login`)")
-        print("config hash:", cfg.config_hash()[:12])'''),
-        code(STATUS_CELL),
+        display(status.stage_table(cfg, paths))
+        ov = status.overview(cfg, paths)
+        display(pd.Series({k: v for k, v in ov.items() if k != "disk"}, dtype=object).to_frame("value"))
+        d = ov["disk"]; print(f"disk free {d['free_gb']:.1f} / {d['total_gb']:.1f} GB at {d['path']}")'''),
     ]
 
 
-def nb10():
+def nb02():
     return [
-        md("""
-        # 10 — V6.2E parent prepare (low disk)
-        **V6.2E is immutable** (`v6p2e_23562a45b343`, 17,483 / 2,272 / 2,012).
-        1. download freeze + split manifest, validate against config (conflicts stop the run);
-        2. index base/overlay archives without extraction;
-        3. stream ≤1200 TRAIN backgrounds with an insulator anchor;
-        4. pHash VAL+TEST once → `parent_val_test_phash.csv.gz` (incremental checkpoint);
-        5. close handles and delete the large archives (`runtime.clean_parent_archives_after_qa`).
-        Re-running resumes; a complete matching result is reused.
-        """),
+        header("02/06", "Chuẩn bị parent V6.2E (low disk)",
+               "V6.2E **bất biến** (17,483 / 2,272 / 2,012). Tải freeze + split manifest, đối chiếu config "
+               "(lệch là dừng), stream ≤1200 ảnh TRAIN có insulator làm background, pHash VAL+TEST một lần, "
+               "rồi xoá archive lớn. pHash cache được lưu lên Camber để Kaggle/local khác không phải tính lại.",
+               [f"{DS}/v6p2e/{TAG}/v6p2e.freeze.json", f"{DS}/v6p2e/{TAG}/v6p2e_split_manifest.csv",
+                f"{DS}/v6p2e/{TAG}/v6p2e_reconciled_labels.zip",
+                f"{DS}/curated_v6_rs1280_{LIN['base_tag']}.tar",
+                f"{DS}/v6p1/{LIN['parent_dataset_tag']}/v6p1_fotl_overlay_{LIN['overlay_tag']}.tar.gz"],
+               [f"{R['stage_root']}/parent_cache/{TAG}/parent_val_test_phash.csv.gz",
+                f"{R['stage_root']}/parent_cache/{TAG}/parent_train_background_pool.csv",
+                "(local) data/parent/train_background_pool/"],
+               "03_build_external_stage_v6p5"),
         code(LOCAL_BOOTSTRAP),
-        code('pipeline.run_stage("parent", dry_run=True)'),
-        code('outcome = pipeline.run_stage("parent", force=FORCE_REBUILD, dry_run=DRY_RUN)\n' + SHOW_OUTCOME),
+        code(DATASETS),
+        code(run_cell("parent")),
+        code(verify_cell("parent")),
         code('''\
         pool = pd.read_csv(paths.resolve(store.load("parent").output("bg_pool_csv")["path"]))
-        display(pool.head())
         for p in pool["image"].head(3):
             display(IPImage(filename=str(paths.resolve(p)), width=480))'''),
     ]
 
 
-def nb20():
+def nb03():
     return [
-        md("""
-        # 20 — V6.5 external expansion staging → `v6p5_ext_<hash>`
-        Sources (settings unchanged from the last Kaggle notebook):
-        * **Open Images V7 TRAIN** Balloon / Kite / Plastic bag / Bird / Person — appearance only,
-          `detections_only`, local GrabCut mask, 250/class, seed 20261007;
-        * **MPCD** broken/fracture → `broken_strand`;
-        * **Power Equipment** `dx_dg→broken_strand`, `yw→foreign_object`, `nw→bird_nest`, `dx_sg` review-only;
-        * **synthetic** relation-aware foreign objects on internal TRAIN backgrounds, 100/subtype, TRAIN only.
-        Then exact-SHA + pHash QA, review manifest, contact sheets, deterministic packaging, freeze, Camber upload.
-        Each stage checkpoints (per class / per subtype) and resumes after a restart.
-        """),
+        header("03/06", "Tạo V6.5 external stage → `v6p5_ext_<12hex>`",
+               "Open Images V7 TRAIN (Balloon/Kite/Plastic bag/Bird/Person, detections-only + GrabCut, 250/class) · "
+               "MPCD (broken → broken_strand) · Power Equipment (dx_dg/yw/nw, dx_sg chỉ review) · synthetic "
+               "foreign_object 100/subtype trên TRAIN background · exact-SHA + pHash QA · review manifest · "
+               "đóng gói + freeze + upload. Checkpoint theo class / subtype.",
+               ["Open Images V7 (internet)", "MPCD Google Drive 1KyciMmwL2_p_-mwckHFqG5fkBA1jzATv",
+                "HF sxiong/Power-equipment-image-dataset", "kết quả bước 02"],
+               [f"{R['stage_root']}/v6p5_ext_<12hex>/v6p5_ext_<12hex>.freeze.json",
+                f"{R['stage_root']}/v6p5_ext_<12hex>/v6p5_ext_<12hex>_overlay.tar.gz",
+                f"{R['stage_root']}/v6p5_ext_<12hex>/v6p5_ext_<12hex>_qa.zip",
+                R["mpcd_direct_archive"], R["power_equipment_direct_archive"]],
+               "04_review_and_compose_v6p5"),
         code(LOCAL_BOOTSTRAP),
+        code(DATASETS),
         code('''\
-        outcomes = {}
         for s in ["parent", "openimages", "mpcd", "power_equipment", "synthetic", "dedup"]:
-            outcomes[s] = pipeline.run_stage(s, force=FORCE_REBUILD, dry_run=DRY_RUN)
-            print(outcomes[s])'''),
-        code('''\
-        d = store.load("dedup").summary
-        print("exact SHA duplicates vs V6.2E (HARD gate):", d["exact_duplicates"])
-        print("pHash candidates vs VAL/TEST (review):   ", d["phash_candidates"])'''),
-        code('outcome = pipeline.run_stage("external_freeze", force=FORCE_REBUILD, dry_run=DRY_RUN)\n' + SHOW_OUTCOME),
+            print(pipeline.run_stage(s, cfg, force=FORCE_REBUILD, dry_run=DRY_RUN))
+        d = store.load("dedup").summary if store.load("dedup") else {}
+        print("exact SHA trùng V6.2E (HARD gate):", d.get("exact_duplicates"))
+        print("pHash gần trùng VAL/TEST (cần review):", d.get("phash_candidates"))'''),
+        code(run_cell("external_freeze")),
+        code(verify_cell("external_freeze")),
         code('''\
         contacts = sorted((paths.qa / "v6p5_external" / "contacts").glob("*.jpg"))
         print(len(contacts), "contact sheets")
         for p in contacts[:12]:
             print(p.name); display(IPImage(filename=str(p), width=640))'''),
+        md("Ghi lại tag `v6p5_ext_...` ở bảng trên — bước 04 tự lấy, hoặc điền vào `EXTERNAL_STAGE`."),
     ]
 
 
-def nb30():
+def nb04():
     return [
-        md("""
-        # 30 — Compose QA review gate → `v6p5_compose_<hash>`
-        **No auto-promotion.** Every TRAIN candidate needs `KEEP` or `DROP` in
-        `artifacts/qa/v6p5_review_decisions.csv` (blank = pending). `REVIEW_THEN_KEEP` is a
-        recommendation, never a decision. The stage stops with `needs_review` until all TRAIN
-        candidates are resolved. Exact SHA duplicates are a hard gate; pHash candidates must be reviewed.
-
-        Workflow: run → open the decisions CSV (spreadsheet) → fill decision/reviewer/comment → run again.
-        """),
+        header("04/06", "Review KEEP/DROP + compose → `v6p5_compose_<12hex>`",
+               "**Không auto-promotion.** Mỗi ứng viên TRAIN cần `KEEP`/`DROP` trong "
+               "`artifacts/qa/v6p5_review_decisions.csv` (trống = pending; file này được đồng bộ lên Camber). "
+               "Còn pending → dừng ở `needs_review`. Exact-SHA trùng là hard gate; pHash phải review.\n\n"
+               "Quy trình: chạy → mở CSV điền decision/reviewer/comment → chạy lại.",
+               [f"{R['stage_root']}/v6p5_ext_<12hex>/ (EXTERNAL_STAGE)"],
+               [f"{R['compose_root']}/review_decisions/v6p5_ext_<12hex>/v6p5_review_decisions.csv",
+                f"{R['compose_root']}/v6p5_compose_<12hex>/v6p5_compose_<12hex>.index.json  (field synthetic_archive)",
+                f"{R['compose_root']}/v6p5_compose_<12hex>/v6p5_compose_<12hex>.freeze.json",
+                f"{R['compose_root']}/v6p5_compose_<12hex>/v6p5_compose_<12hex>_synthetic_approved.tar.gz",
+                f"{R['compose_root']}/v6p5_compose_<12hex>/*.review.resolved.csv, *.direct_approved_manifest.csv"],
+               "05_train_yolo11n_640_ablation"),
         code(LOCAL_BOOTSTRAP),
-        code('outcome = pipeline.run_stage("compose", force=FORCE_REBUILD, dry_run=DRY_RUN)\n' + SHOW_OUTCOME),
+        code(DATASETS),
+        code(run_cell("compose")),
         code('''\
-        cfg = load_config("v6p5_compose")
         dec_path = paths.resolve(cfg.get("compose.decisions_file"))
-        dec = pd.read_csv(dec_path, keep_default_na=False) if dec_path.exists() else pd.DataFrame()
-        print("decisions file:", dec_path)
-        if len(dec):
+        print("file review:", dec_path)
+        if dec_path.exists():
+            dec = pd.read_csv(dec_path, keep_default_na=False)
             display(dec.assign(decision=dec["decision"].replace("", "PENDING"))
-                    .groupby(["candidate_type", "source", "target_split", "decision"]).size().rename("n").reset_index())'''),
-        code('''\
-        # Pending TRAIN candidates + their contact sheets (stage QA extract).
-        pending = paths.compose / "pending_review.csv"
-        if pending.exists():
-            pend = pd.read_csv(pending, keep_default_na=False); display(pend.head(50))
-        ph = paths.compose / "phash_candidates_to_review.csv"
-        if ph.exists():
-            print("pHash candidates to review:"); display(pd.read_csv(ph))
-        extract = sorted((paths.working / "compose_qa_extract").glob("*/contacts/*.jpg"))
-        for p in extract[:load_config("v6p5_compose").get("compose.max_contact_sheets")]:
+                    .groupby(["candidate_type", "source", "target_split", "decision"]).size().rename("n").reset_index())
+        for name in ["pending_review.csv", "phash_candidates_to_review.csv"]:
+            p = paths.compose / name
+            if p.exists():
+                print(name); display(pd.read_csv(p, keep_default_na=False).head(50))
+        for p in sorted((paths.working / "compose_qa_extract").glob("*/contacts/*.jpg"))[:cfg.get("compose.max_contact_sheets")]:
             print(p.name); display(IPImage(filename=str(p), width=640))'''),
-        md("""
-        ### Review gate
-        If the status above is `needs_review`, **stop here**, fill the decisions CSV, then re-run this notebook.
-        After a `complete` compose, notebook 40 auto-selects the compose tag.
-        """),
+        code(verify_cell("compose")),
+        md("Nếu trạng thái là `needs_review`: **dừng ở đây**, điền CSV rồi chạy lại notebook này."),
     ]
 
 
-def nb40():
+def nb05():
     return [
-        md("""
-        # 40 — YOLO11n@640 data ablation (50 epochs)
-        **This is a data ablation, NOT the final V6.5-vs-V6.4 benchmark.**
-        V6.2E TRAIN + reviewed MPCD/PowerEquipment TRAIN + approved synthetic, evaluated on the
-        **frozen V6.2E VAL**. TEST is never materialized.
-        `yolo11n.pt`, imgsz 640, epochs 50, batch -1, device 0, seed 20261007.
-
-        Resume: if `runs/yolo11n_640/<run>/weights/last.pt` exists with a matching train hash,
-        training resumes from it (also restorable from Camber). Needs a CUDA GPU.
-        """),
+        header("05/06", "Train YOLO11n@640, 50 epoch (data ablation)",
+               "**Data ablation, KHÔNG phải benchmark V6.5 vs V6.4 cuối.** V6.2E TRAIN + MPCD/PowerEquipment TRAIN "
+               "đã KEEP + synthetic đã duyệt; đánh giá trên **VAL V6.2E đóng băng**; TEST không bao giờ được tạo. "
+               "`yolo11n.pt`, 640, 50 ep, batch -1, seed 20261007. Cần GPU CUDA (hoặc dùng launcher Kaggle).\n\n"
+               f"Experiment ID: `{CFG.get('training.experiment')}` · checkpoint sync lên Camber mỗi "
+               f"{CFG.get('training.sync_every_epochs')} epoch · mất máy/kernel → chạy lại là resume từ `last.pt`.",
+               [f"{R['compose_root']}/v6p5_compose_<12hex>/ (COMPOSE)", f"{DS}/v6p2e/{TAG}/ + archive base/overlay",
+                R["mpcd_direct_archive"], R["power_equipment_direct_archive"]],
+               [f"{R['train_root']}/{CFG.get('training.remote_tag_prefix')}<12hex>/" + "{last.pt, best.pt, run_state.json, results.csv, args.yaml}",
+                f"(local) runs/{CFG.get('training.run_family')}/{CFG.get('training.experiment')}__v6p5_compose_<12hex>/"],
+               "06_evaluate_vs_v6p2e_baseline"),
         code(LOCAL_BOOTSTRAP),
-        code('pipeline.run_stage("yolo11n_ablation", dry_run=True)'),
-        code('outcome = pipeline.run_stage("yolo11n_ablation", force=FORCE_REBUILD, dry_run=DRY_RUN)\n' + SHOW_OUTCOME),
-        code('''\
+        code(DATASETS),
+        code(f'pipeline.run_stage("yolo11n_ablation", cfg, dry_run=True)'),
+        code(run_cell("yolo11n_ablation")),
+        code(verify_cell(CFG.get("training.experiment"))),
+        code(f'''\
         from yolov11sdi.reporting.status import latest_checkpoint
         print(latest_checkpoint(paths))
-        runs = sorted(paths.runs.glob("yolo11n_640/*/results.csv"))
+        runs = sorted(paths.runs.glob("{CFG.get('training.run_family')}/*/results.csv"))
         if runs:
             r = pd.read_csv(runs[-1]); r.columns = [c.strip() for c in r.columns]
             display(r.tail())
@@ -181,109 +222,45 @@ def nb40():
     ]
 
 
-def nb50():
+def nb06():
     return [
-        md("""
-        # 50 — Evaluate and compare vs old V6.2E YOLO11n@640
-        Baseline: mAP50 0.768 / mAP50:95 0.413 / gap 0.355.
-        Gate (legacy): global mAP50:95 regression ≤ 1 pt; foreign_object AP50 +2 pt and AP50:95 +1 pt;
-        broken_strand AP50:95 +1 pt. A pass only opens human review/promotion.
-        """),
+        header("06/06", "Đánh giá vs baseline V6.2E YOLO11n@640",
+               "Baseline: mAP50 0.768 / mAP50:95 0.413 / gap 0.355 (foreign .537/.295, strand .749/.356).\n\n"
+               "Gate: mAP50:95 toàn cục giảm ≤ 1 điểm; foreign_object AP50 +2 và AP50:95 +1; broken_strand AP50:95 +1. "
+               "**Pass chỉ mở quyền review/promotion bằng tay** → freeze V6.5 canonical → YOLO11m@1024 → RT-DETR B0.",
+               [f"{R['train_root']}/{CFG.get('training.remote_tag_prefix')}<12hex>/v6p5_yolo11n_data_ablation_report.json"],
+               [f"{R['train_root']}/{CFG.get('training.remote_tag_prefix')}<12hex>/{CFG.get('training.experiment')}_vs_baseline.csv"],
+               "quyết định promotion (người làm)"),
         code(LOCAL_BOOTSTRAP),
-        code('outcome = pipeline.run_stage("evaluate", force=FORCE_REBUILD, dry_run=DRY_RUN)\n' + SHOW_OUTCOME),
+        code(DATASETS),
+        code(run_cell("evaluate")),
         code('''\
-        cfg = load_config("yolo11n_ablation")
         cmp_csv = paths.exports / f"{cfg.get('training.experiment')}_vs_baseline.csv"
         if cmp_csv.exists():
             display(pd.read_csv(cmp_csv))'''),
-        md("""
-        If foreign_object improves but broken_strand regresses, split the ablation by source
-        (foreign-only vs strand-only) before freezing anything.
-        """),
-    ]
-
-
-def nb60():
-    return [
-        md("""
-        # 60 — Freeze canonical V6.5 candidate (HUMAN DECISION)
-        Nothing is promoted automatically. This notebook only shows whether the data-ablation
-        gate passed and which artifacts a canonical V6.5 freeze would be built from.
-        Canonical V6.5 creation is intentionally not automated yet: it needs an explicit decision
-        on which sources to keep (see notebook 50) and a new config `configs/v6p5_canonical.yaml`.
-        """),
-        code(LOCAL_BOOTSTRAP),
-        code('''\
-        ev = store.load("evaluate")
-        if ev is None or ev.status != "complete":
-            print("BLOCKED: evaluation not complete — run notebook 50 first.")
-        else:
-            print("gate:", ev.summary.get("promotion_gate"))
-            print("candidate_pass:", ev.summary.get("candidate_pass"))
-            comp = store.load("compose")
-            print("compose tag:", comp.summary.get("tag") if comp else None)
-            print("external stage tag:", comp.summary.get("stage_tag") if comp else None)'''),
-    ]
-
-
-def nb_future(title: str, cfg_name: str):
-    return [
-        md(f"""
-        # {title}
-        **Blocked until canonical V6.5 is frozen** (after the YOLO11n data ablation passes and a human
-        promotes it). Config: `configs/{cfg_name}.yaml`. The same resumable runner is used once unblocked.
-        """),
-        code(LOCAL_BOOTSTRAP),
-        code(f'''\
-        cfg = load_config("{cfg_name}")
-        print("blocked_until:", cfg.get("future.blocked_until", None))
-        print("canonical dataset:", cfg.get("future.canonical_dataset_tag", None))
-        display(pd.Series(cfg.get("training"), dtype=object).to_frame("value"))'''),
-    ]
-
-
-def nb99():
-    return [
-        md("""
-        # 99 — Pipeline status
-        Shows only what `state/*.json` and local artifacts prove. Set `CHECK_REMOTE=True` for a
-        read-only Camber listing of v6p5_ext / v6p5_compose / training tags.
-        """),
-        code(LOCAL_BOOTSTRAP),
-        code(STATUS_CELL),
-        code('''\
-        CHECK_REMOTE = False
-        if CHECK_REMOTE:
-            from yolov11sdi.camber import CamberClient
-            from yolov11sdi.environment import load_camber_api_key
-            load_camber_api_key(paths.env)
-            print(status.remote_tags(cfg, CamberClient(paths, cfg.get("camber.stash_prefix"), cfg.runtime("camber_bin"))))'''),
-        code('''\
-        for name, st in store.all().items():
-            if st.status in ("failed", "needs_review"):
-                print(f"--- {name}: {st.status}"); print(st.error or st.summary)'''),
+        md("Nếu foreign_object tăng nhưng broken_strand giảm → tách ablation theo nguồn (`abl02` chỉ foreign, "
+           "`abl03` chỉ strand) trước khi freeze bất cứ thứ gì."),
     ]
 
 
 NOTEBOOKS = {
-    "00_environment_and_status.ipynb": nb00,
-    "10_v6p2e_parent_prepare.ipynb": nb10,
-    "20_v6p5_external_stage.ipynb": nb20,
-    "30_v6p5_compose_qa.ipynb": nb30,
-    "40_yolo11n_640_data_ablation.ipynb": nb40,
-    "50_evaluate_and_compare.ipynb": nb50,
-    "60_freeze_v6p5_candidate.ipynb": nb60,
-    "70_yolo11m_1024.ipynb": lambda: nb_future("70 — YOLO11m@1024 (canonical V6.5)", "yolo11m_1024"),
-    "80_rtdetr_r50_b0.ipynb": lambda: nb_future("80 — RT-DETR-R50 B0 (canonical V6.5)", "rtdetr_b0"),
-    "99_pipeline_status.ipynb": nb99,
+    "01_setup_and_check.ipynb": nb01,
+    "02_prepare_parent_v6p2e.ipynb": nb02,
+    "03_build_external_stage_v6p5.ipynb": nb03,
+    "04_review_and_compose_v6p5.ipynb": nb04,
+    "05_train_yolo11n_640_ablation.ipynb": nb05,
+    "06_evaluate_vs_v6p2e_baseline.ipynb": nb06,
 }
 
 
 def main() -> None:
+    out = ROOT / "notebooks"
+    for old in OLD_NOTEBOOKS:
+        (out / f"{old}.ipynb").unlink(missing_ok=True)
     for name, fn in NOTEBOOKS.items():
         nb = notebook(fn())
         check_compiles(nb, name)
-        print(write_notebook(ROOT / "notebooks" / name, nb).relative_to(ROOT))
+        print(write_notebook(out / name, nb).relative_to(ROOT))
 
 
 if __name__ == "__main__":

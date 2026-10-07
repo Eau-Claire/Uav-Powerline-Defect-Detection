@@ -5,7 +5,7 @@ be traced back to exact code, config, data and checkpoint.
 
 ## 1. Code version (git)
 
-* Package version in `pyproject.toml` / `src/yolov11sdi/__init__.py` (`0.1.0`), semver.
+* Package version in `pyproject.toml` / `src/yolov11sdi/__init__.py` (currently `0.2.0`), semver.
 * Git tag per code release: `v0.1.0`, `v0.2.0`, ... Bump MINOR when stage
   behaviour or an artifact contract changes, PATCH for fixes that cannot change outputs.
 * Every state file, freeze and run records `git_commit` (suffix `+dirty` when

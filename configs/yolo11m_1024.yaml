@@ -1,6 +1,6 @@
 # FUTURE: YOLO11m@1024 on CANONICAL V6.5 (cloud baseline).
 # Blocked until the YOLO11n data ablation passes the promotion gate AND a
-# canonical V6.5 dataset is frozen (notebook 60). Reference: V6.2E
+# canonical V6.5 dataset is frozen (human promotion after notebooks/06). Reference: V6.2E
 # YOLO11m@1024 40 epochs -> mAP50 0.815 / mAP50:95 0.457 / gap 0.358.
 inherits: [yolo11n_ablation]
 

@@ -54,6 +54,8 @@ def notebook(cells: list[dict], kaggle: bool = False) -> dict:
     }
     if kaggle:
         meta["kaggle"] = {"accelerator": "gpu", "isInternetEnabled": True, "isGpuEnabled": True}
+    # nbformat 4.5 requires a unique id per cell; deterministic ids keep diffs stable.
+    cells = [{"id": f"cell-{i:02d}", **c} for i, c in enumerate(cells)]
     return {"cells": cells, "metadata": meta, "nbformat": 4, "nbformat_minor": 5}
 
 
