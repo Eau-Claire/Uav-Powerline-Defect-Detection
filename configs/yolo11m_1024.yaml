@@ -1,0 +1,25 @@
+# FUTURE: YOLO11m@1024 on CANONICAL V6.5 (cloud baseline).
+# Blocked until the YOLO11n data ablation passes the promotion gate AND a
+# canonical V6.5 dataset is frozen (notebook 60). Reference: V6.2E
+# YOLO11m@1024 40 epochs -> mAP50 0.815 / mAP50:95 0.457 / gap 0.358.
+inherits: [yolo11n_ablation]
+
+future:
+  blocked_until: canonical_v6p5_frozen
+  canonical_dataset_tag: null
+
+training:
+  experiment: v6p5c-yolo11m-1024-e40
+  run_family: yolo11m_1024
+  model: yolo11m.pt
+  model_label: YOLO11m
+  remote_tag_prefix: v6p5_y11m_canonical_
+  imgsz: 1024
+  epochs: 40
+
+baseline:
+  name: V6.2E YOLO11m@1024 40 epochs
+  mAP50: 0.815
+  mAP50_95: 0.457
+  gap: 0.358
+  per_class: {}

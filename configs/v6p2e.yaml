@@ -1,0 +1,41 @@
+# Canonical parent dataset V6.2E. IMMUTABLE.
+#
+# The downloaded freeze JSON + split manifest are authoritative. If they
+# disagree with the expectations below, the parent stage fails loudly and
+# reports the conflict instead of choosing one.
+inherits: [base]
+
+v6p2e:
+  root: stash://bunpmc/projects/yolov11sdi/datasets
+  tag: v6p2e_23562a45b343
+  files:
+    freeze: v6p2e.freeze.json
+    manifest: v6p2e_split_manifest.csv
+    reconciled_labels: v6p2e_reconciled_labels.zip
+  # {root}, {base_tag}, {overlay_tag}, {parent_dataset_tag} are filled from
+  # the downloaded freeze JSON (not from these expectations).
+  base_archive: "{root}/curated_v6_rs1280_{base_tag}.tar"
+  overlay_archive: "{root}/v6p1/{parent_dataset_tag}/v6p1_fotl_overlay_{overlay_tag}.tar.gz"
+  expected_lineage:
+    base_tag: 56b7ea194ee5
+    overlay_tag: ee2d3c4497fd
+    parent_dataset_tag: v6p1_5d0b1149891c
+  expected_counts:
+    train: 17483
+    val: 2272
+    test: 2012
+    total: 21767
+  # TEST is never used for training. VAL stays frozen during the V6.5 ablation.
+  immutable_splits: [test]
+  frozen_splits_for_ablation: [val]
+
+parent_prepare:
+  # Bounded internal TRAIN background pool (streamed, never full extraction).
+  bg_pool_max: 1200
+  # Backgrounds must contain at least one insulator (class 0) anchor.
+  bg_anchor_class: 0
+  # Only VAL/TEST are pHashed (leakage targets for external data).
+  phash_splits: [val, test]
+  phash_hash_size: 8
+  phash_cache_name: parent_val_test_phash.csv.gz
+  min_bg_pool: 100

@@ -1,0 +1,25 @@
+# FUTURE: RT-DETR-R50 B0 on CANONICAL V6.5 (StructDETR ablation baseline).
+# B1 (+Frequency), B2 (+Structural), B3 (Full) come later.
+# Do NOT present YOLO11m@1024 vs RT-DETR@640 as a same-resolution comparison.
+inherits: [yolo11n_ablation]
+
+future:
+  blocked_until: canonical_v6p5_frozen
+  canonical_dataset_tag: null
+
+training:
+  experiment: v6p5c-b0-rtdetr-r50-640
+  run_family: rtdetr_r50
+  model: rtdetr-r50.pt
+  model_label: RTDETR-R50
+  remote_tag_prefix: v6p5_rtdetr_b0_
+  imgsz: 640
+  epochs: null   # not decided yet; set before running
+  batch: null
+
+baseline:
+  name: none (first B0 on canonical V6.5)
+  mAP50: null
+  mAP50_95: null
+  gap: null
+  per_class: {}

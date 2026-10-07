@@ -1,0 +1,19 @@
+# V6.5 compose + QA review gate -> v6p5_compose_<tag>.
+inherits: [v6p5_external]
+
+compose:
+  # null = use the local external_freeze result, else auto-discover exactly one
+  # v6p5_ext_* on Camber. Set explicitly when several exist.
+  stage_tag: null
+  # Human decisions live in this CSV (review_id,decision,reviewer,comment).
+  # Allowed decisions: KEEP, DROP, blank (= pending).
+  decisions_file: artifacts/qa/v6p5_review_decisions.csv
+  # NEVER turn REVIEW_THEN_KEEP into KEEP silently. Only an explicit human
+  # choice may flip this, and it is recorded in the compose freeze.
+  auto_approve_recommended: false
+  # pHash candidates against VAL/TEST must be reviewed; set true only after
+  # reviewing them, it is recorded in the compose freeze.
+  allow_phash_candidates: false
+  allow_exact_duplicates: false
+  allow_existing_compose_tag: false
+  max_contact_sheets: 24

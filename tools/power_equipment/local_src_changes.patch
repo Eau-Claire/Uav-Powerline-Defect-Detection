@@ -1,0 +1,56 @@
+diff --git a/src/copy_example_images.py b/src/copy_example_images.py
+index 9bf953ac..c50ba3fa 100644
+--- a/src/copy_example_images.py
++++ b/src/copy_example_images.py
+@@ -5,10 +5,12 @@ import os
+ import xml.etree.ElementTree as ET
+ from collections import defaultdict
+ import shutil
++from pathlib import Path
+ 
+-# === Paths ===
+-root_dir = r"transmission line object detection"
+-output_dir = r"example images"
++# Resolve paths relative to this project, not the current working directory.
++project_dir = Path(__file__).resolve().parents[1]
++root_dir = project_dir / "transmission line object detection"
++output_dir = project_dir / "example images"
+ 
+ # === Create output directory if not exists ===
+ os.makedirs(output_dir, exist_ok=True)
+diff --git a/src/data_stat.py b/src/data_stat.py
+index 719fe997..8dbab05f 100644
+--- a/src/data_stat.py
++++ b/src/data_stat.py
+@@ -3,9 +3,11 @@
+ 
+ import os
+ import xml.etree.ElementTree as ET
++from pathlib import Path
+ 
+-# Root folder
+-root_dir = r"transmission line object detection"
++# Resolve paths relative to this project, not the current working directory.
++project_dir = Path(__file__).resolve().parents[1]
++root_dir = project_dir / "transmission line object detection"
+ 
+ # Supported image extensions
+ image_exts = ('.jpg', '.jpeg', '.png', '.bmp', '.gif')
+diff --git a/src/unique_types_extractor.py b/src/unique_types_extractor.py
+index cf1a3677..1522bc24 100644
+--- a/src/unique_types_extractor.py
++++ b/src/unique_types_extractor.py
+@@ -2,9 +2,11 @@
+ # count unique 'type' values in the JSON annotation file
+ 
+ import json
++from pathlib import Path
+ 
+-# Load the JSON annotation file
+-with open(r"substation object detection/annotation.json", "r") as f:
++# Load the JSON annotation file relative to this project.
++annotation_path = Path(__file__).resolve().parents[1] / "substation object detection" / "annotation.json"
++with annotation_path.open("r", encoding="utf-8") as f:
+     data = json.load(f)
+ 
+ unique_types = set()

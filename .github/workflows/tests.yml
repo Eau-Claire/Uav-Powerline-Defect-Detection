@@ -1,0 +1,26 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      # Core + test deps only. No FiftyOne / Ultralytics / Camber / network:
+      # the smoke test runs every stage offline with downloads + training stubbed.
+      - run: pip install -e ".[dev]" imagehash opencv-python-headless
+      - run: pytest -v
+      - name: Notebooks + Kaggle launchers still generate and compile
+        run: |
+          python scripts/build_notebooks.py
+          python scripts/export_kaggle.py

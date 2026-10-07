@@ -1,0 +1,56 @@
+# YOLO11n@640 V6.5 DATA ABLATION.
+# This is NOT the final V6.5-vs-V6.4 benchmark. It only answers:
+# "do the new V6.5 sources help the weak classes?"
+inherits: [v6p5_compose]
+
+training:
+  # Experiment ID: <dataset version>-<ablation id>-<model>-<imgsz>-e<epochs>.
+  # Names state/<id>.json and runs/<family>/<id>__<compose_tag>/ (docs/VERSIONING.md).
+  experiment: v6p5-abl01-yolo11n-640-e50
+  run_family: yolo11n_640
+  model: yolo11n.pt
+  # Legacy remote run tag: <remote_tag_prefix> + sha256({compose_tag, model:
+  # model_label, imgsz, epochs, train_count})[:12] under v6p5.remote.train_root.
+  model_label: YOLO11n
+  remote_tag_prefix: v6p5_y11n_ablation_
+  # null = local compose stage result, else exactly one remote compose tag.
+  compose_tag: null
+  imgsz: 640
+  epochs: 50
+  batch: -1
+  device: 0
+  seed: 20261007
+  workers: 8
+  pretrained: true
+  plots: false
+  ultralytics_version: 8.4.172
+  # Compose index field the dataset builder reads.
+  compose_index_synthetic_field: synthetic_archive
+  # Use only direct (MPCD / PowerEquipment) TRAIN rows whose review decision
+  # is KEEP. The legacy train worker added every direct train row regardless
+  # of review; see docs/MIGRATION_PLAN.md (conflict C3).
+  direct_filter_by_review: true
+  # Splits materialized for training. TEST is never materialized.
+  splits: [train, val]
+  # Sync last.pt/best.pt to Camber every N epochs (0 disables).
+  sync_every_epochs: 5
+  eval_batch: 16
+
+baseline:
+  name: V6.2E YOLO11n@640 50 epochs
+  mAP50: 0.768
+  mAP50_95: 0.413
+  gap: 0.355
+  per_class:
+    insulator: {AP50: 0.934, AP50_95: 0.638}
+    insulator_broken: {AP50: 0.800, AP50_95: 0.407}
+    insulator_flashover: {AP50: 0.755, AP50_95: 0.326}
+    bird_nest: {AP50: 0.831, AP50_95: 0.455}
+    foreign_object: {AP50: 0.537, AP50_95: 0.295}
+    broken_strand: {AP50: 0.749, AP50_95: 0.356}
+
+promotion_gate:
+  global_map50_95_max_regression: 0.01
+  foreign_object_ap50_min_gain: 0.02
+  foreign_object_ap50_95_min_gain: 0.01
+  broken_strand_ap50_95_min_gain: 0.01

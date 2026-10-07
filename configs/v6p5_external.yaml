@@ -1,0 +1,93 @@
+# V6.5 external expansion staging. Values mirror the last Kaggle notebook
+# KAGGLE_V6P5_STAGE_COMPOSE_RECOVERY_DISKSAFE.ipynb exactly. Do not edit
+# these without a new dataset version; they define the v6p5_ext_<tag>.
+inherits: [base, v6p2e]
+
+v6p5:
+  remote:
+    stage_root: stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage
+    compose_root: stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/compose_qa
+    job_root: stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/jobs
+    train_root: stash://bunpmc/projects/yolov11sdi/checkpoints/v6p5_data_ablation
+    # Fixed, train-compatible direct archives (the train worker reads these).
+    mpcd_direct_archive: stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/mpcd/mpcd_broken_strand_stage.tar.gz
+    power_equipment_direct_archive: stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/power_equipment/power_equipment_stage.tar.gz
+
+openimages:
+  version: v7
+  split: train
+  classes: [Balloon, Kite, Plastic bag, Bird, Person]
+  max_samples_per_class: 250
+  seed: 20261007
+  fiftyone_version: 1.22.1
+  num_workers: 8
+  # Disk-safe implementation: detections only, NO segmentation ZIPs.
+  annotation_download: detections_only
+  mask_strategy: local GrabCut foreground mask from detection bbox
+  openimages_segmentation_zip_downloaded: false
+  grabcut:
+    pad_frac: 0.14
+    iterations: 4
+    allowed_expand_frac: 0.06
+    min_fg_ratio: 0.015
+    max_fg_ratio: 0.90
+    min_box_px: 8
+
+mpcd:
+  gdrive_id: 1KyciMmwL2_p_-mwckHFqG5fkBA1jzATv
+  target_class: 5          # broken_strand
+  name_keywords: [broken, fracture, fractured, discontinu, strand break]
+  license_note: AGPL-3.0 project repository; verify dataset-source terms before redistribution
+
+power_equipment:
+  hf_repo: sxiong/Power-equipment-image-dataset
+  filename: transmission line object detection.zip
+  train_frac: 0.80
+  map:
+    dx_dg: 5               # broken_strand
+    yw: 4                  # foreign_object
+    nw: 3                  # bird_nest
+  review_only:
+    dx_sg: strand_loosening_review_only
+  # The legacy notebook hashed the ABSOLUTE Kaggle path of each image to
+  # assign train/external_eval. To keep that exact split on any machine, the
+  # split key is rebuilt as <split_key_prefix>/<path relative to extract root>.
+  split_key_prefix: /kaggle/working/v6p5_external_expansion/sources/power_equipment_object_detection
+  license_note: MIT repository; verify original data redistribution terms
+
+synthetic:
+  per_subtype: 100
+  require_mask: true
+  anchor_class: 0          # insulator
+  foreign_class: 4         # foreign_object
+  max_attempts_factor: 20
+  jpeg_quality: 92
+  # Relative object size vs. anchor long side, per subtype (legacy values).
+  rel_scale:
+    person: [0.45, 0.90]
+    balloon: [0.20, 0.55]
+    kite: [0.20, 0.55]
+    bird: [0.10, 0.28]
+    default: [0.12, 0.35]
+  max_frac_of_min_side: 0.30
+  min_long_side_px: 12
+  # FUTURE CONFIGURATION (disabled): hard-negative relation samples existed in
+  # an earlier compose launcher (POS 90 / NEG 30) but NOT in the latest
+  # DISKSAFE notebook that defines the current settings.
+  hard_negatives:
+    enabled: false
+    per_subtype: 0
+
+dedup:
+  run_phash: true
+  phash_max_hamming: 4
+  # LSH band widths over the 64-bit pHash (legacy).
+  phash_band_widths: [13, 13, 13, 13, 12]
+  # Exact SHA duplicates against canonical V6.2E are a HARD gate.
+  exact_sha_hard_gate: true
+
+qa:
+  max_contacts_per_source: 80
+  max_synth_contacts: 100
+
+run_sanity_train: false

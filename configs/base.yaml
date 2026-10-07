@@ -1,0 +1,48 @@
+# Common settings shared by every stage.
+#
+# Everything outside `runtime:` is SEMANTIC: it participates in config hashes,
+# dataset tags and freeze manifests. Keys under `runtime:` only control where /
+# how things run on this machine (disk policy, upload switch, logging) and are
+# excluded from every hash, so a local run and a Kaggle run of the same stage
+# produce the same config hash and the same dataset tag.
+#
+# Secrets (CAMBER_API_KEY) never belong in config. Use the environment or
+# Kaggle Secrets.
+
+project:
+  name: yolov11sdi
+  research_title: >-
+    StructDETR: Structural-Consistency-Aware Detection Transformer for
+    UAV-Based Electrical Infrastructure Inspection
+
+# Fixed six-class taxonomy. Order is part of the dataset contract.
+taxonomy:
+  names:
+    - insulator
+    - insulator_broken
+    - insulator_flashover
+    - bird_nest
+    - foreign_object
+    - broken_strand
+
+seed: 20261007
+
+camber:
+  stash_prefix: stash://bunpmc/projects/yolov11sdi
+  datasets_root: stash://bunpmc/projects/yolov11sdi/datasets
+  checkpoints_root: stash://bunpmc/projects/yolov11sdi/checkpoints
+
+runtime:
+  # Disk / storage policy (non-semantic).
+  min_free_gb_warn: 3.0
+  clean_parent_archives_after_qa: true
+  # Push stage outputs to Camber when the CLI + key are available.
+  upload_camber: true
+  # Camber sync must never block local work; failures are logged, not raised.
+  camber_required: false
+  # Optional explicit path to the camber binary (else PATH / ~/.camber/bin).
+  camber_bin: null
+  # State JSON progress write throttle (seconds).
+  progress_interval_s: 15
+  log_level: INFO
+  debug: false

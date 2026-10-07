@@ -1,0 +1,46 @@
+# Python / tooling
+.venv/
+.venv-*/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+.idea/
+.vscode/
+
+# Secrets
+.env
+
+# FiftyOne viewer (existing tool)
+.fiftyone/
+fiftyone/
+
+# Third-party upstream clone (1.3 GB, its own git repo). Not vendored:
+# clone it separately; our small script edits live in tools/power_equipment/.
+Power-equipment-image-dataset/
+
+# Bulky / regenerable research data (keep READMEs)
+data/*
+!data/README.md
+runs/**
+!runs/*/
+!runs/*/.gitkeep
+logs/**
+!logs/.gitkeep
+artifacts/remote_mirror/
+artifacts/qa/**
+!artifacts/qa/.gitkeep
+!artifacts/qa/v6p5_review_decisions.csv
+artifacts/compose/**
+!artifacts/compose/.gitkeep
+artifacts/exports/**
+!artifacts/exports/.gitkeep
+dist/
+
+# Model weights
+*.pt
+!drone-modal/models/*.pt.source
+
+# Small, valuable records ARE committed: state/*.json, artifacts/freezes/*.json,
+# artifacts/manifests/*.csv, the review decisions CSV.

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Drone Inspect · Nhận diện thiết bị điện</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/stream.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Drone Inspect trang chủ"><span class="brand-icon">⌖</span> DRONE<span>INSPECT</span></a>
+    <span class="badge"><i></i> CPU inference</span>
+  </header>
+  <main>
+    <div class="heading"><div><p class="eyebrow">POWER EQUIPMENT / VISION LAB</p><h1>Quan sát. Nhận diện.<br><span>Hiểu từng khung hình.</span></h1><p class="subtitle">Phát hiện 7 loại thiết bị điện từ ảnh hoặc camera iPhone.</p></div><div class="model-tag">YOLO11s<span>BASELINE V5</span></div></div>
+    <div class="workspace">
+      <aside class="panel controls">
+        <div class="section-heading"><span class="step">01</span><h2>Nguồn hình ảnh</h2></div>
+        <div class="tabs" role="tablist" aria-label="Nguồn ảnh">
+          <button id="upload-tab" role="tab" aria-selected="true" aria-controls="upload-panel">Upload ảnh</button>
+          <button id="camera-tab" role="tab" aria-selected="false" aria-controls="camera-panel">Camera IP</button>
+        </div>
+        <section id="upload-panel" role="tabpanel" aria-labelledby="upload-tab">
+          <label class="dropzone" id="dropzone" for="file"><span class="upload-icon">↑</span><strong>Chọn hoặc kéo thả ảnh</strong><span>JPEG, PNG · Tối đa 10 MiB</span><span class="choose">Chọn ảnh</span></label>
+          <input class="file-input" id="file" type="file" accept="image/jpeg,image/png">
+          <p id="file-name" class="hint">Ảnh sẽ được gửi khi bạn bấm phân tích.</p>
+        </section>
+        <section id="camera-panel" role="tabpanel" aria-labelledby="camera-tab" hidden>
+          <label for="camera-url">URL camera iPhone</label>
+          <input id="camera-url" type="url" placeholder="http://192.168.1.20:8080/…" autocomplete="off" spellcheck="false">
+          <p class="hint">Dán URL snapshot JPEG/PNG hoặc MJPEG trong app IP Camera Lite, gồm cả port và đường dẫn. Không dùng URL RTSP hoặc trang quản lý camera.</p>
+          <p id="camera-help" class="notice">Đang kiểm tra chế độ kết nối…</p>
+          <button id="capture" class="secondary" disabled>Lấy một khung hình</button>
+          <div class="stream-controls">
+            <label for="stream-delay">Nghỉ giữa hai lần nhận diện (giây)</label>
+            <input id="stream-delay" type="number" min="0" max="30" step="0.5" value="0">
+            <p class="hint">0 = nhận diện liên tục theo tốc độ CPU (tối đa 5 request/giây). Tăng số này để giảm lượt gọi.</p>
+            <button id="stream-start" class="primary" disabled>Bắt đầu stream + nhận diện</button>
+            <button id="stream-stop" class="secondary" disabled>Dừng stream</button>
+          </div>
+          <p class="hint">Video và bounding box AI nằm trong cùng một khung. Chuyển tab không tự dừng; bấm Dừng khi không dùng.</p>
+        </section>
+        <div id="token-section" class="token-section"><label for="token">API token <span>nếu có</span></label><input id="token" type="password" placeholder="Bearer token" autocomplete="off"><p class="hint">Token chỉ giữ trong trang hiện tại, không lưu vào trình duyệt.</p></div>
+        <button id="detect" class="primary" disabled>Phân tích khung hình <span>↗</span></button>
+        <p id="status" role="status" aria-live="polite">Chọn một ảnh để bắt đầu.</p>
+        <div class="settings"><span>Kích thước <b>640 px</b></span><span>Confidence <b>0.10</b></span></div>
+      </aside>
+      <section class="panel viewer">
+        <div class="viewer-head"><div class="section-heading"><span class="step">02</span><h2>Khung hình & kết quả</h2></div><span id="source-label" class="source-label">CHƯA CÓ ẢNH</span></div>
+        <div id="live-panel" hidden><div class="live-label" id="camera-status">Đang kết nối camera…</div><div class="live-rates"><span id="video-fps">Video: — FPS</span><span id="ai-fps">AI: — FPS</span></div><div id="ai-status" role="status" aria-live="polite">AI chờ khung hình đầu tiên…</div><p class="hint" id="box-age">Bbox là kết quả AI gần nhất; có thể trễ so với video khi camera di chuyển.</p></div>
+        <div class="canvas-area" id="canvas-area"><div id="empty"><div class="empty-cross">⌖</div><h3>Không gian quan sát</h3><p>Ảnh và các vùng nhận diện sẽ xuất hiện ở đây.</p></div><canvas id="canvas" hidden aria-label="Ảnh đầu vào và bounding box nhận diện"></canvas></div>
+        <div class="metrics"><div><span>Đối tượng</span><strong id="count">—</strong></div><div><span>Inference</span><strong id="inference">—</strong></div><div><span>Tổng thời gian</span><strong id="latency">—</strong></div></div>
+        <div class="results"><h3>Chi tiết nhận diện</h3><p id="result-placeholder" class="hint">Chưa có kết quả phân tích.</p><div class="table-scroll"><table id="results-table" hidden><thead><tr><th>Class</th><th>Confidence</th><th>Bbox [x1, y1, x2, y2]</th></tr></thead><tbody id="detections"></tbody></table></div></div>
+      </section>
+    </div>
+    <footer><span>CAPSTONE · DRONE INSPECT</span><span>Ảnh & camera trực tiếp. Model cố định.</span></footer>
+  </main>
+</body>
+</html>
