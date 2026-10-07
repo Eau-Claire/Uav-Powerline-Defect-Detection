@@ -42,7 +42,7 @@ Added by V6.5: **Open Images V7** (foreign-object appearance only), **MPCD** (br
 **Power Equipment Image Dataset** (`dx_dg/yw/nw`; `dx_sg` review-only).
 Studied but not merged: Insulator-DET, BGI, CPMID, TLID, Porcelain Disk Insulator 2026, MPID,
 InsPLAD, TTPLA, TL-Defect5K.
-**Full citations, DOIs and dataset links: [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md).**
+Citations: [References](#references) below · per-source usage details: [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md).
 
 ## Results so far (YOLO11n@640, frozen V6.2E VAL)
 
@@ -288,6 +288,66 @@ Manifests store project-relative paths (`data/...`, `artifacts/...`).
   (`compose.allow_phash_candidates` recorded in the freeze).
 * Synthetic samples intentionally use internal TRAIN backgrounds and are not counted as leakage.
 * Only KEEP'ed direct rows enter training (`training.direct_filter_by_review`; see MIGRATION_PLAN C3).
+
+## References
+
+If you use this pipeline or its derived data, cite the original datasets below and respect each
+source's license (see [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) for how each one is used).
+Entries marked *link TODO* still need their official URL.
+
+### Datasets in the canonical V6.2E parent
+
+1. **ZHENG1600** — Zheng et al. "Insulator-Defect Detection Algorithm Based on Improved YOLOv7."
+   *Sensors* 22(22):8801, 2022. https://doi.org/10.3390/s22228801
+2. **IDID** — Lewis & Kulkarni. "Insulator Defect Detection" [dataset]. IEEE DataPort.
+   https://doi.org/10.21227/vkdw-x769
+3. **CPLID** — Tao et al. "Detection of Power Line Insulator Defects Using Aerial Images Analyzed
+   With Convolutional Neural Networks." *IEEE Transactions on Systems, Man, and Cybernetics: Systems*.
+   https://doi.org/10.1109/TSMC.2018.2871750
+4. **VPMBGI** — merged Vietnamese public broken-glass insulator dataset (no canonical paper; cite the
+   upstream sources listed in its repository). *link TODO*
+5. **InsuFault** — "InsuFault-Net: A Deep Learning-Based Insulator Defect Detection Algorithm for
+   Transmission Lines" (official repository). *link TODO*
+6. **FOTL / EFOD_Drone** — Gao et al. "YOLOv11-Based UAV Foreign Object Detection for Power
+   Transmission Lines." MDPI, 2025. *DOI TODO*
+
+### Datasets added by V6.5
+
+7. **Open Images V7** — Kuznetsova et al. "The Open Images Dataset V4: Unified Image Classification,
+   Object Detection, and Visual Relationship Detection at Scale." *International Journal of Computer
+   Vision*, 2020. https://arxiv.org/abs/1811.00982 · https://storage.googleapis.com/openimages/web/index.html
+8. **MPCD** — Benelmostafa & Medromi. "PowerLine-MTYOLO: A Multitask YOLO Model for Simultaneous Cable
+   Segmentation and Broken Strand Detection." *Drones* 9(7):505, 2025.
+   https://doi.org/10.3390/drones9070505 · https://github.com/phd-benel/PowerLine-MTYOLO
+9. **Power Equipment Image Dataset** — Xiong et al. "Object recognition for power equipment via
+   human-level concept learning." *IET Generation, Transmission & Distribution* 15(10):1578–1587, 2021.
+   https://doi.org/10.1049/gtd2.12088 · https://github.com/xiongsiheng/Power-equipment-image-dataset
+
+### Studied, not merged (candidate / external evaluation / reference)
+
+10. **Insulator-DET** — Li et al. "TLINet." *PLOS ONE*, 2025. *DOI TODO*
+11. **CPMID** — "Cross-scale recognition of dense insulators and defects in complex power grid
+    environments." *Engineering Applications of Artificial Intelligence*, 2025.
+    https://doi.org/10.1016/j.engappai.2025.113283
+12. **TLID** — Hu et al. "Towards Defect Detection of Transmission Line Insulator: A Dataset, Benchmarks
+    and Challenges." ICPRE 2025. https://doi.org/10.1109/ICPRE67300.2025.11274094
+13. **Porcelain Disk Insulator 2026** — Mendeley Data, CC BY 4.0. https://doi.org/10.17632/5pwrd7gmw2.1
+14. **MPID** — "APF-YOLOv8: Enhancing Multiscale Detection and Intra-Class Variance Handling for
+    UAV-Based Insulator Power Line Inspections." Dataset: https://doi.org/10.5281/zenodo.14604384
+15. **InsPLAD** — Vieira e Silva et al. "InsPLAD: A Dataset and Benchmark for Power Line Asset
+    Inspection in UAV Images." 2023. https://doi.org/10.1080/01431161.2023.2283900
+16. **TTPLA** — Abdelfattah et al. "TTPLA: An Aerial-Image Dataset for Detection and Segmentation of
+    Transmission Towers and Power Lines." ACCV 2020.
+17. **TL-Defect5K** — Jia. "Mamba-enhanced detection transformer with selective state space models for
+    multi-category defect detection in transmission lines." *Discover Computing* 29(1):489, 2026.
+    https://link.springer.com/article/10.1007/s10791-026-10353-0 · https://github.com/Dali8710/TL-Defect5K
+18. **BGI** — broken-glass insulator dataset, predecessor of VPMBGI. *link TODO*
+
+### Models and tools
+
+19. **YOLO11** — Jocher & Qiu. *Ultralytics YOLO11*, 2024. https://github.com/ultralytics/ultralytics
+20. **RT-DETR** (StructDETR B0 baseline) — Zhao et al. "DETRs Beat YOLOs on Real-time Object
+    Detection." CVPR 2024. https://arxiv.org/abs/2304.08069
 
 ## Current status (2026-10-07)
 
