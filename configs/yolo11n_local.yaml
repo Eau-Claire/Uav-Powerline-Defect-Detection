@@ -1,0 +1,23 @@
+# Conservative local RTX 3060 Laptop profile. Dataset path is supplied at runtime.
+inherits: [yolo11n_ablation]
+
+training:
+  experiment: local-yolo11n-640
+  run_family: yolo11n_640
+  model: yolo11n.pt
+  imgsz: 640
+  epochs: 35
+  batch: 8
+  device: 0
+  seed: 20261008
+  workers: 2
+  cache: false
+  amp: true
+  optimizer: AdamW
+  lr0: 0.0005
+  lrf: 0.05
+  warmup_epochs: 1.0
+  weight_decay: 0.0005
+  cos_lr: true
+  patience: 10
+  eval_batch: 8
