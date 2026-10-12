@@ -1,0 +1,13 @@
+model,val,class,AP50,AP50_95
+teacher_y26m,val,ALL,0.786,0.4057
+teacher_y26m,val,insulator_broken,0.8788,0.4595
+teacher_y26m,val,insulator_flashover,0.8434,0.3707
+teacher_y26m,val,bird_nest,0.8591,0.5153
+teacher_y26m,val,foreign_object,0.5547,0.32
+teacher_y26m,val,broken_strand,0.7939,0.3631
+teacher_y26m,val_clean,ALL,0.8218,0.4343
+teacher_y26m,val_clean,insulator_broken,0.8788,0.4595
+teacher_y26m,val_clean,insulator_flashover,0.8434,0.3707
+teacher_y26m,val_clean,bird_nest,0.9272,0.5661
+teacher_y26m,val_clean,foreign_object,0.6656,0.412
+teacher_y26m,val_clean,broken_strand,0.7939,0.3631
