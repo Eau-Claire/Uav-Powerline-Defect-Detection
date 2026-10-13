@@ -68,10 +68,24 @@ mismatches and ~5 are vines).
   broken/flashover box (it grows to the whole insulator body) and review.
 - rule P: person class from YOLO11x COCO (person_all/, imgsz 960). Only conf >= 0.8 and covering <= 20% of any GT box:
   at 0.5-0.8, COCO labels close-up/top-down insulators and cable joints as person (checked on contact sheets).
-  train 274, val 16, val_clean 34 person boxes. Person is never an alert.
+  train 274, val 16, val_clean 34 person boxes. Person is its own alert type ("person on/near the line"), never FO.
+  Person labels are auto (recall-limited at conf 0.8): review them if person AP matters.
 - rule H no longer applied to foreign_object: SAM cut the strings/tails off, so the FO box convention became mixed.
 - review_decisions.csv: new `add_box` decision (with w,h); 1 missing FO added in val_clean (balloon in the wires).
 Defect labels = v6p5_5cls_v2 exactly (ids +1), apart from that one added FO box.
 Known: 159 near-duplicate image pairs inside val (dHash <= 6), 16 val images with a near-duplicate in train.
 Training: legacy/notebooks/v6p5/v6p5-18_20261012-v4-person-teacher-distill-yolo26n.ipynb (teacher v2 + new head rows
 for insulator/person, student v3 + person row; remap checked: identical predictions on 20 val images).
+
+## v5 (2026-10-13) -> datasets/v6p5_v5 (v4 + insulator filled; the shared dataset from now on)
+The insulator class is labelled only in far-view sources: 15,249 train / 1,950 val images had no insulator box.
+V6.4, YOLOE and SAM point prompts could not fill them; Grounding DINO base ("insulator") + OWLv2 base
+("a photo of an insulator") can. insulator_ov/run.py runs both on every image without an insulator label and on
+1,000 train images that have one (benchmark). insulator_ov/fuse.py keeps a Grounding DINO box after NMS when it is
+not a group box (holds >= 2 other boxes), not ~the whole image, not on a bird_nest / FO / person GT box, not wrapping
+a smaller kept box, and is confirmed by OWLv2 (IoU >= 0.5) or has a high Grounding DINO score. `--auto` picks the
+thresholds with the highest benchmark recall at precision >= 0.85 (fuse_choice.json); if no setting reaches 0.75
+precision nothing is added. Rule I (`--add-insulator insulator_add.csv`) adds the boxes to train + val_clean
+(val stays frozen). Known failure mode on contact sheets: a whole lattice tower boxed as "insulator".
+Training: legacy/notebooks/v6p5/v6p5-19_20261013-v5-insulator-filled-teacher-distill-yolo26n.ipynb, run unattended
+by pipeline_v5.sh (results -> stash://bunpmc/projects/yolov11sdi/checkpoints/v6p5_v5_20261013/, then the studio stops).

@@ -18,6 +18,8 @@ Rules (see data/label_audit/README.md):
   P  person   with --person-all: add a `person` class from COCO person detections conf>=--person-label-conf
               that cover <=20% of any GT box (COCO calls close-up insulators / cable joints "person")
               (all splits; person is a negative for foreign_object, never an alert)
+  I  ins_add  with --add-insulator: add insulator boxes proposed for images without any insulator label
+              (insulator_ov/fuse.py: Grounding DINO + OWLv2 agreement)            (train + val_clean)
 review_decisions.csv may also hold `add_box` rows (out space, with w,h) for objects the labels missed.
 The insulator class is dropped and ids are remapped 1..5 -> 0..4 (same as v6p5_roboflow_5cls),
 unless --keep-insulator (6 classes, ids unchanged; insulator labels are source-specific/incomplete).
@@ -61,6 +63,7 @@ def main() -> int:
     p.add_argument("--person-conf", type=float, default=0.6)
     p.add_argument("--review", type=Path, help="review_decisions.csv (rule G)")
     p.add_argument("--tighten", type=Path, help="sam_boxes.csv (rule H)")
+    p.add_argument("--add-insulator", type=Path, help="insulator_add.csv: split,image,x,y,w,h (rule I)")
     p.add_argument("--person-all", type=Path, help="label_audit/person_all dir (rule P)")
     p.add_argument("--person-label-conf", type=float, default=0.8)
     p.add_argument("--keep-insulator", action="store_true", help="write 6 classes (no drop/remap)")
@@ -99,6 +102,10 @@ def main() -> int:
                   and sy - sh / 2 >= y - h / 2 - 0.02 * h and sy + sh / 2 <= y + h / 2 + 0.02 * h)
         if inside and 0.5 <= float(r["iou"]) < 0.85 and int(r["class6"]) == 0:
             tight[(r["split"], r["image"])].append((int(r["class6"]), x, y, (sx, sy, sw, sh)))
+
+    ins_add = defaultdict(list)
+    for r in csv.DictReader(a.add_insulator.open()) if a.add_insulator else []:
+        ins_add[(r["split"], r["image"])].append([float(r[k]) for k in ("x", "y", "w", "h")])
 
     def drop_matching(gc, gb, boxes, tol=1e-3):
         hit = np.zeros(len(gc), bool)
@@ -191,6 +198,9 @@ def main() -> int:
                         n += 1
                 if n:
                     log(out_split, name, "H_tighten", f"{n} boxes")
+            if full is not False and out_key in ins_add and not (gc == 0).any():  # rule I
+                gc, gb = np.r_[gc, np.zeros(len(ins_add[out_key]), int)], np.r_[gb, ins_add[out_key]]
+                log(out_split, name, "I_ins_add", f"{len(ins_add[out_key])} boxes")
             if a.person_all:  # rule P, also on the frozen val: person boxes do not touch the defect classes
                 pr = persons_all.get(name)
                 pb = np.array([b for b, f in zip(pr["xywhn"], pr["conf"]) if f >= a.person_label_conf]).reshape(-1, 4) \
@@ -253,11 +263,13 @@ def main() -> int:
                    "review": str(a.review.resolve()) if a.review else None,
                    "keep_insulator": a.keep_insulator,
                    "tighten": str(a.tighten.resolve()) if a.tighten else None,
+                   "add_insulator": str(a.add_insulator.resolve()) if a.add_insulator else None,
                    "person_all": str(a.person_all.resolve()) if a.person_all else None,
                    "person_label_conf": a.person_label_conf if a.person_all else None},
         "dropped_classes": [] if a.keep_insulator else ["insulator"],
         "val_policy": "val = untouched source VAL (frozen, comparable); val_clean = A_hflip + C_person"
-                      + (" + G_review" if a.review else "") + (" + H_tighten" if a.tighten else ""),
+                      + (" + G_review" if a.review else "") + (" + H_tighten" if a.tighten else "")
+                      + (" + I_ins_add" if a.add_insulator else ""),
         "stats": {k: dict(sorted(v.items())) for k, v in stats.items()},
     }
     (a.out / "manifest.json").write_text(json.dumps(manifest, indent=2))
