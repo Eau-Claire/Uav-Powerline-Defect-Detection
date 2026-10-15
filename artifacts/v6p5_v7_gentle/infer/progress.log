@@ -1,0 +1,49 @@
+[20:34] ===== v6p5-24 inference tricks
+[20:35] pred v5_orig_640 done
+[20:36] pred v5_orig_800 done
+[20:37] pred ft_v6_640 done
+[20:39] pred ft_v6_800 done
+[20:40] pred g_v6_640 done
+[20:41] pred g_v6_800 done
+[20:42] pred gf_v6_640 done
+[20:43] pred gf_v6_800 done
+[20:44] pred v5_orig_1024 done
+[20:47] pred v5_orig_640_tta done
+[20:49] pred v5_orig_800_tta done
+[20:50] baseline v5_orig fo800       MEAN_5 val_clean_v6 0.8283  val_clean 0.8276
+[20:50] v5_orig fo1024               MEAN_5 val_clean_v6 0.8209  val_clean 0.8192
+[20:50] v5_orig all640 (FO@640)      MEAN_5 val_clean_v6 0.8197  val_clean 0.8201
+[20:50] v5_orig TTA640 + FO@800      MEAN_5 val_clean_v6 0.8242  val_clean 0.8235
+[20:50] v5_orig 640 + FO@800 TTA     MEAN_5 val_clean_v6 0.8256  val_clean 0.8254
+[20:50] v5_orig TTA all              MEAN_5 val_clean_v6 0.8215  val_clean 0.8212
+[20:50] ft_v6 fo800                  MEAN_5 val_clean_v6 0.8129  val_clean 0.8124
+[20:50] g_v6 fo800                   MEAN_5 val_clean_v6 0.8219  val_clean 0.8214
+[20:50] gf_v6 fo800                  MEAN_5 val_clean_v6 0.8252  val_clean 0.8239
+[20:50] WBF all teachers fo800       MEAN_5 val_clean_v6 0.8196  val_clean 0.8188
+[20:51] WBF orig+ft_v6 fo800         MEAN_5 val_clean_v6 0.8153  val_clean 0.8140
+[20:51] 
+       split                   server  MEAN_5  insulator_broken  insulator_flashover  bird_nest  foreign_object  broken_strand
+val_clean_v6   baseline v5_orig fo800  0.8283            0.8503               0.8391     0.9244          0.7278         0.7998
+val_clean_v6           v5_orig fo1024  0.8209            0.8503               0.8391     0.9244          0.6907         0.7998
+val_clean_v6  v5_orig all640 (FO@640)  0.8197            0.8503               0.8391     0.9244          0.6847         0.7998
+val_clean_v6  v5_orig TTA640 + FO@800  0.8242            0.8491               0.8303     0.9223          0.7278         0.7914
+val_clean_v6 v5_orig 640 + FO@800 TTA  0.8256            0.8503               0.8391     0.9244          0.7143         0.7998
+val_clean_v6          v5_orig TTA all  0.8215            0.8491               0.8303     0.9223          0.7143         0.7914
+val_clean_v6              ft_v6 fo800  0.8129            0.8538               0.8248     0.9250          0.7007         0.7605
+val_clean_v6               g_v6 fo800  0.8219            0.8524               0.8249     0.9262          0.7186         0.7876
+val_clean_v6              gf_v6 fo800  0.8252            0.8481               0.8349     0.9246          0.7266         0.7917
+val_clean_v6   WBF all teachers fo800  0.8196            0.8516               0.8412     0.9252          0.7064         0.7736
+val_clean_v6     WBF orig+ft_v6 fo800  0.8153            0.8543               0.8392     0.9238          0.6985         0.7606
+
+       split                   server  diff_vs_baseline  ci95_lo  ci95_hi  P(>0)
+val_clean_v6           v5_orig fo1024           -0.0066  -0.0220   0.0072 0.1835
+val_clean_v6  v5_orig all640 (FO@640)           -0.0091  -0.0193  -0.0008 0.0175
+val_clean_v6  v5_orig TTA640 + FO@800           -0.0038  -0.0107   0.0030 0.1380
+val_clean_v6 v5_orig 640 + FO@800 TTA           -0.0029  -0.0089   0.0034 0.1740
+val_clean_v6          v5_orig TTA all           -0.0067  -0.0159   0.0025 0.0725
+val_clean_v6              ft_v6 fo800           -0.0145  -0.0281  -0.0006 0.0200
+val_clean_v6               g_v6 fo800           -0.0065  -0.0143   0.0000 0.0255
+val_clean_v6              gf_v6 fo800           -0.0029  -0.0103   0.0052 0.2250
+val_clean_v6   WBF all teachers fo800           -0.0083  -0.0216   0.0043 0.0955
+val_clean_v6     WBF orig+ft_v6 fo800           -0.0124  -0.0257   0.0007 0.0360
+[20:51] ===== XONG v6p5-24

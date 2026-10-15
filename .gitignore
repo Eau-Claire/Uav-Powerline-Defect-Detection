@@ -48,3 +48,17 @@ dist/
 # local datasets / dataset tarballs (GBs; never commit — `git add .` once hashed ~8 GB of them)
 datasets/
 packages/
+
+# 2026-10-15 experiments: commit scripts, eval CSV/MD, progress logs, review sheets; not caches / weights / dataset copies
+artifacts/**/pred_*.json
+artifacts/*_stdout.log
+artifacts/**/best_ncnn_model/
+artifacts/strand_v8/localizer_ds/
+artifacts/strand_v8/localizer/
+artifacts/strand_v8/proposals_*.json
+artifacts/sam_v8/*.json
+artifacts/diffusion_*_proto/images/
+artifacts/diffusion_*_proto/labels/
+artifacts/diffusion_fo_proto/tile_*.jpg
+artifacts/diffusion_fo_proto/soup/
+artifacts/**/*.cache
