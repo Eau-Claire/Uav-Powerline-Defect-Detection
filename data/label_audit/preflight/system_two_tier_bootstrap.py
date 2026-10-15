@@ -27,7 +27,7 @@ def wap(img, tp, npos, w):  # weighted 101-point AP50
     mrec, mpre = np.r_[0, rec, 1], np.flip(np.maximum.accumulate(np.flip(np.r_[1, prec, 0])))
     x = np.linspace(0, 1, 101); return float(np.trapezoid(np.interp(x, mrec, mpre), x))
 if __name__ == "__main__":
-    imgs, G, D, servers = load(args()); idx = {p.name: i for i, p in enumerate(imgs)}; flag = flagged(D['pi'], TAU)
+    a = args(); imgs, G, D, servers = load(a); idx = {p.name: i for i, p in enumerate(imgs)}; flag = flagged(D['pi'], TAU)
     pre = {(src, c): prep(D[src], G[c], c, flag, idx) for p in servers.values() for c, src in p.items()}
     score = lambda w: {s: np.mean([wap(*pre[(p[c], c)], w) for c in range(1, 6)]) for s, p in servers.items()}
     full = score(np.ones(len(imgs))); rng = np.random.default_rng(SEED); S = {s: [] for s in servers}
@@ -39,4 +39,4 @@ if __name__ == "__main__":
         lo, hi = np.percentile(v, [2.5, 97.5]); diff = ' - ' in s; p = (v > 0).mean() if diff else (v > TARGET).mean()
         print(f"Two-tier @{TAU} {s:20s} MEAN_5 {full[s]:+.4f}  CI95 [{lo:+.4f}, {hi:+.4f}]  P({'>0' if diff else f'>{TARGET}'}) {p:.1%}", flush=True)
         res.append({'setting': s, 'tau': TAU, 'MEAN_5_AP50': full[s], 'ci95_lo': lo, 'ci95_hi': hi, 'p_above': p, 'above': 0 if diff else TARGET, 'rounds': B})
-    import pandas as pd; pd.DataFrame(res).to_csv(HERE/'system_two_tier_bootstrap.csv', index=False)
+    import pandas as pd; pd.DataFrame(res).to_csv(HERE/('system_two_tier_bootstrap.csv' if a.split == 'val_clean' else f'system_two_tier_bootstrap_{a.split}.csv'), index=False)

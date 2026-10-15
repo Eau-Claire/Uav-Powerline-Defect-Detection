@@ -8,7 +8,7 @@ made the first version of this script score the teacher at 0.815 instead of 0.82
 Server "fo800": foreign_object boxes come from the teacher at 800 (FO is small: 0.687 -> 0.718), the other classes
 from 640 (flashover / strand drop at 800). Uncertainty: system_two_tier_bootstrap.py.
 
-Usage: python system_two_tier.py [--data DIR] [--pi WEIGHTS] [--teacher WEIGHTS] [--device cpu|0]
+Usage: python system_two_tier.py [--data DIR] [--split val_clean|val_clean_v6] [--pi W] [--teacher W] [--device cpu|0]
 Predictions are cached as sys_<tag>.json, tagged with the weights path (another path -> recompute); delete them
 after retraining a model in place."""
 import argparse, json, numpy as np, torch
@@ -49,9 +49,9 @@ def run(weights, imgs, tag, imgsz=640, device='cpu'):
     json.dump({'_weights': str(weights), 'dets': out}, open(cache, 'w')); return out
 def load(a):
     """-> imgs, G {class: {img: xyxyn}}, dets {pi, t640, t800}, servers {name: {class: dets}}"""
-    R = Path(a.data); imgs = sorted(p for p in (R/'images/val_clean').iterdir() if p.suffix == '.jpg'); G = {c: {} for c in range(1, 6)}
+    R = Path(a.data); imgs = sorted(p for p in (R/'images'/a.split).iterdir() if p.suffix == '.jpg'); G = {c: {} for c in range(1, 6)}
     for im in imgs:
-        x = np.array([l.split() for l in (R/'labels/val_clean'/(im.stem+'.txt')).read_text().splitlines() if l.strip()], float).reshape(-1, 5)
+        x = np.array([l.split() for l in (R/'labels'/a.split/(im.stem+'.txt')).read_text().splitlines() if l.strip()], float).reshape(-1, 5)
         for c in range(1, 6):
             b = x[x[:, 0] == c][:, 1:]; G[c][im.name] = np.c_[b[:, :2]-b[:, 2:]/2, b[:, :2]+b[:, 2:]/2]
     D = {'pi': run(a.pi, imgs, 'pi', device=a.device), 't640': run(a.teacher, imgs, 'teacher', device=a.device),
@@ -64,6 +64,7 @@ def args():
     p.add_argument('--data', default=str(S/'datasets/v6p5_v5'))
     p.add_argument('--pi', default=str(A/'student_distill/weights/best_ncnn_model'))
     p.add_argument('--teacher', default=str(A/'teacher/weights/best.pt'))
+    p.add_argument('--split', default='val_clean', help='val_clean | val_clean_v6 (v6p5_v6) — same images, cache reused')
     p.add_argument('--device', default='0' if torch.cuda.is_available() else 'cpu')
     return p.parse_args()
 if __name__ == "__main__":
@@ -84,4 +85,4 @@ if __name__ == "__main__":
         m50 = np.mean([v[0] for v in r.values()]); m95 = np.mean([v[1] for v in r.values()])
         print(f"{name:44s} server {share:5.1%} | MEAN_5 {m50:.4f} / {m95:.4f} | " + ' '.join(f"{k[:9]} {v[0]:.3f}/{v[1]:.3f}" for k, v in r.items()), flush=True)
         res.append({'setting': name, 'server_share': share, 'MEAN_5_AP50': m50, 'MEAN_5_AP50_95': m95, **{f'{k}_AP50': v[0] for k, v in r.items()}, **{f'{k}_AP50_95': v[1] for k, v in r.items()}})
-    import pandas as pd; pd.DataFrame(res).to_csv(HERE/'system_two_tier.csv', index=False)
+    import pandas as pd; pd.DataFrame(res).to_csv(HERE/('system_two_tier.csv' if a.split == 'val_clean' else f'system_two_tier_{a.split}.csv'), index=False)

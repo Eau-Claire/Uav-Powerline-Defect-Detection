@@ -89,3 +89,25 @@ precision nothing is added. Rule I (`--add-insulator insulator_add.csv`) adds th
 (val stays frozen). Known failure mode on contact sheets: a whole lattice tower boxed as "insulator".
 Training: legacy/notebooks/v6p5/v6p5-19_20261013-v5-insulator-filled-teacher-distill-yolo26n.ipynb, run unattended
 by pipeline_v5.sh (results -> stash://bunpmc/projects/yolov11sdi/checkpoints/v6p5_v5_20261013/, then the studio stops).
+
+## v6 (2026-10-15) -> datasets/v6p5_v6 (v5 + foreign_object review; built by scripts/build_v6.py from v5)
+Why: hard mining with teacher v5 on train (legacy/notebooks/v6p5/v6p5-21_20261015-v6-data-hard-mining.ipynb,
+artifacts/v6p5_v6_data/) showed contradictory FO labels in train (workers and vines labelled FO in some images, not in
+others) and that the 161 leftover v65 synthetic FO pastes caused 32% of the FO misses (pasted birds labelled FO).
+Misses are driven by object size (small boxes miss 12-37%), not by lighting measured inside the box.
+FO definition from now on: a real foreign object, including hornet nests and vegetation lying on or climbing a pole,
+line or equipment; NOT a person, a bird nest, plants growing on the ground, electrical equipment, an empty region or a
+drawing.
+fo_review_v6/: make_sheets.py (all 955 train FO GT + 66 unlabelled teacher FO boxes, COCO yolo26s person overlap) ->
+visual review of every tile -> decisions_src.py (decisions + user answers, readable) -> decisions.csv;
+user_sheets.py / fix_view.py = pages the user checked (person boxes completed with COCO proposals, G034 kite vs man,
+one nest split in two boxes merged); apply.py applies decisions.csv to one image's labels (asserts one FO line per box).
+- rule J (train): 34 FO -> person (+8 missed persons added), 7 FO -> bird_nest (+1 merged nest), 23 boxes dropped
+  (5 plants on the ground, 12 empty/equipment, 4 unclear, 1 group of people, 1 drawing), 6 missed FO added, all 161
+  v65 synthetic images removed. FO train 955 -> 734, person 264 -> 306.
+- rule K: the v2 audit had dropped FO boxes as "vegetation" (review_decisions.csv, centres only). old_veg_decisions.csv:
+  4 val_clean boxes are vegetation on a structure -> restored from the untouched `val` labels in val_clean_v6;
+  10 train images held such a box (size unknown) -> removed.
+- val and val_clean are v5 unchanged; val_clean_v6 (FO 58 -> 62) is the main metric set from now on.
+Baseline v5 on val_clean_v6 (preflight/system_two_tier*.py --split val_clean_v6): Pi n 0.778, teacher 0.822,
+two-tier FO@800 @0.05 0.8285 (CI95 0.798-0.860, P>0.82 74%), FO@800 vs 640 +0.0087 (CI95 +0.0009..+0.019).

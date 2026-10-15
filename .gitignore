@@ -44,3 +44,7 @@ dist/
 
 # Small, valuable records ARE committed: state/*.json, artifacts/freezes/*.json,
 # artifacts/manifests/*.csv, the review decisions CSV.
+
+# local datasets / dataset tarballs (GBs; never commit — `git add .` once hashed ~8 GB of them)
+datasets/
+packages/

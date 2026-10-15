@@ -1,0 +1,48 @@
+id,split,image,x,y,box,decision,note
+V01,train,04d5eeb51a2dd85d_002337.jpg,0.518012,0.57827,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V02,train,1244f7be916977c1_003316.jpg,0.563368,0.486545,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V03,train,12e1cc262e1acb77_003363.jpg,0.501085,0.362703,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V04,train,12e1cc262e1acb77_003363.jpg,0.294379,0.427517,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V05,train,27e120e7a62e4a57_004754.jpg,0.528537,0.605179,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V06,train,29b0d00ad6fbb21c_004888.jpg,0.505751,0.382523,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V07,train,3269a304d29c0f70_005482.jpg,0.302843,0.30787,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V08,train,3269a304d29c0f70_005482.jpg,0.579427,0.523438,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V09,train,542931f4bae709a7_007788.jpg,0.537109,0.396991,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V10,train,61231722c89ce1f8_008706.jpg,0.33214,0.342737,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V11,train,61231722c89ce1f8_008706.jpg,0.559896,0.495226,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V12,train,61d408447de38d7e_008763.jpg,0.564996,0.371094,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V13,train,667ac35faf9eb807_009106.jpg,0.32921,0.342159,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V14,train,667ac35faf9eb807_009106.jpg,0.584418,0.521123,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V15,train,6946336c5e45212e_009324.jpg,0.690667,0.753086,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V16,train,7427d4612b8a7719_010020.jpg,0.460069,0.462963,0.44182 0.38962 0.53038 0.54603,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V17,train,750d95c5b43de398_010084.jpg,0.424588,0.418113,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V18,train,750d95c5b43de398_010084.jpg,0.550781,0.509693,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V19,train,7f42049e60c2260b_010828.jpg,0.499349,0.480035,0.43070 0.44261 0.51821 0.65759,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V20,train,870aeeacdcf50984_011326.jpg,0.441081,0.441696,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V21,train,870aeeacdcf50984_011326.jpg,0.553168,0.525608,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V22,train,9f987cc4a11c75b2_012937.jpg,0.455826,0.285237,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V23,train,9f987cc4a11c75b2_012937.jpg,0.22309,0.256301,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V24,train,9f987cc4a11c75b2_012937.jpg,0.290123,0.225823,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V25,train,a30af7a2b71e1dc5_013175.jpg,0.207031,0.345197,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V26,train,a30af7a2b71e1dc5_013175.jpg,0.652995,0.560619,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V27,train,c08a0c29cfc0ccd4_015161.jpg,0.517795,0.61849,0.40051 0.27010 0.57577 0.86639,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V28,train,dcca4cba19e09bb1_017113.jpg,0.353974,0.912166,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V29,train,dcca4cba19e09bb1_017113.jpg,0.419078,0.83179,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V30,train,dcca4cba19e09bb1_017113.jpg,0.311728,0.763503,0.26445 0.69502 0.36192 0.82948,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V31,train,e6198c5d2c609701_017723.jpg,0.602865,0.275174,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V32,train,f785c8599a5f0dcc_018953.jpg,0.66,0.574074,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V33,train,f7e5da54a7843202_018976.jpg,0.595269,0.462963,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V34,train,fd87b666f6720aa7_019344.jpg,0.513889,0.364005,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V35,train,rf_1369439e1d314f4d.jpg,0.498661,0.564741,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V36,train,rf_2d5fe757d2e47de7.jpg,0.682031,0.580469,,drop_image_train,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V37,train,rf_adb51a522844fe10.jpg,0.5875,0.585156,,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V38,val_clean,004bcc84c18ccd8e_019497.jpg,0.533637,0.330729,0.46745 0.21875 0.59983 0.44271,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V39,val_clean,4645c5824c4477f0_020084.jpg,0.461263,0.495949,0.42535 0.38628 0.49718 0.60561,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V40,val_clean,8f7285eccfbfa6d9_020728.jpg,0.534614,0.57827,0.36328 0.22801 0.70595 0.92853,restore_fo_val_clean_v6,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V41,val_clean,97ecc738679f6dcb_020809.jpg,0.539931,0.478443,0.50391 0.42448 0.57596 0.53241,restore_fo_val_clean_v6,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V42,val_clean,c3efda7705ee92a4_021212.jpg,0.372147,0.807163,0.32221 0.75261 0.42208 0.86172,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V43,val_clean,c3efda7705ee92a4_021212.jpg,0.833626,0.758144,0.80674 0.69015 0.86051 0.82614,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V44,val_clean,c55fb4fa376ee263_021223.jpg,0.547201,0.32147,0.50260 0.24913 0.59180 0.39381,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V45,val_clean,cf401cbea2058d40_021316.jpg,0.354492,0.708478,0.27691 0.60561 0.43207 0.81134,stay_dropped,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V46,val_clean,d98b224a2ab85e25_021404.jpg,0.52398,0.434317,0.40690 0.27373 0.64106 0.59491,restore_fo_val_clean_v6,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
+V47,val_clean,ebd09f47b6a86c18_021584.jpg,0.482422,0.377025,0.42188 0.07089 0.54297 0.68316,restore_fo_val_clean_v6,v2 audit dropped as vegetation; user 2026-10-15: vegetation on structure is FO
