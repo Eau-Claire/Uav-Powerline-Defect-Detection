@@ -1,0 +1,20 @@
+img,img_lum,cls,conf,area,size,obj_lum,obj_std,light,box,missed
+e0d771857951253d_017395.jpg,138.2,bird_nest,0.0,0.0006976589999999993,nhỏ,136.6,37.7,thường,"[np.float64(0.38975), np.float64(0.28867), np.float64(0.41275), np.float64(0.319)]",True
+e0d771857951253d_017395.jpg,138.2,bird_nest,0.0,0.000572000000000001,nhỏ,143.4,38.6,thường,"[np.float64(0.594), np.float64(0.27633), np.float64(0.616), np.float64(0.30233)]",True
+3ba370ea0c89a634_006114.jpg,65.2,broken_strand,0.0127,0.085217234375,lớn,85.8,41.0,thường,"[np.float64(0.50391), np.float64(0.18555), np.float64(0.70703), np.float64(0.60508)]",True
+b33662b6bfb66ddc_014267.jpg,234.7,foreign_object,0.0,0.012339093107000002,vừa,197.6,63.2,thường,"[np.float64(0.28689), np.float64(0.75492), np.float64(0.33724), np.float64(1.0)]",True
+v65_syn_syn_kite_61dc78e2b3b81bee43.jpg,104.6,foreign_object,0.0191,0.022705124999999996,vừa,114.3,29.8,thường,"[np.float64(0.03203), np.float64(0.58889), np.float64(0.15312), np.float64(0.77639)]",True
+3798cbc68ebc987e_005836.jpg,209.1,insulator_broken,0.0,0.0011010648750000036,nhỏ,57.9,34.5,tối,"[np.float64(0.70282), np.float64(0.59395), np.float64(0.73529), np.float64(0.62786)]",True
+90c2a7808e08512c_011971.jpg,175.6,insulator_broken,0.0,0.006939708489999999,nhỏ,195.4,40.4,thường,"[np.float64(0.60569), np.float64(0.15451), np.float64(0.72743), np.float64(0.21152)]",True
+ac857f9f2ad40f27_013804.jpg,95.8,insulator_broken,0.0,0.0011446012619999988,nhỏ,45.4,25.6,tối,"[np.float64(0.44737), np.float64(0.5), np.float64(0.47807), np.float64(0.53728)]",True
+bb285b64adf9225e_014794.jpg,53.9,insulator_broken,0.0,0.0011470850779999981,nhỏ,141.6,23.5,thường,"[np.float64(0.5466), np.float64(0.3538), np.float64(0.57602), np.float64(0.39279)]",True
+dc7e94df980fc5a1_017093.jpg,238.6,insulator_broken,0.0,0.0007595624999999981,nhỏ,107.1,59.5,ngược sáng,"[np.float64(0.29167), np.float64(0.7908), np.float64(0.32292), np.float64(0.8151)]",True
+a98050a591ca4e1c_013611.jpg,172.0,insulator_broken,0.0174,0.007741643205000005,nhỏ,106.5,53.5,ngược sáng,"[np.float64(0.47873), np.float64(0.46325), np.float64(0.58008), np.float64(0.53964)]",True
+21d677f6e3ee9d62_004346.jpg,172.3,insulator_broken,0.0219,0.015022267518000017,vừa,45.2,13.1,tối,"[np.float64(0.55621), np.float64(0.25058), np.float64(0.64062), np.float64(0.42853)]",True
+b9ca1d6c11cebe97_014692.jpg,233.4,insulator_broken,0.0998,0.0008231144950000003,nhỏ,110.8,62.5,ngược sáng,"[np.float64(0.42383), np.float64(0.65654), np.float64(0.44835), np.float64(0.6901)]",True
+06cdb972215c6673_002474.jpg,206.9,insulator_broken,0.1022,0.15338055914999998,lớn,176.9,85.3,thường,"[np.float64(0.46109), np.float64(0.23448), np.float64(0.75674), np.float64(0.75327)]",True
+65945e7f5297a3b8_009039.jpg,186.9,insulator_broken,0.1084,0.004439750430000003,nhỏ,106.2,5.1,ngược sáng,"[np.float64(0.6148), np.float64(0.23553), np.float64(0.65365), np.float64(0.34983)]",True
+2255454b299a7a80_004382.jpg,247.0,insulator_broken,0.1426,0.0009670076999999998,nhỏ,169.4,70.2,ngược sáng,"[np.float64(0.51346), np.float64(0.21875), np.float64(0.53016), np.float64(0.27662)]",True
+25d700f5bae58e13_004617.jpg,242.7,insulator_flashover,0.0,0.0005847105600000005,nhỏ,149.4,73.0,ngược sáng,"[np.float64(0.53462), np.float64(0.37949), np.float64(0.55699), np.float64(0.40564)]",True
+63290318981679b7_008853.jpg,108.2,insulator_flashover,0.0,0.0019862393820000053,nhỏ,180.5,45.9,thường,"[np.float64(0.67258), np.float64(0.53158), np.float64(0.71302), np.float64(0.5807)]",True
+90c2a7808e08512c_011971.jpg,175.6,insulator_flashover,0.027,0.029488407511999992,vừa,102.9,25.5,ngược sáng,"[np.float64(0.44922), np.float64(0.21528), np.float64(0.62739), np.float64(0.38079)]",True
