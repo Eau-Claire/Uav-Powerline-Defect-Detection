@@ -111,3 +111,15 @@ one nest split in two boxes merged); apply.py applies decisions.csv to one image
 - val and val_clean are v5 unchanged; val_clean_v6 (FO 58 -> 62) is the main metric set from now on.
 Baseline v5 on val_clean_v6 (preflight/system_two_tier*.py --split val_clean_v6): Pi n 0.778, teacher 0.822,
 two-tier FO@800 @0.05 0.8285 (CI95 0.798-0.860, P>0.82 74%), FO@800 vs 640 +0.0087 (CI95 +0.0009..+0.019).
+
+## v8 / v9 (2026-10-15/16) -> datasets/v6p5_v8, datasets/v6p5_v9 (scripts/build_v8.py, build_v9.py)
+- v8 (from v6): rule L removes 170 train images that near-duplicate 148 val images (leak); rule M: val_clean_v8 =
+  val_clean_v6 + 11 missed bird_nest (review_v7 ids 140-145, 147-151) - 2 insulator_broken boxes not on an insulator
+  (ids 64, 77). leaked_val.txt: score v5/v6-trained models on val_clean_v8 without these 148 images.
+- v9 (from v8): rule N holds out test_fo: whole near-duplicate clusters (dHash, Hamming <= 6) holding FO, drawn at random
+  until >= 150 FO boxes. Only v9-trained models may be scored on test_fo.
+- Conventions decided by the user (2026-10-16), apply to every future label edit: insulator_broken = 1 box per damaged
+  shed (only ~3% of boxes look like per-crack groups: 215 train / 16 val); broken_strand = tight around the visible
+  fraying + ~5%; insulator_flashover = the whole burnt shed; a drone is not foreign_object.
+- Open: 80 small dubious insulator_broken val boxes (review_v8_broken/verify_broken.csv, user verdicts); upper bound if
+  all were label errors: broken 0.847 -> 0.926, two-tier MEAN_5 0.817 -> 0.833 (scripts/eval_v8.py).

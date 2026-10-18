@@ -62,11 +62,16 @@ beyond conventional confidence- and loss-based methods?" Study set = val_clean_v
   top-50 chỉ trùng 11/50 → tín hiệu khác biệt nhưng **chưa biết đúng hay sai**.
   Luật cứng "lỗi phải nằm trong insulator": 1213 box chỉ cấu trúc bắt; xem 24 mẫu: đa số là thiếu nhãn insulator /
   ảnh cận, không phải box lỗi sai.
-- **Việc còn treo**: user xác minh mù 205 box (`verify_01..09.jpg`, điền `verify_blind.csv` cột verdict:
-  correct | wrong_class:<cls> | bad_box | not_defect | duplicate | unsure), rồi ghép `verify_key.csv` → precision@k.
+- Xác minh mù 205 box (user, xong 2026-10-15 tối; `verify_blind.csv`, chấm bằng notebook 08 cell 7): 26 lỗi (12.7%):
+  20 not_defect, 4 wrong_class, 1 bad_box. Precision@50 (CI95 bootstrap): s_loss 0.24 [0.12, 0.36] · s_conf 0.20
+  [0.10, 0.32] · s_struct 0.14 [0.06, 0.26] · s_disagree 0.12 [0.04, 0.22]; baseline ngẫu nhiên 0.13.
+  s_struct − s_loss = −0.08 [−0.22, +0.06]; top-10 của s_struct không có lỗi nào; lỗi chỉ cấu trúc tìm ra: 3/39.
+  **Kết luận Part B: âm.** Với đặc trưng cấu trúc thủ công, structural consistency không cho thêm bằng chứng về lỗi
+  gán nhãn ngoài loss (loss tốt nhất, ~2× ngẫu nhiên). Cùng Part A (AUROC không đổi) → trả lời RQ: **không**, ở dạng
+  đặc trưng hiện tại. Mẫu nhỏ (26 lỗi) nên CI rộng; muốn kết luận mạnh hơn cần đặc trưng học được hoặc mẫu lớn hơn.
 
 ## 7. Việc tiếp theo (ưu tiên)
-1. Điền `verify_blind.csv` (205 box) → trả lời RQ phần B.
+1. ~~Điền `verify_blind.csv` (205 box) → trả lời RQ phần B.~~ Xong: kết quả âm (mục 6).
 2. Bỏ 148 ảnh train trùng val (v8), báo cáo MEAN_5 không rò + tách strand theo miền ảnh.
 3. Sửa val: thêm ~13 bird_nest thiếu (review_v7), duyệt 82 insulator_broken đáng ngờ; quyết drone có là FO (mặc định không).
 4. Thu ảnh drone thật có dây tưa (kể cả chưa gán nhãn → pre-label bằng teacher).
@@ -75,3 +80,15 @@ beyond conventional confidence- and loss-based methods?" Study set = val_clean_v
 
 GitHub: commit chưa push được từ máy thuê (không có credential). Bundle git nằm trên Camber (`repo.bundle`);
 notebook 08 tự áp bundle nếu GitHub thiếu commit.
+
+## 8. Tiếp tục trên máy 4060 (tối 2026-10-15): v8 + đánh giá theo lớp không rò
+- `scripts/build_v8.py` → `datasets/v6p5_v8` (từ v6): bỏ 170 ảnh train gần trùng 148 ảnh val (rule L);
+  val_clean_v8 = val_clean_v6 + 11 bird_nest thiếu (review id 140–145, 147–151) − 2 insulator_broken không nằm trên sứ
+  (id 64 dây buộc, 77 kẹp) (rule M). `leaked_val.txt` = 148 ảnh val để đo model cũ công bằng. Drone ≠ FO: val không có nhãn
+  drone nào. Chưa đổi: quy ước A1–A3, 80 box insulator_broken nhỏ đáng ngờ (cần chuyên môn).
+- `scripts/eval_v8.py` → `artifacts/eval_v8/report.md` (từ cache, CPU). Hệ 2 tầng n_v5 → v5_orig, không rò (2123 ảnh):
+  **MEAN_5 0.817 [0.79–0.85], P(>0.82) 51%** · broken 0.847 · flashover 0.841 · bird_nest 0.927 · FO 0.688 [0.54–0.83]
+  · strand 0.784. Pi n_v5 một mình 0.761. soup_g_v6 = v5_orig (±0.001); gn_v6 = n_v5.
+- Độ nhạy: bỏ 80 box broken đáng ngờ → broken 0.926, MEAN_5 0.833 (cận trên, nếu cả 80 đều là nhãn sai).
+- strand theo miền: ảnh vuông (điện thoại/mặt đất, 189 box) 0.827; ảnh drone (39 box) **0.570**. Ảnh vuông không có
+  flashover / bird_nest / FO → mỗi lớp đến từ nguồn ảnh khác nhau.
