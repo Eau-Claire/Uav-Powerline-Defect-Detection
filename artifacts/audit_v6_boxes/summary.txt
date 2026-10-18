@@ -1,0 +1,55 @@
+
+== train: flags by class x type
+flag                 loose_box  missed_gt  missing_label  wrong_class   All
+cls                                                                        
+bird_nest                  288         79             46            7   420
+broken_strand              218         59             10            1   288
+foreign_object              33          7             48            0    88
+insulator                  535        488            924           29  1976
+insulator_broken           494        273             44            8   819
+insulator_flashover        155         56              9            9   229
+person                       2         70              9           23   104
+All                       1725       1032           1090           77  3924
+
+== train: loose_box + missed_gt by source (top)
+flag                          loose_box  missed_gt  missing_label  wrong_class
+cls                 source                                                    
+bird_nest           1280x720         36          9              3            1
+                    1280x960        160         51             29            0
+broken_strand       640x480          52         33              3            1
+                    640x640         161         24              4            0
+insulator           1280x720        446         92             48            0
+                    1280x960         12        108            220            0
+                    640x480          52        101            401            3
+                    640x640          13         78             78           25
+insulator_broken    160x120          23          1              1            0
+                    512x384          15          8              2            0
+                    640x480         417        246             32            5
+                    640x640          39          7              9            3
+insulator_flashover 160x120          42          5              3            0
+                    640x480          99         28              6            3
+
+== val_clean_v6: flags by class x type
+flag                 loose_box  missed_gt  missing_label  wrong_class   All
+cls                                                                        
+bird_nest                  110         42             24            0   176
+broken_strand               55         27              1            0    83
+foreign_object               8         12              7            0    27
+insulator                   99        201            189            4   493
+insulator_broken           121         82              7            0   210
+insulator_flashover         41         11              1            1    54
+person                       0         16              5            2    23
+All                        434        391            234            7  1066
+
+== val_clean_v6: loose_box + missed_gt by source (top)
+flag                          loose_box  missed_gt  missing_label  wrong_class
+cls                 source                                                    
+bird_nest           1280x720         21          3              0            0
+                    1280x960         37         21             11            0
+broken_strand       640x640          42         18              1            0
+insulator           1280x720         76         27             15            0
+                    1280x960          3         59             26            0
+                    640x480          17         44             96            1
+                    640x640           0         27             13            3
+insulator_broken    640x480         103         71              3            0
+insulator_flashover 640x480          29          5              0            0

@@ -1,0 +1,26 @@
+description: Ultralytics YOLO26s model trained on d:\Data-Centric-UAV-Powerline-Defect-Detection\Uav-Powerline-Defect-Detection\datasets\v6p5_v5\data.yaml
+author: Ultralytics
+date: '2026-10-15T07:16:44.285900+07:00'
+version: 8.4.172
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+head: Detect
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: insulator
+  1: insulator_broken
+  2: insulator_flashover
+  3: bird_nest
+  4: foreign_object
+  5: broken_strand
+  6: person
+args:
+  batch: 1
+  quantize: null
+channels: 3
+end2end: false

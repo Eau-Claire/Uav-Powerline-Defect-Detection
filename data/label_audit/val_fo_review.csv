@@ -1,0 +1,86 @@
+k,image_stem,label_line,box_px,decision,reason
+0,004bcc84c18ccd8e_019497,0,171,drop_box,no foreign object (vegetation/equipment/empty)
+1,057f80079c2f7a1a_019533,0,214,drop_image,"drawing, not a photo"
+2,07744e2fba006cc5_019554,0,197,keep,real foreign object
+3,0f2dac058858d532_019615,0,50,keep,real foreign object
+4,1148ec66d537b89d_019630,0,141,keep,real foreign object
+5,121d8fa0565333d1_019637,0,117,keep,real foreign object
+6,12234089f163d28e_019638,0,93,keep,real foreign object
+7,12234089f163d28e_019638,1,129,keep,real foreign object
+8,1580d04f68608755_019663,0,186,keep,real foreign object
+9,276dd4f281c60926_019817,0,224,keep,uncertain - kept
+10,2b621af8273f7ac3_019849,0,54,keep,uncertain - kept
+11,2c2b4d11fc5d7caa_019859,0,65,drop_box,person
+12,2c2b4d11fc5d7caa_019859,1,51,drop_box,person
+13,2d38d9dc3de0c60f_019864,0,94,keep,real foreign object
+14,31dc043ca12a8fa9_019909,0,78,keep,real foreign object
+15,35133e6d92611c88_019940,0,60,keep,real foreign object
+16,414ae2d0a0c6a6d0_020038,0,114,keep,real foreign object
+17,41d95fb314847810_020041,0,335,keep,real foreign object
+18,41d95fb314847810_020041,1,260,keep,real foreign object
+19,4265c70840b186f1_020046,0,140,keep,real foreign object
+20,4645c5824c4477f0_020084,0,125,drop_box,no foreign object (vegetation/equipment/empty)
+21,466cdcbaa538969f_020086,0,47,drop_box,person
+22,466cdcbaa538969f_020086,1,48,drop_box,person
+23,470100014a485e40_020090,0,123,keep,real foreign object
+24,4a822801796c4f92_020120,0,113,keep,real foreign object
+25,4ec4cfc125570be4_020150,0,58,keep,real foreign object
+26,57a32be5ef02fc70_020236,0,325,keep,real foreign object
+27,588543bc4f87e0d2_020244,0,37,keep,real foreign object
+28,5c06a9e3ae51298e_020273,0,151,drop_box,person
+29,5e3b9b21ab948498_020294,0,323,keep,real foreign object
+30,6355225748c8caa2_020345,0,29,keep,real foreign object
+31,714373a489b0236e_020459,0,321,keep,real foreign object
+32,7726d79e7be84c7c_020512,0,66,keep,real foreign object
+33,7aacc349398c47c5_020550,0,50,drop_box,person
+34,7e94928ed040d8f3_020582,0,366,keep,real foreign object
+35,801bfd7abdc5c96e_020598,0,135,keep,real foreign object
+36,80be10cf5dfd0e62_020605,0,109,keep,real foreign object
+37,83f87c34d914b3d6_020631,0,315,keep,real foreign object
+38,86787e65ee5f3ae2_020646,0,95,keep,real foreign object
+39,8f17910cb63c4a3c_020724,0,82,keep,real foreign object
+40,8f7285eccfbfa6d9_020728,0,488,keep,uncertain - kept
+41,97ecc738679f6dcb_020809,0,87,keep,uncertain - kept
+42,9c516feababac679_020847,0,103,keep,real foreign object
+43,9f1505266fd5855c_020878,0,28,keep,real foreign object
+44,9f1505266fd5855c_020878,1,98,keep,real foreign object
+45,a590f1d96b604d89_020946,0,227,keep,uncertain - kept
+46,a590f1d96b604d89_020946,1,210,keep,uncertain - kept
+47,a7383093e4028280_020964,0,47,keep,real foreign object
+48,a7383093e4028280_020964,1,40,keep,real foreign object
+49,a7383093e4028280_020964,2,80,keep,real foreign object
+50,b131f1502dc936a9_021049,0,65,keep,real foreign object
+51,b663da7bb7afb0e8_021095,0,177,keep,uncertain - kept
+52,b663da7bb7afb0e8_021095,1,228,keep,uncertain - kept
+53,b6fc88d3674c0ff6_021101,0,196,keep,real foreign object
+54,bac39fdcd316bc54_021132,0,159,keep,real foreign object
+55,bac39fdcd316bc54_021132,1,66,keep,real foreign object
+56,be8aecafcba9851c_021158,0,53,drop_box,person
+57,be8aecafcba9851c_021158,1,48,drop_box,person
+58,be8aecafcba9851c_021158,2,40,drop_box,person
+59,bf82475b4e66846b_021165,0,131,keep,real foreign object
+60,c15d6461eda30f76_021187,0,230,keep,real foreign object
+61,c15d6461eda30f76_021187,1,224,keep,real foreign object
+62,c15d6461eda30f76_021187,2,240,keep,real foreign object
+63,c3efda7705ee92a4_021212,0,110,drop_box,person
+64,c3efda7705ee92a4_021212,1,116,drop_box,no foreign object (vegetation/equipment/empty)
+65,c3efda7705ee92a4_021212,2,95,drop_box,no foreign object (vegetation/equipment/empty)
+66,c3efda7705ee92a4_021212,3,112,drop_box,person
+67,c3efda7705ee92a4_021212,4,94,drop_box,person
+68,c3efda7705ee92a4_021212,5,82,drop_box,person
+69,c55fb4fa376ee263_021223,0,112,drop_box,no foreign object (vegetation/equipment/empty)
+70,cf401cbea2058d40_021316,0,177,drop_box,no foreign object (vegetation/equipment/empty)
+71,d0db6568509f9f86_021331,0,320,keep,real foreign object
+72,d61ea73d2fa125eb_021376,0,316,keep,real foreign object
+73,d787af8a7fcd6e5a_021388,0,534,keep,uncertain - kept
+74,d86b61323813c071_021396,0,137,drop_box,person
+75,d98b224a2ab85e25_021404,0,273,drop_box,no foreign object (vegetation/equipment/empty)
+76,de6a2a945f06d4b7_021449,0,39,drop_box,person
+77,de6a2a945f06d4b7_021449,1,45,drop_box,person
+78,de6a2a945f06d4b7_021449,2,42,drop_box,person
+79,e1844f9f3876eb2a_021485,0,61,keep,real foreign object
+80,e8c1cdb38699b0bd_021552,0,140,keep,real foreign object
+81,ebb867289b514049_021583,0,127,keep,real foreign object
+82,ebd09f47b6a86c18_021584,0,271,drop_box,no foreign object (vegetation/equipment/empty)
+83,ec08d3f2bb3b6310_021588,0,73,keep,real foreign object
+84,eccf468e44a10dcc_021595,0,41,keep,real foreign object

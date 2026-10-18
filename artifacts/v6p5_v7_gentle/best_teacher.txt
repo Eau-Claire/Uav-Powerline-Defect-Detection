@@ -1,0 +1,1 @@
+v5_orig	/root/projects/Uav-Powerline-Defect-Detection/artifacts/v6p5_v6_teachers/init/teacher_v5.pt

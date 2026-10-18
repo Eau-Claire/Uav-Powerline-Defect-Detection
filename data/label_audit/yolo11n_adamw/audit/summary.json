@@ -1,0 +1,104 @@
+{
+  "train": {
+    "counts": {
+      "class_flip:insulator": 2,
+      "class_flip:insulator_broken": 6,
+      "class_flip:insulator_flashover": 1,
+      "gt_boxes": 25807,
+      "images": 18334,
+      "loose_box:bird_nest": 762,
+      "loose_box:broken_strand": 87,
+      "loose_box:foreign_object": 85,
+      "loose_box:insulator": 669,
+      "loose_box:insulator_broken": 510,
+      "loose_box:insulator_flashover": 110,
+      "missing:bird_nest": 223,
+      "missing:broken_strand": 6,
+      "missing:foreign_object": 48,
+      "missing:insulator": 200,
+      "missing:insulator_broken": 99,
+      "missing:insulator_flashover": 21,
+      "tiny_gt:bird_nest": 17,
+      "tiny_gt:broken_strand": 1,
+      "tiny_gt:foreign_object": 34,
+      "tiny_gt:insulator": 11,
+      "tiny_gt:insulator_broken": 11,
+      "tiny_gt:insulator_flashover": 3,
+      "unseen_gt:bird_nest": 399,
+      "unseen_gt:broken_strand": 274,
+      "unseen_gt:foreign_object": 378,
+      "unseen_gt:insulator": 137,
+      "unseen_gt:insulator_broken": 537,
+      "unseen_gt:insulator_flashover": 138
+    },
+    "images_with_issue": {
+      "loose_box": 2037,
+      "missing": 523,
+      "unseen_gt": 1691,
+      "tiny_gt": 72,
+      "class_flip": 8
+    },
+    "matched_iou_median": {
+      "bird_nest": 0.823,
+      "insulator_broken": 0.785,
+      "insulator_flashover": 0.741,
+      "insulator": 0.857,
+      "broken_strand": 0.751,
+      "foreign_object": 0.835
+    },
+    "matched_iou_lt075_frac": {
+      "bird_nest": 0.273,
+      "insulator_broken": 0.389,
+      "insulator_flashover": 0.521,
+      "insulator": 0.223,
+      "broken_strand": 0.496,
+      "foreign_object": 0.249
+    }
+  },
+  "val": {
+    "counts": {
+      "gt_boxes": 2903,
+      "images": 2272,
+      "loose_box:bird_nest": 128,
+      "loose_box:broken_strand": 16,
+      "loose_box:foreign_object": 6,
+      "loose_box:insulator": 55,
+      "loose_box:insulator_broken": 81,
+      "loose_box:insulator_flashover": 23,
+      "missing:bird_nest": 40,
+      "missing:foreign_object": 7,
+      "missing:insulator": 15,
+      "missing:insulator_broken": 16,
+      "tiny_gt:bird_nest": 1,
+      "tiny_gt:insulator_broken": 1,
+      "unseen_gt:bird_nest": 56,
+      "unseen_gt:broken_strand": 39,
+      "unseen_gt:foreign_object": 19,
+      "unseen_gt:insulator": 16,
+      "unseen_gt:insulator_broken": 93,
+      "unseen_gt:insulator_flashover": 17
+    },
+    "images_with_issue": {
+      "unseen_gt": 216,
+      "loose_box": 286,
+      "missing": 74,
+      "tiny_gt": 2
+    },
+    "matched_iou_median": {
+      "broken_strand": 0.739,
+      "bird_nest": 0.792,
+      "insulator": 0.858,
+      "insulator_flashover": 0.696,
+      "insulator_broken": 0.763,
+      "foreign_object": 0.829
+    },
+    "matched_iou_lt075_frac": {
+      "broken_strand": 0.529,
+      "bird_nest": 0.359,
+      "insulator": 0.219,
+      "insulator_flashover": 0.676,
+      "insulator_broken": 0.461,
+      "foreign_object": 0.222
+    }
+  }
+}

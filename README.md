@@ -175,6 +175,16 @@ Only the ordered steps needed to train on the newest dataset. Each notebook star
 | 05 | `05_train_yolo11n_640_ablation` | `v6p5_compose_<12hex>` → `checkpoints/v6p5_data_ablation/v6p5_y11n_ablation_<12hex>/` |
 | 06 | `06_evaluate_vs_v6p2e_baseline` | run report → comparison CSV next to the run on Camber |
 
+**V6.5 Raspberry Pi students on any GPU (local or rented) — `legacy/notebooks/v6p5/v6p5-20_20261013-v5-students-n-s-anywhere.ipynb`:**
+`git pull`, put `CAMBER_API_KEY=...` in `.env`, install the Camber CLI and `pip install ultralytics==8.4.172 ncnn pnnx pandas`
+(+ torch with CUDA), then **Run All** (over SSH: run it with `jupyter nbconvert --to notebook --execute
+--ExecutePreprocessor.timeout=-1 --output run <notebook>` inside `tmux`). It downloads and verifies the `v6p5_v5` dataset
+(sha256) and the v5 teacher/student from Camber, picks batch / workers / cache from VRAM, OS and free disk, distills
+YOLO26n (fine-tune from v5) and YOLO26s (from COCO) from the v5 teacher, exports NCNN for the Pi, evaluates (val +
+val_clean, mAP50 / mAP50-95 per class, MEAN_5) and uploads to `checkpoints/<RUN_NAME>_<date>/` on Camber. Interrupted?
+Run it again: finished stages are skipped, the running one resumes. Smoke test first with `DRY_RUN=1`.
+Pi speed for n vs s: `artifacts/pi_bench_v5/` (models on Camber, see its README). Dataset tar: `scripts/package_dataset.py`.
+
 YOLO11m@1024 / RT-DETR notebooks are added only after canonical V6.5 is frozen
 (configs already exist: `configs/yolo11m_1024.yaml`, `configs/rtdetr_b0.yaml`).
 Old Kaggle notebooks: `legacy/notebooks/` (renamed `<version>-<NN>_<date>_<content>[__FINAL|__EXECUTED]`, see its `INDEX.csv`).

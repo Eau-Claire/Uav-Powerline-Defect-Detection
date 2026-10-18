@@ -1,0 +1,30 @@
+{
+ "test_fo": {
+  "images": 145,
+  "fo_boxes": 150,
+  "seed": 20261016,
+  "clusters_with_fo": 620,
+  "hamming": 6
+ },
+ "labels_sha256": "75e1d592111590494662c742bde02097b4a0be2a18863eb65e59167436ee4ac0"
+}
+{
+ "train": {
+  "box:bird_nest": 6070,
+  "box:broken_strand": 1897,
+  "box:foreign_object": 574,
+  "box:insulator": 15501,
+  "box:insulator_broken": 6171,
+  "box:insulator_flashover": 1223,
+  "box:person": 292,
+  "images": 17417
+ },
+ "test_fo": {
+  "box:bird_nest": 1,
+  "box:foreign_object": 150,
+  "box:insulator": 52,
+  "box:insulator_broken": 1,
+  "box:person": 11,
+  "images": 145
+ }
+}
