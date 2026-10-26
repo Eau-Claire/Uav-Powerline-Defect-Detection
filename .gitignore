@@ -62,3 +62,7 @@ artifacts/diffusion_*_proto/labels/
 artifacts/diffusion_fo_proto/tile_*.jpg
 artifacts/diffusion_fo_proto/soup/
 artifacts/**/*.cache
+
+benchmakring_transmission_line_defect_model/data
+benchmakring_transmission_line_defect_model/runs
+*.pth

@@ -1,0 +1,11 @@
+path: D:/Data-Centric-UAV-Powerline-Defect-Detection/benchmakring_transmission_line_defect_model/data/raw_combined
+train: images/train
+val: images/val
+test: images/val_clean
+names:
+  0: insulator
+  1: insulator_broken
+  2: insulator_flashover
+  3: bird_nest
+  4: foreign_object
+  5: broken_strand

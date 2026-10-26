@@ -1,0 +1,5 @@
+streamlit>=1.37
+ultralytics>=8.3
+opencv-python>=4.9
+python-dotenv>=1.0
+pillow>=10.0
