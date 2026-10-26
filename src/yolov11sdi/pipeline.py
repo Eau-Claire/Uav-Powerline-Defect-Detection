@@ -294,9 +294,18 @@ def _direct_stage(ctx: Context, stage: str, keys: list[str]) -> StageOutcome:
         extra_outputs, summary = [], {}
         if stage == "mpcd":
             L.mpcd_root.mkdir(parents=True, exist_ok=True)
-            src_dir, zsha = mpcd.download_and_extract(cfg, L.mpcd_root)
-            _provenance(L.mpcd_root, "MPCD.zip", zsha)
-            records, source, manifest_path = mpcd.parse_mpcd(cfg, src_dir), mpcd.SOURCE, L.mpcd_manifest
+            source, manifest_path = mpcd.SOURCE, L.mpcd_manifest
+            try:
+                src_dir, zsha = mpcd.download_and_extract(cfg, L.mpcd_root)
+            except Exception as e:  # noqa: BLE001
+                # The public Drive file was removed (2026-10); an unavailable source must not
+                # block the other sources. Recorded in the summary/freeze as unavailable.
+                ctx.log.warning("MPCD unavailable, continuing without it: %r", e)
+                src_dir, records = L.mpcd_root / "MPCD", []
+                summary["availability"] = {"status": "unavailable", "reason": repr(e)[:500]}
+            else:
+                _provenance(L.mpcd_root, "MPCD.zip", zsha)
+                records = mpcd.parse_mpcd(cfg, src_dir)
         else:
             L.pe_root.mkdir(parents=True, exist_ok=True)
             src_dir, zsha = power_equipment.download_and_extract(cfg, L.pe_root, ctx.paths.cache / "hf_power_equipment")

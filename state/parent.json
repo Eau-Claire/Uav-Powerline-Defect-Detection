@@ -1,0 +1,29 @@
+{
+  "stage": "parent",
+  "status": "failed",
+  "started_at": "2026-10-09T02:17:10+00:00",
+  "updated_at": "2026-10-09T02:18:43+00:00",
+  "completed_at": null,
+  "config_hash": "6ad10a91604d2312a3c18dadebd468bf59baff44b58c5a6a1009c084887c5008",
+  "git_commit": "bef729fd4799dbf4fc1ae2d0a1fb5b13dce0e7e8+dirty",
+  "host": "ACFC-L-InternIT",
+  "environment": "local",
+  "inputs": [
+    {
+      "name": "v6p2e_tag",
+      "path": "stash://bunpmc/projects/yolov11sdi/datasets/v6p2e/v6p2e_23562a45b343",
+      "sha256": "v6p2e_23562a45b343"
+    }
+  ],
+  "outputs": [],
+  "progress": {
+    "current": 1200,
+    "total": 1200,
+    "step": "background_pool"
+  },
+  "summary": {
+    "stage_step": "background_pool"
+  },
+  "error": "yolov11sdi.camber.CamberError: camber stash cp stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/parent_cache/v6p2e_23562a45b343/parent_val_test_phash.csv.gz /home/intern/yolov11sdi_data/parent/.parent_val_test_phash.csv.gz.part failed (1)\nSTDOUT:\nPerform copying stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/parent_cache/v6p2e_23562a45b343/parent_val_test_phash.csv.gz to /home/intern/yolov11sdi_data/parent/.parent_val_test_phash.csv.gz.part\nsource path does not exist: stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/parent_cache/v6p2e_23562a45b343/parent_val_test_phash.csv.gz\n\nSTDERR:\nError: source path does not exist: stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/parent_cache/v6p2e_23562a45b343/parent_val_test_phash.csv.gz\nUsage:\n  camber stash cp [flags]\n\nFlags:\n      --exclude stringArray   exclude local paths matching a pattern when recursively uploading a folder to Stash; can be repeated\n  -h, --help                  help for cp\n  -r, --recursive             copy directory recursively\n      --use-gitignore         apply .gitignore patterns when recursively uploading a local folder to Stash\n\nGlobal Flags:\n      --api-key string   API key for authentication (also set via CAMBER_API_KEY env var)",
+  "history": []
+}

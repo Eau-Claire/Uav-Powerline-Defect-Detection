@@ -66,3 +66,7 @@ artifacts/**/*.cache
 benchmakring_transmission_line_defect_model/data
 benchmakring_transmission_line_defect_model/runs
 *.pth
+# Local training datasets and transfer bundles (GBs; live on Camber, see artifacts/v6p5_transfer/TRANSFER.md)
+artifacts/v6p5_train_local/*/dataset/
+artifacts/v6p5_transfer/*.tar
+artifacts/v6p5_transfer/*.tar.gz

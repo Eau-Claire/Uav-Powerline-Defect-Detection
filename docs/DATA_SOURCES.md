@@ -18,8 +18,17 @@ rather than guessing.
 | **InsuFault** | V6.2E (train-only) | insulator, damaged, flashover | "InsuFault-Net: A Deep Learning-Based Insulator Defect Detection Algorithm for Transmission Lines" (repository) | official repository — `TODO` |
 | **FOTL / EFOD_Drone** | V6.2E (FOTL overlay `ee2d3c4497fd`) | bird_nest, foreign_object (kite, balloon, plastic) | Gao et al., "YOLOv11-Based UAV Foreign Object Detection for Power Transmission Lines", MDPI, 2025 — DOI `TODO` | MDPI article supplementary / `TODO` |
 | **Open Images V7** | V6.5 | foreign_object **appearance only**: Balloon, Kite, Plastic bag, Bird, Person crops (TRAIN, detections + local GrabCut) composited onto power-line TRAIN backgrounds | Kuznetsova et al., "The Open Images Dataset V4", *IJCV* 2020. [arXiv:1811.00982](https://arxiv.org/abs/1811.00982) | [storage.googleapis.com/openimages/web](https://storage.googleapis.com/openimages/web/index.html) |
-| **MPCD** (Merged Public Power Cable Dataset) | V6.5 | broken_strand (fractured strands / discontinuities); 1,871 images, 1,906 broken boxes, 2,501 cable masks | Benelmostafa & Medromi, "PowerLine-MTYOLO: A Multitask YOLO Model for Simultaneous Cable Segmentation and Broken Strand Detection", *Drones* 9(7):505, 2025. [doi:10.3390/drones9070505](https://doi.org/10.3390/drones9070505) | [github.com/phd-benel/PowerLine-MTYOLO](https://github.com/phd-benel/PowerLine-MTYOLO) · Google Drive id `1KyciMmwL2_p_-mwckHFqG5fkBA1jzATv` |
+| **MPCD** (Merged Public Power Cable Dataset) | V6.5 (**source unavailable since 2026-10**: public Drive file removed; stage `mpcd` records `availability: unavailable` and continues) | broken_strand (fractured strands / discontinuities); 1,871 images, 1,906 broken boxes, 2,501 cable masks | Benelmostafa & Medromi, "PowerLine-MTYOLO: A Multitask YOLO Model for Simultaneous Cable Segmentation and Broken Strand Detection", *Drones* 9(7):505, 2025. [doi:10.3390/drones9070505](https://doi.org/10.3390/drones9070505) | [github.com/phd-benel/PowerLine-MTYOLO](https://github.com/phd-benel/PowerLine-MTYOLO) · Google Drive id `1KyciMmwL2_p_-mwckHFqG5fkBA1jzATv` |
 | **Power Equipment Image Dataset** | V6.5 | transmission-line subset: `dx_dg→broken_strand`, `yw→foreign_object`, `nw→bird_nest`; `dx_sg` review-only | Xiong et al., "Object recognition for power equipment via human-level concept learning", *IET GTD* 15(10):1578–1587, 2021. [doi:10.1049/gtd2.12088](https://ietresearch.onlinelibrary.wiley.com/doi/10.1049/gtd2.12088) | [github.com/xiongsiheng/Power-equipment-image-dataset](https://github.com/xiongsiheng/Power-equipment-image-dataset) · HF `sxiong/Power-equipment-image-dataset` |
+| **Roboflow transmission-detection v1** | V6.5 local ablation (`v6p5-11`) | `cable_defectueux→broken_strand`, `rubbish→foreign_object`; deduped vs all V6.2E; its non-train split = `external_eval` | — (Roboflow Universe, CC BY 4.0) | Roboflow Universe — `TODO` link |
+
+Notes:
+* Power Equipment was **dropped from the Roboflow ablation** (`v6p5-11`): ~86% of its images are already in V6.2E.
+  Some of its XMLs carry `<width>0</width>`; the parser now takes the size from the image header.
+* From dataset `v6p5_v4` on, a 7th class `person` (id 6) is labelled in the internal data (no new source):
+  lineworkers were being predicted as foreign_object. The 2×6 benchmark keeps the 6-class contract.
+* broken_strand domain split (v8 study): 77% of strand boxes are square phone/ground images; only ~360 boxes come
+  from drone images, where AP50 is much lower (0.57 vs 0.83). New strand data should be **real drone images**.
 
 ## Studied, not merged
 

@@ -87,13 +87,15 @@ def parse_power_equipment(cfg, pe_dir: Path) -> tuple[list[dict], list[dict]]:
         if cand is None or not cand.exists():
             continue
         size = root.find("size")
-        if size is None:
+        W0 = H0 = 0
+        if size is not None:
+            W0, H0 = int(float(size.findtext("width") or 0)), int(float(size.findtext("height") or 0))
+        if W0 <= 0 or H0 <= 0:
+            # Some source XMLs carry <width>0</width>; the image header is authoritative.
             from PIL import Image
 
             with Image.open(cand) as im:
                 W0, H0 = im.size
-        else:
-            W0, H0 = int(float(size.findtext("width"))), int(float(size.findtext("height")))
         rel_image = cand.relative_to(pe_dir).as_posix()
 
         mapped = []

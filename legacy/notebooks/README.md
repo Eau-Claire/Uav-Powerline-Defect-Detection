@@ -25,6 +25,7 @@
 | `v6p4/v6p4-06_..._camber-bootstrap-post-clean-audit__EXECUTED` | V6.4 post-clean RAW VAL results (mAP50≈0.839, 50:95≈0.472, per class) |
 | `v6p5/v6p5-07_..._yolo11n-640-ablation-train-launcher__EXECUTED` | last V6.5 train attempt: `Compose candidates: []` → blocked |
 | `v6p5/v6p5-10_..._stage-compose-recovery-disksafe__FINAL` | **authoritative V6.5 settings** copied into `configs/*.yaml` |
+| `v6p5/v6p5-11_..._yolo11n-640-roboflow-ablation-train__FINAL` | local WSL ablation: + Roboflow transmission-detection (strand/foreign), deduped vs all V6.2E; PowerEquipment was dropped because ~86% of it is already in V6.2E |
 
 Two Kaggle downloads had misleading names and were re-filed by content:
 `v6p4-post-clean-dataset-gate.ipynb` → `v6p4-06…__EXECUTED`;

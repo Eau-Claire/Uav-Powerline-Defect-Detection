@@ -1,5 +1,10 @@
 # Migration plan: Kaggle notebooks → local-first resumable project
 
+> **Historical document (2026-10-07).** Section 2 describes the state at migration time. For the
+> current state see the README ("Current status") and `docs/SESSION_2026-10-15_v6p5_plateau.md`.
+> Later change: the `mpcd` stage no longer fails when the MPCD download is unavailable (recorded as
+> `availability: unavailable` in its summary).
+
 Date: 2026-10-07. Source of truth for settings: the last Kaggle notebook
 `KAGGLE_V6P5_STAGE_COMPOSE_RECOVERY_DISKSAFE.ipynb` (copied to
 `legacy/notebooks/v6p5/`) and `KAGGLE_V6P5_CAMBER_YOLO11N_640_DATA_ABLATION_TRAIN.ipynb`.

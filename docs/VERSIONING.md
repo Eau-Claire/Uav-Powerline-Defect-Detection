@@ -22,6 +22,24 @@ be traced back to exact code, config, data and checkpoint.
 
 Same content ⇒ same tag on any machine (local / Kaggle / Camber). Never timestamps.
 
+### V6.5 dataset line (built by scripts, not by pipeline stages)
+
+After the Roboflow ablation, V6.5 data was iterated with standalone scripts. These are sequential
+names, not content hashes; each build writes a `labels_sha256` / build log as its identity.
+
+| Dataset | Built by | Change vs parent |
+|---|---|---|
+| `v6p5_v2` … `v6p5_v4` | notebooks `v6p5-16..18` | 6-class v3 with SAM-tightened boxes; v4 adds `person` |
+| `v6p5_v5` | notebook `v6p5-19` | 7 classes, insulator filled — base of `v5_orig` / `n_v5` |
+| `v6p5_v6` | `scripts/build_v6.py` | foreign_object reviewed (`data/label_audit/fo_review_v6`) |
+| `v6p5_v7` | `scripts/build_v7.py` | automatic box fixes from teacher (no measurable effect) |
+| `v6p5_v8` | `scripts/build_v8.py` | rule L: −170 train images near-duplicating val; rule M: `val_clean_v8` fixes |
+| `v6p5_v9` | `scripts/build_v9.py` | rule N: cluster-aware `test_fo` split (145 img / 150 FO boxes); see `artifacts/build_v9.log` |
+
+Rule: a model may only be scored on a split it has not seen. v5/v6/v8-trained models have seen
+`test_fo`; models trained before v8 must be scored on `val_clean_v8` minus `leaked_val.txt`.
+Datasets live on Camber (`datasets/v6p5_v*`); package with `scripts/package_dataset.py` (sha256 recorded).
+
 ## 3. Experiment ID (human readable, in config)
 
 ```
@@ -34,6 +52,11 @@ v6p5c-b0-rtdetr-r50-640         StructDETR B0 baseline (future); later b1/b2/b3
 `v6p5` = candidate/ablation data, `v6p5c` = canonical frozen V6.5.
 A new ablation (e.g. foreign-only sources) = new config with `abl02`; never
 reuse an ID for a different setup.
+
+Script/notebook experiments after `v6p5-11` are identified by their notebook number
+(`v6p5-NN`, see `legacy/notebooks/INDEX.csv`) and model names such as `v5_orig`, `n_v5`, `soup_g_v6`;
+results sit in `artifacts/<experiment>/`. The 2×6 benchmark names runs `<raw|curated>_<model>`
+(e.g. `curated_yolo26n`) under `benchmakring_transmission_line_defect_model/runs/`.
 
 ## 4. Run directory
 
