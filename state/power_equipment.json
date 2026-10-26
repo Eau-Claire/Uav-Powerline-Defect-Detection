@@ -1,0 +1,46 @@
+{
+  "stage": "power_equipment",
+  "status": "complete",
+  "started_at": "2026-10-09T02:16:21+00:00",
+  "updated_at": "2026-10-09T02:16:36+00:00",
+  "completed_at": "2026-10-09T02:16:36+00:00",
+  "config_hash": "574044de597c097d9281528c66ee5e843e750f663a4b418832ace25f796fb517",
+  "git_commit": "bef729fd4799dbf4fc1ae2d0a1fb5b13dce0e7e8+dirty",
+  "host": "ACFC-L-InternIT",
+  "environment": "local",
+  "inputs": [],
+  "outputs": [
+    {
+      "name": "direct_manifest",
+      "path": "artifacts/manifests/power_equipment_direct_manifest.csv",
+      "sha256": "9910b5dba4c11b92f4a0faee28e1ffb725eae76e39070b14a6e64c048b21c20b",
+      "size": 364639,
+      "remote": null
+    },
+    {
+      "name": "review_only_dx_sg",
+      "path": "artifacts/manifests/power_equipment_review_only_dx_sg.csv",
+      "sha256": "987aeeabf1c395793c5e58372be66c52a02d76d5e7eeaa62ecf7533ce7d0d07d",
+      "size": 97915,
+      "remote": null
+    }
+  ],
+  "progress": {},
+  "summary": {
+    "images": 901,
+    "train": 722,
+    "external_eval": 179,
+    "dx_sg_review_only_boxes": 350,
+    "images_by_split_class": {
+      "external_eval/bird_nest": 47,
+      "external_eval/broken_strand": 98,
+      "external_eval/foreign_object": 34,
+      "train/bird_nest": 186,
+      "train/broken_strand": 385,
+      "train/foreign_object": 151
+    },
+    "archive_sha256": "4dfb88386d7f460347be6c86241cbd16af322dc47a3ad0099c3e90f2c41bb8a3"
+  },
+  "error": null,
+  "history": []
+}

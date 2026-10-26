@@ -26,6 +26,7 @@ stage = [
 ]
 # GPU training. Pinned to the version used by the Kaggle/Camber workers.
 train = ["ultralytics==8.4.172"]
+rtdetr-eval = ["transformers==5.20.2"]
 notebook = ["jupyterlab>=4", "ipykernel", "matplotlib"]
 dev = ["pytest>=8"]
 

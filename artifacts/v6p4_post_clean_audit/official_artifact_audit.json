@@ -1,0 +1,34 @@
+{
+  "v6p4_data_root": "stash://bunpmc/projects/yolov11m/datasets/v6p4_clean/v6p4_clean_official",
+  "v6p4_checkpoint_root": "stash://bunpmc/projects/yolov11m/checkpoints/v6p4_clean/v6p4_clean_official/yolo11m_v6p4_clean_official_best.pt",
+  "checkpoint_sha256": "a6e34cdbab6e8dbf8565c520dcc7bcc835c11ecca0009d7c5cd34d0abff7ca52",
+  "checkpoint_copies_identical": true,
+  "official_yaml_path": "/tmp/v6p4_clean_runtime",
+  "official_freeze": {
+    "schema_version": "v6p4-data-centric-freeze-clean-1",
+    "created_utc": "2026-10-07T09:45:54.668633+00:00",
+    "dataset_name": "V6.4-clean",
+    "final_tag": "v6p4_clean_official",
+    "parent_tag": "v6p2e_23562a45b343",
+    "split_counts": {
+      "train": 17483,
+      "val": 2272,
+      "test": 2012
+    },
+    "label_modifications": {
+      "missing_gt_added": 79,
+      "human_verified_bird_nests": 79,
+      "false_alarm_excluded": "Case 3",
+      "broken_strand_policy": "Defect-Level Cluster"
+    },
+    "artifacts": {
+      "labels_zip": "v6p4_clean_reconciled_labels.zip",
+      "reports_zip": "v6p4_clean_reports.zip",
+      "weights": "yolo11m_v6p4_clean_official_best.pt"
+    }
+  },
+  "labels_zip_txt_count": 113,
+  "reports_zip_member_count": 22,
+  "exact_v6p4_train_runtime_packaged": false,
+  "reason": "Current official bundle contains checkpoint/metadata/label archive/reports, but not the image runtime nor an exact replay package for all training mutations (79 missing-GT edits + 600 hard crops)."
+}

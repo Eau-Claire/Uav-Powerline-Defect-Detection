@@ -1,0 +1,35 @@
+{
+  "stage": "mpcd",
+  "status": "complete",
+  "started_at": "2026-10-09T02:16:14+00:00",
+  "updated_at": "2026-10-09T02:16:16+00:00",
+  "completed_at": "2026-10-09T02:16:16+00:00",
+  "config_hash": "407bce1d2106a510b8406cb18e75518e590b7cc471e96145c167b46e08ef3836",
+  "git_commit": "bef729fd4799dbf4fc1ae2d0a1fb5b13dce0e7e8+dirty",
+  "host": "ACFC-L-InternIT",
+  "environment": "local",
+  "inputs": [],
+  "outputs": [
+    {
+      "name": "direct_manifest",
+      "path": "artifacts/manifests/mpcd_direct_manifest.csv",
+      "sha256": "b5d366ce4ef6e9bd2c80ad106e3336677029ef144ffda2bb20a9c235b7ae39bd",
+      "size": 150,
+      "remote": null
+    }
+  ],
+  "progress": {},
+  "summary": {
+    "images": 0,
+    "train": 0,
+    "external_eval": 0,
+    "availability": {
+      "status": "unavailable",
+      "reason": "FileURLRetrievalError(\"Failed to retrieve file url:\\n\\n\\tCannot retrieve the public link of the file. You may need to change\\n\\tthe permission to 'Anyone with the link', or have had many accesses.\\n\\tCheck FAQ in https://github.com/wkentaro/gdown?tab=readme-ov-file#faq.\\n\\nYou may still be able to access the file from the browser:\\n\\n\\thttps://drive.google.com/uc?id=1KyciMmwL2_p_-mwckHFqG5fkBA1jzATv\\n\\nbut Gdown can't. Please check connections and permissions.\")"
+    },
+    "images_by_split_class": {},
+    "archive_sha256": null
+  },
+  "error": null,
+  "history": []
+}

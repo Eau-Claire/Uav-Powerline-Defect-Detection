@@ -217,7 +217,13 @@ def main() -> int:
             shift = 0 if a.keep_insulator else 1
             lines = [f"{c - shift} " + " ".join(f"{v:.6f}" for v in np.clip(b, 0, 1)) for c, b in zip(gc[keep], gb[keep])]
             (a.out / "labels" / out_split / (img.stem + ".txt")).write_text("\n".join(lines) + ("\n" if lines else ""))
-            os.symlink(img.resolve(), a.out / "images" / out_split / name)
+            try:
+                os.link(img.resolve(), a.out / "images" / out_split / name)
+            except OSError:
+                try:
+                    os.symlink(img.resolve(), a.out / "images" / out_split / name)
+                except OSError:
+                    shutil.copy2(img.resolve(), a.out / "images" / out_split / name)
             stats[out_split]["images"] += 1
             for c in gc[keep]:
                 stats[out_split][f"box:{(NAMES6 + ['person'])[c]}"] += 1

@@ -1,0 +1,161 @@
+{
+  "experiment": "V6.2E + V6.5 synthetic-only data ablation",
+  "direct_sources": [
+    {
+      "source": "MPCD",
+      "train_images": 0,
+      "availability": {
+        "status": "reference_only",
+        "used_for_training": false,
+        "reason": "RuntimeError('MPCD Google Drive download unavailable: FileURLRetrievalError(\"Failed to retrieve file url:\\\\n\\\\n\\\\tCannot retrieve the public link of the file. You may need to change\\\\n\\\\tthe permission to \\'Anyone with the link\\', or have had many accesses.\\\\n\\\\tCheck FAQ in https://github.com/wkentaro/gdown?tab=readme-ov-file#faq.\\\\n\\\\nYou may still be able to access the file from the browser:\\\\n\\\\n\\\\thttps://drive.google.com/uc?id=1KyciMmwL2_p_-mwckHFqG5fkBA1jzATv\\\\n\\\\nbut Gdown can\\'t. Please check connections and permissions.\")')",
+        "reference_repo": "phd-benel/PowerLine-MTYOLO",
+        "reference_role": "broken_strand dataset/method reference"
+      }
+    },
+    {
+      "source": "PowerEquipment",
+      "train_images": 0,
+      "availability": {
+        "status": "reference_only",
+        "used_for_training": false,
+        "reason": "ZeroDivisionError('float division by zero')",
+        "reference_role": "dataset/method reference"
+      }
+    }
+  ],
+  "compose_tag": "v6p5_compose_4b9a452e24e2",
+  "run_id": "20261008T181605Z_6b0eac5f",
+  "seed": 20261007,
+  "batch": 8,
+  "run_dir": "/mnt/c/Users/intern/Documents/SEP490/train/artifacts/v6p5_train_local/20261008T181605Z_6b0eac5f/runs/yolo11n_v6p5_data_ablation_640",
+  "model": "YOLO11n",
+  "imgsz": 640,
+  "epochs": 50,
+  "base_train_images": 17483,
+  "added_direct_train_images": 0,
+  "added_synthetic_train_images": 500,
+  "final_train_images": 17983,
+  "val_images": 2272,
+  "mAP50": 0.7692368219934579,
+  "mAP50_95": 0.41731353298261287,
+  "gap": 0.351923289010845,
+  "precision": 0.8067807355336116,
+  "recall": 0.6938308285599392,
+  "per_class": [
+    {
+      "cid": 0,
+      "class": "insulator",
+      "AP50": 0.9478742325522255,
+      "AP50_95": 0.6499715757207163,
+      "gap": 0.2979026568315092,
+      "AP75": 0.7073970975104228,
+      "AP90": 0.22929099894047916,
+      "AP95": 0.029247931101499598,
+      "delta_AP50_vs_v6p2e": 0.013874232552225418,
+      "delta_AP50_95_vs_v6p2e": 0.011971575720716277
+    },
+    {
+      "cid": 1,
+      "class": "insulator_broken",
+      "AP50": 0.7877934183137998,
+      "AP50_95": 0.40330702159158544,
+      "gap": 0.38448639672221435,
+      "AP75": 0.36545096909384156,
+      "AP90": 0.01722462063851259,
+      "AP95": 0.00040540540540540544,
+      "delta_AP50_vs_v6p2e": -0.012206581686200257,
+      "delta_AP50_95_vs_v6p2e": -0.003692978408414538
+    },
+    {
+      "cid": 2,
+      "class": "insulator_flashover",
+      "AP50": 0.7506493578770213,
+      "AP50_95": 0.30868414263113186,
+      "gap": 0.4419652152458894,
+      "AP75": 0.17905099706537952,
+      "AP90": 0.004594260409477801,
+      "AP95": 0.0,
+      "delta_AP50_vs_v6p2e": -0.004350642122978754,
+      "delta_AP50_95_vs_v6p2e": -0.01731585736886815
+    },
+    {
+      "cid": 3,
+      "class": "bird_nest",
+      "AP50": 0.8357896556295914,
+      "AP50_95": 0.47352955720281187,
+      "gap": 0.36226009842677953,
+      "AP75": 0.5034477743248714,
+      "AP90": 0.030893756136094897,
+      "AP95": 0.001294930875576037,
+      "delta_AP50_vs_v6p2e": 0.004789655629591438,
+      "delta_AP50_95_vs_v6p2e": 0.018529557202811853
+    },
+    {
+      "cid": 4,
+      "class": "foreign_object",
+      "AP50": 0.5566868919644778,
+      "AP50_95": 0.31748867208934783,
+      "gap": 0.23919821987513,
+      "AP75": 0.28034400850276064,
+      "AP90": 0.11281786394137838,
+      "AP95": 0.015,
+      "delta_AP50_vs_v6p2e": 0.019686891964477815,
+      "delta_AP50_95_vs_v6p2e": 0.02248867208934785
+    },
+    {
+      "cid": 5,
+      "class": "broken_strand",
+      "AP50": 0.7366273756236307,
+      "AP50_95": 0.35090022866008425,
+      "gap": 0.38572714696354643,
+      "AP75": 0.27053851228538445,
+      "AP90": 0.008647952042307495,
+      "AP95": 0.0008333333333333333,
+      "delta_AP50_vs_v6p2e": -0.012372624376369323,
+      "delta_AP50_95_vs_v6p2e": -0.005099771339915737
+    }
+  ],
+  "reference_v6p2e_yolo11n": {
+    "mAP50": 0.768,
+    "mAP50_95": 0.413,
+    "gap": 0.355,
+    "per_class": {
+      "insulator": {
+        "AP50": 0.934,
+        "AP50_95": 0.638
+      },
+      "insulator_broken": {
+        "AP50": 0.8,
+        "AP50_95": 0.407
+      },
+      "insulator_flashover": {
+        "AP50": 0.755,
+        "AP50_95": 0.326
+      },
+      "bird_nest": {
+        "AP50": 0.831,
+        "AP50_95": 0.455
+      },
+      "foreign_object": {
+        "AP50": 0.537,
+        "AP50_95": 0.295
+      },
+      "broken_strand": {
+        "AP50": 0.749,
+        "AP50_95": 0.356
+      }
+    }
+  },
+  "delta_vs_v6p2e": {
+    "mAP50": 0.0012368219934578706,
+    "mAP50_95": 0.004313532982612889,
+    "gap": -0.0030767109891549627
+  },
+  "promotion_gate": {
+    "global_map5095_not_regress_gt_1pt": true,
+    "foreign_AP50_improves_2pt": false,
+    "foreign_AP5095_improves_1pt": true,
+    "strand_AP5095_improves_1pt": false,
+    "candidate_pass": false
+  }
+}

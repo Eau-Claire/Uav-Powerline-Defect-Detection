@@ -1,0 +1,16 @@
+{
+  "compose_tag": "v6p5_compose_4b9a452e24e2",
+  "source_stage_tag": "v6p5_ext_2aa118556a1e",
+  "source_stage_remote": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/v6p5_ext_2aa118556a1e",
+  "synthetic_archive": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/compose_qa/v6p5_compose_4b9a452e24e2/v6p5_compose_4b9a452e24e2_synthetic_approved.tar.gz",
+  "resolved_review_manifest": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/compose_qa/v6p5_compose_4b9a452e24e2/v6p5_compose_4b9a452e24e2.review.resolved.csv",
+  "approved_synthetic_manifest": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/compose_qa/v6p5_compose_4b9a452e24e2/v6p5_compose_4b9a452e24e2.synthetic_manifest.csv",
+  "qa_summary": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/compose_qa/v6p5_compose_4b9a452e24e2/v6p5_compose_4b9a452e24e2.qa_summary.json",
+  "source_stage_freeze": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/v6p5_ext_2aa118556a1e/v6p5_ext_2aa118556a1e.freeze.json",
+  "source_stage_qa": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/v6p5_ext_2aa118556a1e/v6p5_ext_2aa118556a1e_qa.zip",
+  "source_stage_overlay": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/v6p5_ext_2aa118556a1e/v6p5_ext_2aa118556a1e_overlay.tar.gz",
+  "direct_archives": {
+    "mpcd": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/mpcd/mpcd_broken_strand_stage.tar.gz",
+    "power_equipment": "stash://bunpmc/projects/yolov11sdi/datasets/v6p5_external_stage/power_equipment/power_equipment_stage.tar.gz"
+  }
+}

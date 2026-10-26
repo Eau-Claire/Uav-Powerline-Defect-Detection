@@ -1,0 +1,12 @@
+{
+  "tag": "v6p5_y11n_ablation_761a2f41098d",
+  "remote_root": "stash://bunpmc/projects/yolov11sdi/checkpoints/v6p5_data_ablation/v6p5_y11n_ablation_761a2f41098d",
+  "local_run_dir": "/mnt/c/Users/intern/Documents/SEP490/train/artifacts/v6p5_train_local/20261008T181605Z_6b0eac5f/runs/yolo11n_v6p5_data_ablation_640",
+  "promotion_gate": {
+    "global_map5095_not_regress_gt_1pt": true,
+    "foreign_AP50_improves_2pt": false,
+    "foreign_AP5095_improves_1pt": true,
+    "strand_AP5095_improves_1pt": false,
+    "candidate_pass": false
+  }
+}

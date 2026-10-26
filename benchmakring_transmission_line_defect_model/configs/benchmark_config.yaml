@@ -1,0 +1,92 @@
+# ==============================================================================
+# 2x6 Factorial Benchmark Configuration
+# A Data-Centric Benchmark for Multi-Class Power-Line Defect Detection
+# ==============================================================================
+
+project:
+  name: "benchmarking_transmission_line_defect"
+  title: "A Data-Centric Benchmark for Multi-Class Power-Line Defect Detection: Raw vs Curated"
+
+taxonomy:
+  names:
+    0: "insulator"
+    1: "insulator_broken"
+    2: "insulator_flashover"
+    3: "bird_nest"
+    4: "foreign_object"
+    5: "broken_strand"
+
+# Standardized Hyperparameters for Fair Comparison
+training:
+  imgsz: 640
+  epochs: 50
+  seed: 42
+  deterministic: true
+  device: 0               # GPU 0 (RTX 4060)
+  optimizer: "AdamW"      # Standardized optimizer across all models
+  lr0: 0.001
+  lrf: 0.01
+  cos_lr: true
+  warmup_epochs: 3.0
+  weight_decay: 0.0005
+  close_mosaic: 10
+  amp: true               # Mixed precision for speed and VRAM efficiency
+  workers: 2              # 4 workers for multi-process DataLoader (safe & fast after 2048px rescale)
+  save: true
+  save_period: 5
+  plots: true
+
+# RTX 4060 (8GB VRAM) optimized batch sizes & gradient accumulation
+# Note: effective_batch = batch * accumulate = 16 across all runs!
+models:
+  yolo11n:
+    family: "yolo11"
+    weights: "yolo11n.pt"
+    batch: 16
+    accumulate: 1
+    type: "yolo"
+  yolo11m:
+    family: "yolo11"
+    weights: "yolo11m.pt"
+    batch: 8
+    accumulate: 2
+    type: "yolo"
+  yolo26n:
+    family: "yolo26"
+    weights: "yolo26n.pt"
+    batch: 16
+    accumulate: 1
+    type: "yolo"
+  yolo26m:
+    family: "yolo26"
+    weights: "yolo26m.pt"
+    batch: 8
+    accumulate: 2
+    type: "yolo"
+  rtdetr_r50:
+    family: "rtdetr"
+    weights: "rtdetr-l.pt"
+    batch: 4
+    accumulate: 4
+    type: "rtdetr"
+  rtdetr_r101:
+    family: "rtdetr"
+    weights: "rtdetr-x.pt"
+    batch: 2
+    accumulate: 8
+    type: "rtdetr"
+
+datasets:
+  raw:
+    name: "raw_combined"
+    description: "V6.2E canonical parent dataset with original, uncurated annotations"
+    yaml_path: "configs/dataset_raw.yaml"
+  curated:
+    name: "curated_combined"
+    description: "8-rule curated dataset (hflip, add_nest, syn_prune, tiny, review, SAM box tightened)"
+    yaml_path: "configs/dataset_curated.yaml"
+
+profiling:
+  benchmark_images: 300   # Number of test images used for latency/FPS profiling
+  warmup_runs: 50
+
