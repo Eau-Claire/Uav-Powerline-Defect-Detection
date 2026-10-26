@@ -223,10 +223,10 @@ flowchart TD
     CQ -- pending --> NR[needs_review<br/>fill decisions CSV]
     NR --> CQ
     CQ -- resolved --> CT[v6p5_compose_hash<br/>index.synthetic_archive]
-    CT --> Y[yolo11n_ablation<br/>YOLO11n@640, 50 ep<br/>frozen V6.2E VAL]
+    CT --> Y["yolo11n_ablation<br/>YOLO11n@640, 50 ep<br/>frozen V6.2E VAL"]
     Y --> EV[evaluate<br/>vs V6.2E baseline + gate]
     EV -->|gate pass + human promotion| CAN[canonical V6.5 freeze]
-    CAN --> Y11M[YOLO11m@1024]
+    CAN --> Y11M["YOLO11m@1024"]
     CAN --> RT[RT-DETR-R50 B0 → B1/B2/B3]
 ```
 
