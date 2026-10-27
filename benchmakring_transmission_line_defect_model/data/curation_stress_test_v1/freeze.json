@@ -1,0 +1,13 @@
+{
+  "name": "curation_stress_test_v1",
+  "selection_policy": "ground_truth_and_image_geometry_only",
+  "model_outputs_used": false,
+  "seed": 20261027,
+  "target_images": 600,
+  "min_images_per_defect_class": 80,
+  "source_candidate_records": 1155,
+  "source_unique_sha256": 1155,
+  "exact_duplicate_candidate_rows_excluded": 0,
+  "selected_images": 600,
+  "manifest_sha256": "58964bcb959e4f148e74f7857a160d89f02726ed7a00a180d07d9645445e389f"
+}

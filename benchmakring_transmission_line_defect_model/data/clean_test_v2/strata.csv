@@ -1,0 +1,8 @@
+stratum,pool_images,sampled_images,inclusion_probability
+insulator_flashover,109,109,1.000000
+broken_strand,119,119,1.000000
+foreign_object,134,134,1.000000
+bird_nest,166,155,0.933735
+insulator_broken,627,168,0.267943
+insulator,662,170,0.256798
+background,145,145,1.000000

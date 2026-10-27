@@ -1,0 +1,7 @@
+class_id,class,images,boxes
+0,insulator,170,300
+1,insulator_broken,202,250
+2,insulator_flashover,109,124
+3,bird_nest,156,167
+4,foreign_object,134,161
+5,broken_strand,121,134

@@ -81,11 +81,17 @@ broken_strand is a **domain** problem: AP50 0.827 on square ground/phone images 
 Details: [`docs/SESSION_2026-10-15_v6p5_plateau.md`](docs/SESSION_2026-10-15_v6p5_plateau.md),
 weekly log [`docs/NHAT_KY_TUAN_2026-10-18.md`](docs/NHAT_KY_TUAN_2026-10-18.md).
 
-### 2×6 benchmark: Raw vs Curated — all 12 runs (frozen TEST, 2,012 images)
+### 2×6 benchmark: Raw vs Curated — all 12 runs (`val_clean` split)
 
-Raw / Curated = the **training** data. All 12 runs are scored on the same TEST split with the
-**Curated** labels (`dataset_curated.yaml` for YOLO, `curated_combined/data_val_clean.yaml` for RT-DETR),
-so the columns are directly comparable. Source: `benchmakring_transmission_line_defect_model/results_yolo_model/`
+Raw / Curated = the **training** data. All 12 runs are scored on the same split with the **Curated** labels
+(`dataset_curated.yaml` for YOLO, `curated_combined/data_val_clean.yaml` for RT-DETR), so the columns are
+directly comparable.
+
+> ⚠️ Despite the `test` key, both `dataset_raw.yaml` and `dataset_curated.yaml` set `test: images/val_clean`,
+> not the frozen V6.2E TEST (2,012 images). For Curated, `val_clean` is also the `val` split used to pick
+> `best.pt`, and it very likely still contains the 148 images that near-duplicate train (found in v6, removed in v8).
+> These numbers are therefore optimistic; re-score the checkpoints on `images/test` (and on `val_clean`
+> minus `leaked_val.txt`) before citing them. Source: `benchmakring_transmission_line_defect_model/results_yolo_model/`
 and `results_rtdetr/` (`benchmark_test_results.json`). YOLO runs evaluated with `best.pt` (2026-10-23),
 RT-DETR with `last.pt` (2026-10-25). Latency / FPS / VRAM: single-image inference on the RTX 4060 benchmark
 machine. MEAN_5 = mean AP50 of the 5 defect classes (insulator excluded).
@@ -353,8 +359,8 @@ compose, yolo11n_ablation, evaluate`.
 
 Self-contained sub-project: [`benchmakring_transmission_line_defect_model/`](benchmakring_transmission_line_defect_model/README.md).
 Raw = uncurated V6.2E combined data; Curated = `v6p5_6cls_v3` after the 8-rule curation (flip fixes,
-missing nests, pruned synthetic pastes, human review, SAM 2.1-b box tightening). Same frozen TEST
-(2,012 images) for all 12 runs. Run `benchmark_pipeline.ipynb` (YOLO, RTX 4060, resumable);
+missing nests, pruned synthetic pastes, human review, SAM 2.1-b box tightening). All 12 runs are scored on
+the same `val_clean` split (not the frozen TEST — see the warning in Results). Run `benchmark_pipeline.ipynb` (YOLO, RTX 4060, resumable);
 RT-DETR runs were trained on Kaggle (`kaggle_train_rtdetr*.ipynb`). Upload YOLO runs to Camber with
 `scripts/upload_yolo_runs_to_camber.py --dry-run` first.
 

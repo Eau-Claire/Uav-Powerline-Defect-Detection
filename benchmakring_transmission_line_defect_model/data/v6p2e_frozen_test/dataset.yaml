@@ -1,0 +1,11 @@
+path: C:/Users/intern/Documents/SEP490/train/benchmakring_transmission_line_defect_model/data/v6p2e_frozen_test
+train: images/test
+val: images/test
+test: images/test
+names:
+  0: insulator
+  1: insulator_broken
+  2: insulator_flashover
+  3: bird_nest
+  4: foreign_object
+  5: broken_strand
