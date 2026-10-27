@@ -65,18 +65,38 @@ class BenchmarkEvaluator:
                 f"found {type(checkpoint).__name__}."
             )
 
+        state_dict: Dict[str, torch.Tensor] = {}
+        for key, value in checkpoint.items():
+            current_key = key
+            if current_key.startswith(("class_embed.", "bbox_embed.")):
+                current_key = f"model.decoder.{current_key}"
+            current_key = current_key.replace(
+                "model.encoder.encoder.", "model.encoder.aifi."
+            ).replace(".self_attn.out_proj.", ".self_attn.o_proj.")
+            if current_key.startswith(("model.encoder.aifi.", "model.decoder.layers.")):
+                current_key = current_key.replace(".fc1.", ".mlp.fc1.").replace(".fc2.", ".mlp.fc2.")
+
+            if current_key in state_dict:
+                if not torch.equal(state_dict[current_key], value):
+                    raise ValueError(
+                        f"Conflicting duplicate RT-DETR weights map to '{current_key}' "
+                        f"in checkpoint {checkpoint_path}."
+                    )
+                continue
+            state_dict[current_key] = value
+
         config = RTDetrConfig.from_pretrained(model_id)
         config.num_labels = len(self.class_names)
         config.id2label = self.class_names
         config.label2id = {name: idx for idx, name in self.class_names.items()}
         processor = RTDetrImageProcessor.from_pretrained(model_id)
         model = RTDetrForObjectDetection(config)
-        model.load_state_dict(checkpoint, strict=True)
+        model.load_state_dict(state_dict, strict=True)
         device = torch.device(
             f"cuda:{self.cfg['training']['device']}" if torch.cuda.is_available() else "cpu"
         )
         model.to(device).eval()
-        del checkpoint
+        del checkpoint, state_dict
         return model, processor
 
     @staticmethod
@@ -263,7 +283,7 @@ class BenchmarkEvaluator:
         conf = np.concatenate([item[1] for item in stats], axis=0)
         pred_cls = np.concatenate([item[2] for item in stats], axis=0)
         target_cls = np.concatenate([item[3] for item in stats], axis=0)
-        _, _, precision, recall, f1, ap, ap_classes, *_ = ap_per_class(
+        _, _, precision, recall, _, ap, ap_classes, *_ = ap_per_class(
             tp, conf, pred_cls, target_cls, names=self.class_names
         )
         per_class = {}
@@ -281,10 +301,13 @@ class BenchmarkEvaluator:
                 "foreign_object", "broken_strand"
             )
         ]))
+        precision_mean = float(precision.mean()) if len(precision) else 0.0
+        recall_mean = float(recall.mean()) if len(recall) else 0.0
+        f1_mean = 2 * precision_mean * recall_mean / (precision_mean + recall_mean + 1e-8)
         accuracy = {
-            "precision": round(float(precision.mean()), 4) if len(precision) else 0.0,
-            "recall": round(float(recall.mean()), 4) if len(recall) else 0.0,
-            "f1_score": round(float(f1.mean()), 4) if len(f1) else 0.0,
+            "precision": round(precision_mean, 4),
+            "recall": round(recall_mean, 4),
+            "f1_score": round(f1_mean, 4),
             "mAP50": round(float(ap[:, 0].mean()), 4) if len(ap) else 0.0,
             "mAP50_95": round(float(ap.mean()), 4) if len(ap) else 0.0,
             "MEAN_5_defect_ap50": round(mean_5, 4),
@@ -398,6 +421,16 @@ class BenchmarkEvaluator:
                 )
                 self._save_results()
                 del model
+            if re.search(r"rtdetr(50|100)$", run_key.lower()):
+                accuracy = cached_result.get("accuracy", {})
+                precision = float(accuracy.get("precision", 0.0))
+                recall = float(accuracy.get("recall", 0.0))
+                f1_score = round(
+                    2 * precision * recall / (precision + recall + 1e-8), 4
+                )
+                if accuracy.get("f1_score") != f1_score:
+                    accuracy["f1_score"] = f1_score
+                    self._save_results()
             print(f"[REUSE] Evaluation for '{run_key}' already cached.")
             return cached_result
 
