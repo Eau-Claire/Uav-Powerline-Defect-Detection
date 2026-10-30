@@ -396,7 +396,18 @@ def export_staged_labels(records: list[dict[str, Any]], output_dir: Path) -> dic
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.is_file():
         return []
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    records = []
+    lines = path.read_text(encoding="utf-8").splitlines()
+    for line_number, line in enumerate(lines, 1):
+        if not line.strip():
+            continue
+        try:
+            records.append(json.loads(line))
+        except json.JSONDecodeError:
+            if line_number != len(lines):
+                raise
+            print(f'Ignoring truncated final checkpoint line in {path}', flush=True)
+    return records
 
 
 def save_decision(decisions_path: Path, image_path: str, decision: str, note: str) -> None:
@@ -428,4 +439,3 @@ def environment_defaults() -> dict[str, str]:
         "workflow_id": os.getenv("ROBOFLOW_WORKFLOW_ID", "evn-object-detection"),
         "allowed_classes": os.getenv("ROBOFLOW_INSULATOR_CLASSES", "insulator"),
     }
-

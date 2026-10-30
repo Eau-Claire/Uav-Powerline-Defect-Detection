@@ -16,12 +16,17 @@ OUT = Path(os.environ.get('CROSS_OUTPUT_ROOT', str(ROOT/'artifacts/roboflow_rela
 OUT.mkdir(parents=True, exist_ok=True)
 
 def main():
-    model = YOLO(str(ROOT/'weights/curated_yolo26m/best.pt'))
+    model_path = Path(os.environ.get('CROSS_MODEL', ROOT/'weights/curated_yolo26m/best.pt'))
+    if not model_path.is_file():
+        raise SystemExit(f'Missing teacher checkpoint: {model_path}')
+    model = YOLO(str(model_path))
     expected = ['insulator','insulator_broken','insulator_flashover','bird_nest','foreign_object','broken_strand']
     assert [model.names[i] for i in range(6)] == expected
     labels = sorted((SOURCE/'labels/train').glob('*.txt'))
     cache = OUT/'yolo.jsonl'
-    done = {Path(r['image'].replace('\\','/')).stem for r in load_jsonl(cache)}
+    cached_rows = load_jsonl(cache)
+    done = {Path(r['image'].replace('\\','/')).stem for r in cached_rows}
+    print(f'YOLO resume: {len(done)}/{len(labels)} complete, {len(labels)-len(done)} pending', flush=True)
     with cache.open('a',encoding='utf-8') as handle:
         for index,p in enumerate(labels):
             if p.stem in done: continue
@@ -34,6 +39,8 @@ def main():
     sdk_python=ROOT/'.venv-roboflow'/('Scripts/python.exe' if os.name=='nt' else 'bin/python')
     subprocess.run([str(sdk_python if sdk_python.exists() else sys.executable),str(ROOT/'tools/roboflow_relabel/full_rf.py')],check=True,cwd=ROOT)
     rf={Path(r['image_path'].replace('\\','/')).stem:r for r in load_jsonl(OUT/'roboflow/proposals.jsonl')}
+    if len(rf) != len(labels):
+        raise RuntimeError(f'Roboflow checkpoint incomplete: {len(rf)}/{len(labels)} records')
     destination=Path(os.environ.get('CROSS_DATASET_OUTPUT',str(ROOT/'data/working/curated_cross_v1')))
     staged=destination/'labels/train'; staged.mkdir(parents=True,exist_ok=True)
     counts=Counter(); conflicts=[]; changes=[]

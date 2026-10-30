@@ -27,4 +27,4 @@ if cache.exists():
         r['label_path']=str(source/'labels/train'/Path(r['label_path'].replace('\\','/')).name)
     cache.write_text(''.join(json.dumps(r)+'\n' for r in rows),encoding='utf-8')
 d=environment_defaults()
-run_workflow_batch(candidates,out,d['api_url'],os.environ['ROBOFLOW_API_KEY'],d['workspace_name'],d['workflow_id'],{'insulator'},0.5,1.1,20,resume=True,workers=4)
+run_workflow_batch(candidates,out,d['api_url'],os.environ['ROBOFLOW_API_KEY'],d['workspace_name'],d['workflow_id'],{'insulator'},0.6,1.1,20,resume=True,workers=4)

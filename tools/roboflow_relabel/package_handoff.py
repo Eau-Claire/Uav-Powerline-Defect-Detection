@@ -13,7 +13,7 @@ archive=out/'cross_v3_resume_v1.tar'
 counts={}
 with tarfile.open(archive,'w') as tar:
     for p in (root/'tools/roboflow_relabel').glob('*'):
-        if p.suffix in {'.py','.md','.txt','.ps1'}:
+        if p.suffix in {'.py','.md','.txt','.ps1','.sh'} or p.name == '.env.example':
             tar.add(p,arcname=str(p.relative_to(root)))
     tar.add(root/'weights/curated_yolo26m/best.pt',arcname='weights/curated_yolo26m/best.pt')
     tar.add(Path.home()/'Downloads/curated_v6p5_v3.zip',arcname='data/transfer/curated_v6p5_v3.zip')
