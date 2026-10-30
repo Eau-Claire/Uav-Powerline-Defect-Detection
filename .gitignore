@@ -11,6 +11,7 @@ __pycache__/
 
 # Secrets
 .env
+.docker-anon/
 
 # FiftyOne viewer (existing tool)
 .fiftyone/
@@ -29,6 +30,7 @@ runs/**
 logs/**
 !logs/.gitkeep
 artifacts/remote_mirror/
+artifacts/roboflow_relabel/
 artifacts/qa/**
 !artifacts/qa/.gitkeep
 !artifacts/qa/v6p5_review_decisions.csv
@@ -39,6 +41,7 @@ artifacts/exports/**
 dist/
 
 # Model weights
+weights/
 *.pt
 !drone-modal/models/*.pt.source
 
