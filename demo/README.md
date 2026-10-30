@@ -30,4 +30,4 @@ Chạy ứng dụng:
 streamlit run app.py
 ```
 
-Có thể đặt `MODEL_PATH` trong `.env` để dùng checkpoint khác. Đường dẫn tương đối được tính từ thư mục gốc repository. Cần cho phép máy chạy ứng dụng truy cập được camera qua mạng; endpoint RTSP và đường dẫn phụ thuộc model camera.
+Có thể đặt `MODEL_PATH` trong `.env` để dùng checkpoint khác. Đường dẫn tương đối được tìm từ thư mục gốc project trước, rồi mới thử các vị trí liên quan khác. Cần cho phép máy chạy ứng dụng truy cập được camera qua mạng; endpoint RTSP và đường dẫn phụ thuộc model camera.

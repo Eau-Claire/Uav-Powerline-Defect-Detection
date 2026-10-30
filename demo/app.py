@@ -39,10 +39,19 @@ st.set_page_config(page_title="Power-line Defect Detector", layout="wide")
 
 def resolve_model_path() -> Path:
     configured_path = os.getenv("MODEL_PATH", "").strip()
-    model_path = Path(configured_path) if configured_path else DEFAULT_MODEL_PATH
-    if not model_path.is_absolute():
-        model_path = ROOT_DIR / model_path
-    return model_path
+    if not configured_path:
+        return DEFAULT_MODEL_PATH
+
+    model_path = Path(configured_path).expanduser()
+    if model_path.is_absolute():
+        return model_path
+
+    candidates = (
+        ROOT_DIR / model_path,
+        APP_DIR / model_path,
+        ROOT_DIR.parent / model_path,
+    )
+    return next((candidate for candidate in candidates if candidate.is_file()), candidates[0])
 
 
 @st.cache_resource(show_spinner="Đang tải mô hình...")
@@ -121,7 +130,9 @@ def run_detection(
         imgsz=image_size,
         verbose=False,
     )[0]
-    annotated = Image.fromarray(cv2.cvtColor(result.plot(), cv2.COLOR_BGR2RGB))
+    annotated = Image.fromarray(
+        cv2.cvtColor(result.plot(conf=False), cv2.COLOR_BGR2RGB)
+    )
     detections: list[dict[str, float | int | str]] = []
 
     if result.boxes is not None:
