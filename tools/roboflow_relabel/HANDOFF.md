@@ -4,7 +4,7 @@ Dataset: v6p5 v3, 17,903 train / 2,272 val / 2,271 val_clean. Only TRAIN labels
 are supplemented. Existing labels are preserved. Every output is an unreviewed
 pseudo-label until a human accepts it.
 
-The process has two resumable phases:
+The process has two resumable inference phases, followed by one export step:
 
 1. curated YOLO26m predicts all 17,903 TRAIN images and appends one complete JSON
    record per image to `artifacts/roboflow_relabel/cross_v3/yolo.jsonl`;
@@ -61,7 +61,15 @@ CROSS_MODEL=weights/curated_yolo26m/best.pt
 CROSS_DEVICE=cpu
 ```
 
-Terminal 1:
+Run YOLO26m first; this phase does not need Docker or a Roboflow key:
+
+```sh
+source .venv-roboflow/bin/activate
+python tools/roboflow_relabel/doctor.py --phase yolo
+python -u tools/roboflow_relabel/run_v3.py --phase yolo
+```
+
+After YOLO finishes, start the Roboflow server in terminal 1:
 
 ```sh
 source .venv-roboflow/bin/activate
@@ -69,12 +77,13 @@ inference server start --env-file .env \
   --image roboflow/roboflow-inference-server-cpu:latest
 ```
 
-Terminal 2:
+Continue in terminal 2:
 
 ```sh
 source .venv-roboflow/bin/activate
-python tools/roboflow_relabel/doctor.py --require-server
-python -u tools/roboflow_relabel/run_v3.py
+python tools/roboflow_relabel/doctor.py --phase roboflow --require-server
+python -u tools/roboflow_relabel/run_v3.py --phase roboflow
+python -u tools/roboflow_relabel/run_v3.py --phase export
 ```
 
 ## Windows
@@ -95,7 +104,15 @@ V3_ARCHIVE=D:/datasets/curated_v6p5_v3.zip
 CROSS_MODEL=D:/models/curated_yolo26m/best.pt
 ```
 
-PowerShell 1:
+Run YOLO26m first; this phase does not need Docker or a Roboflow key:
+
+```powershell
+.\.venv-roboflow\Scripts\Activate.ps1
+python tools\roboflow_relabel\doctor.py --phase yolo
+python -u tools\roboflow_relabel\run_v3.py --phase yolo
+```
+
+After YOLO finishes, start the Roboflow server in PowerShell 1:
 
 ```powershell
 .\.venv-roboflow\Scripts\Activate.ps1
@@ -103,12 +120,13 @@ inference server start --env-file .env `
   --image roboflow/roboflow-inference-server-cpu:latest
 ```
 
-PowerShell 2:
+Continue in PowerShell 2:
 
 ```powershell
 .\.venv-roboflow\Scripts\Activate.ps1
-python tools\roboflow_relabel\doctor.py --require-server
-python -u tools\roboflow_relabel\run_v3.py
+python tools\roboflow_relabel\doctor.py --phase roboflow --require-server
+python -u tools\roboflow_relabel\run_v3.py --phase roboflow
+python -u tools\roboflow_relabel\run_v3.py --phase export
 ```
 
 If activation is restricted, call `.venv-roboflow\Scripts\python.exe` directly.
@@ -144,8 +162,13 @@ folder:
 
 ```sh
 python -u tools/roboflow_relabel/run_v3.py \
-  --output-root artifacts/roboflow_relabel/cross_v3_fresh
+  --output-root artifacts/roboflow_relabel/cross_v3_fresh --phase yolo
 ```
+
+`--phase all` remains available and performs YOLO → Roboflow → export in one
+command. Separate phases are recommended for a fresh long run because each phase
+can be observed and backed up independently. Reversing YOLO and Roboflow does not
+reduce the total number of images; both are required before export.
 
 The final dataset export path is shared, so finish and review one experiment at a
 time. Back up the checkpoint JSONL files periodically during a long run.

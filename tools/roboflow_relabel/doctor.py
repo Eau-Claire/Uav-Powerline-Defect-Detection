@@ -24,6 +24,8 @@ def resolve(value: str, fallback: Path) -> Path:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--phase', choices=('yolo', 'roboflow', 'export', 'all'),
+                        default='all', help='check only dependencies needed by this phase')
     parser.add_argument('--require-server', action='store_true',
                         help='also fail unless ROBOFLOW_API_URL accepts a connection')
     args = parser.parse_args()
@@ -60,15 +62,17 @@ def main() -> int:
         'Python >= 3.10': sys.version_info >= (3, 10),
         f'Dataset ZIP: {archive}': archive.is_file(),
         'Dataset file is a ZIP': archive.is_file() and zipfile.is_zipfile(archive),
-        f'Teacher model: {model}': model.is_file(),
-        'Teacher model SHA-256': model_hash_ok,
-        'ROBOFLOW_API_KEY configured': bool(os.getenv('ROBOFLOW_API_KEY', '').strip())
-            and os.getenv('ROBOFLOW_API_KEY') != 'replace_with_a_new_key',
-        'ROBOFLOW_API_URL configured': bool(api_url),
-        'Docker CLI installed': docker_cli,
-        'Docker daemon available': docker_daemon,
     }
-    if args.require_server:
+    if args.phase in {'yolo', 'all'}:
+        checks[f'Teacher model: {model}'] = model.is_file()
+        checks['Teacher model SHA-256'] = model_hash_ok
+    if args.phase in {'roboflow', 'all'}:
+        checks['ROBOFLOW_API_KEY configured'] = bool(os.getenv('ROBOFLOW_API_KEY', '').strip()) \
+            and os.getenv('ROBOFLOW_API_KEY') != 'replace_with_a_new_key'
+        checks['ROBOFLOW_API_URL configured'] = bool(api_url)
+        checks['Docker CLI installed'] = docker_cli
+        checks['Docker daemon available'] = docker_daemon
+    if args.require_server and args.phase in {'roboflow', 'all'}:
         checks['Roboflow inference server reachable'] = server_reachable
     for label, ok in checks.items():
         print(('OK   ' if ok else 'FAIL ')+label)
@@ -76,11 +80,11 @@ def main() -> int:
     for relative in ('yolo.jsonl', 'roboflow/proposals.jsonl'):
         path = progress/relative
         count = sum(1 for line in path.open(encoding='utf-8') if line.strip()) if path.is_file() else 0
-        print(f'INFO checkpoint {relative}: {count} records')
+        print(f'INFO progress {relative}: {count} records')
     print(f"INFO device: {os.getenv('CROSS_DEVICE', 'cpu')}")
-    if not args.require_server:
+    if args.phase in {'roboflow', 'all'} and not args.require_server:
         print('INFO Roboflow server reachable:', server_reachable,
-              '(use --require-server before the run)')
+              '(use --require-server before the Roboflow phase)')
     return 0 if all(checks.values()) else 1
 
 

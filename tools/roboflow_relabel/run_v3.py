@@ -28,6 +28,8 @@ def parse_args() -> argparse.Namespace:
                         default=Path(os.environ.get('CROSS_MODEL', root/'weights/curated_yolo26m/best.pt')))
     parser.add_argument('--device', default=os.environ.get('CROSS_DEVICE', 'cpu'),
                         help="Ultralytics device: cpu or 0 for the first CUDA GPU")
+    parser.add_argument('--phase', choices=('yolo', 'roboflow', 'export', 'all'),
+                        default='all', help='run one phase or the full sequence')
     parser.add_argument('--output-root', type=Path,
                         default=root/'artifacts/roboflow_relabel/cross_v3')
     return parser.parse_args()
@@ -41,9 +43,9 @@ def main() -> None:
     model = args.model.expanduser().resolve()
     if not archive.is_file():
         raise SystemExit(f'Missing dataset ZIP: {archive}\nSet V3_ARCHIVE or pass --archive PATH.')
-    if not model.is_file():
+    if args.phase in {'yolo', 'all'} and not model.is_file():
         raise SystemExit(f'Missing YOLO teacher checkpoint: {model}\nSet CROSS_MODEL or pass --model PATH.')
-    if not os.environ.get('ROBOFLOW_API_KEY', '').strip():
+    if args.phase in {'roboflow', 'all'} and not os.environ.get('ROBOFLOW_API_KEY', '').strip():
         raise SystemExit('ROBOFLOW_API_KEY is missing from .env. Use a newly issued key.')
 
     extract=root/'data/working/v6p5_v3_source'
@@ -88,6 +90,7 @@ def main() -> None:
     os.environ['CROSS_DATASET_OUTPUT']=str((root/'data/working/v6p5_v3_cross_labeled').resolve())
     os.environ['CROSS_MODEL']=str(model)
     os.environ['CROSS_DEVICE']=args.device
+    os.environ['CROSS_PHASE']=args.phase
     subprocess.run([sys.executable,'-u','tools/roboflow_relabel/full_cross_audit.py'],check=True)
 
 

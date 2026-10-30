@@ -16,31 +16,58 @@ OUT = Path(os.environ.get('CROSS_OUTPUT_ROOT', str(ROOT/'artifacts/roboflow_rela
 OUT.mkdir(parents=True, exist_ok=True)
 
 def main():
-    model_path = Path(os.environ.get('CROSS_MODEL', ROOT/'weights/curated_yolo26m/best.pt'))
-    if not model_path.is_file():
-        raise SystemExit(f'Missing teacher checkpoint: {model_path}')
-    model = YOLO(str(model_path))
+    phase = os.environ.get('CROSS_PHASE', 'all')
+    if phase not in {'yolo', 'roboflow', 'export', 'all'}:
+        raise SystemExit(f'Invalid CROSS_PHASE: {phase}')
     expected = ['insulator','insulator_broken','insulator_flashover','bird_nest','foreign_object','broken_strand']
-    assert [model.names[i] for i in range(6)] == expected
     labels = sorted((SOURCE/'labels/train').glob('*.txt'))
+    expected_stems = {p.stem for p in labels}
     cache = OUT/'yolo.jsonl'
     cached_rows = load_jsonl(cache)
     done = {Path(r['image'].replace('\\','/')).stem for r in cached_rows}
     print(f'YOLO resume: {len(done)}/{len(labels)} complete, {len(labels)-len(done)} pending', flush=True)
-    with cache.open('a',encoding='utf-8') as handle:
-        for index,p in enumerate(labels):
-            if p.stem in done: continue
-            image = find_image(SOURCE/'images/train',p.stem)
-            if image is None: raise RuntimeError(f'Missing image: {p}')
-            result = model.predict(str(image),imgsz=640,conf=0.6,device=os.environ.get('CROSS_DEVICE','cpu'),verbose=False)[0]
-            predictions = [Box(*xy,int(c),float(s),model.names[int(c)]).__dict__ for xy,c,s in zip(result.boxes.xyxy.tolist(),result.boxes.cls.tolist(),result.boxes.conf.tolist())]
-            handle.write(json.dumps({'image':str(image),'predictions':predictions})+'\n'); handle.flush()
-            if (index+1)%25==0: print(f'YOLO {index+1}/{len(labels)}',flush=True)
-    sdk_python=ROOT/'.venv-roboflow'/('Scripts/python.exe' if os.name=='nt' else 'bin/python')
-    subprocess.run([str(sdk_python if sdk_python.exists() else sys.executable),str(ROOT/'tools/roboflow_relabel/full_rf.py')],check=True,cwd=ROOT)
-    rf={Path(r['image_path'].replace('\\','/')).stem:r for r in load_jsonl(OUT/'roboflow/proposals.jsonl')}
-    if len(rf) != len(labels):
-        raise RuntimeError(f'Roboflow checkpoint incomplete: {len(rf)}/{len(labels)} records')
+    if phase in {'yolo', 'all'}:
+        model_path = Path(os.environ.get('CROSS_MODEL', ROOT/'weights/curated_yolo26m/best.pt'))
+        if not model_path.is_file():
+            raise SystemExit(f'Missing teacher checkpoint: {model_path}')
+        model = YOLO(str(model_path))
+        actual_names = [model.names[i] for i in range(len(model.names))]
+        if actual_names != expected:
+            raise RuntimeError(f'Wrong teacher taxonomy: {actual_names}')
+        with cache.open('a',encoding='utf-8') as handle:
+            for index,p in enumerate(labels):
+                if p.stem in done: continue
+                image = find_image(SOURCE/'images/train',p.stem)
+                if image is None: raise RuntimeError(f'Missing image: {p}')
+                result = model.predict(str(image),imgsz=640,conf=0.6,device=os.environ.get('CROSS_DEVICE','cpu'),verbose=False)[0]
+                predictions = [Box(*xy,int(c),float(s),model.names[int(c)]).__dict__ for xy,c,s in zip(result.boxes.xyxy.tolist(),result.boxes.cls.tolist(),result.boxes.conf.tolist())]
+                handle.write(json.dumps({'image':str(image),'predictions':predictions})+'\n'); handle.flush()
+                if (index+1)%25==0: print(f'YOLO {index+1}/{len(labels)}',flush=True)
+        if phase == 'yolo':
+            print('YOLO phase complete. Next: run_v3.py --phase roboflow', flush=True)
+            return
+    if phase in {'roboflow', 'all'}:
+        sdk_python=ROOT/'.venv-roboflow'/('Scripts/python.exe' if os.name=='nt' else 'bin/python')
+        subprocess.run([str(sdk_python if sdk_python.exists() else sys.executable),str(ROOT/'tools/roboflow_relabel/full_rf.py')],check=True,cwd=ROOT)
+        if phase == 'roboflow':
+            print('Roboflow phase complete. Next: run_v3.py --phase export', flush=True)
+            return
+    if phase not in {'export', 'all'}:
+        return
+    cached_rows = load_jsonl(cache)
+    yolo_stems = {Path(r['image'].replace('\\','/')).stem for r in cached_rows}
+    if yolo_stems != expected_stems or len(cached_rows) != len(expected_stems):
+        raise RuntimeError(
+            f'YOLO progress incomplete or duplicated: records={len(cached_rows)}, '
+            f'unique_expected_images={len(yolo_stems & expected_stems)}/{len(expected_stems)}'
+        )
+    rf_rows = load_jsonl(OUT/'roboflow/proposals.jsonl')
+    rf={Path(r['image_path'].replace('\\','/')).stem:r for r in rf_rows}
+    if set(rf) != expected_stems or len(rf_rows) != len(expected_stems):
+        raise RuntimeError(
+            f'Roboflow progress incomplete or duplicated: records={len(rf_rows)}, unique_expected_images='
+            f'{len(set(rf) & expected_stems)}/{len(expected_stems)}'
+        )
     destination=Path(os.environ.get('CROSS_DATASET_OUTPUT',str(ROOT/'data/working/curated_cross_v1')))
     staged=destination/'labels/train'; staged.mkdir(parents=True,exist_ok=True)
     counts=Counter(); conflicts=[]; changes=[]
