@@ -1,0 +1,14 @@
+*.pt
+*_ncnn_model/
+__pycache__/
+.venv/
+dist/
+runtime-versions.txt
+.venv-export/
+*.onnx
+*.sqlite3*
+alerts.json
+*.token
+*.key
+.env
+device.env

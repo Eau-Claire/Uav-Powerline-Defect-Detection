@@ -1,0 +1,8 @@
+{
+  "model": "curated_yolo11n",
+  "uri": "stash://bunpmc/projects/curated_yolo11n/weights/best.pt",
+  "status": "YOLO11n architecture and six-class taxonomy verified; ONNX exported and CPU parity checked; NCNN export pending",
+  "local_file": "models/best.pt",
+  "sha256": "37e74b0c3632801bc6ac049caab9787c29871e5b47bd3364dba6ceb167a9660a",
+  "onnx": "models/best.onnx"
+}

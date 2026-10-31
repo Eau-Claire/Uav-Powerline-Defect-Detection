@@ -1,0 +1,35 @@
+{
+  "drone_id": "REPLACE_WITH_REGISTERED_UAV_CODE",
+  "rules": {
+    "insulator_broken": {
+      "enabled": true,
+      "min_confidence": 0.8,
+      "cooldown_seconds": 30,
+      "category_code": "insulator_broken"
+    },
+    "insulator_flashover": {
+      "enabled": true,
+      "min_confidence": 0.8,
+      "cooldown_seconds": 30,
+      "category_code": "insulator_flashover"
+    },
+    "bird_nest": {
+      "enabled": false,
+      "min_confidence": 0.8,
+      "cooldown_seconds": 30,
+      "category_code": "bird_nest"
+    },
+    "foreign_object": {
+      "enabled": false,
+      "min_confidence": 0.8,
+      "cooldown_seconds": 30,
+      "category_code": "foreign_object"
+    },
+    "broken_strand": {
+      "enabled": true,
+      "min_confidence": 0.8,
+      "cooldown_seconds": 30,
+      "category_code": "broken_strand"
+    }
+  }
+}

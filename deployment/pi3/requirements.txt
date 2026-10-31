@@ -1,0 +1,3 @@
+ncnn
+numpy
+opencv-python-headless
