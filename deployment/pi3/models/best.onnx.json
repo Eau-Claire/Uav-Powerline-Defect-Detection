@@ -1,0 +1,28 @@
+{
+  "checkpoint_sha256": "37e74b0c3632801bc6ac049caab9787c29871e5b47bd3364dba6ceb167a9660a",
+  "onnx_sha256": "319840186c7afd0aa19132fd5fe2362db9125574445ca66980a35fc0804e96cf",
+  "input": [
+    1,
+    3,
+    640,
+    640
+  ],
+  "output": [
+    1,
+    10,
+    8400
+  ],
+  "names": [
+    "insulator",
+    "insulator_broken",
+    "insulator_flashover",
+    "bird_nest",
+    "foreign_object",
+    "broken_strand"
+  ],
+  "opset": 17,
+  "precision": "FP32",
+  "nms": false,
+  "parity_max_abs_error": 0.0009002685546875,
+  "validation": "ONNX checker and CPU PT/ORT parity on seeded synthetic input; not accuracy evaluation"
+}
