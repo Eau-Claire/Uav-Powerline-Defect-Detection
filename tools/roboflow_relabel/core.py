@@ -5,7 +5,7 @@ import json
 import os
 import time
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from threading import local
 from typing import Any, Iterable
@@ -15,16 +15,15 @@ from PIL import Image, ImageDraw
 
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".bmp", ".webp")
 
-# Dataset IDs confirmed by the dataset owner; power-pole is deliberately unmapped.
+# Only component-level insulator detections are mapped. Workflow severity labels
+# (critical/cautious/low) describe power poles and must not become broken insulators.
 ROBOFLOW_CLASS_MAP = {
     'insulator': 0,
+    'damagedinsulator': 1,
     'damage_insulator': 1,
-    'critical': 1,
     'centerdamage': 1,
     'edgesmalldamage': 1,
     'edgebigdamage': 1,
-    'cautious': 1,
-    'low': 1,
 }
 
 
@@ -296,6 +295,7 @@ def run_workflow_batch(
     max_area_ratio: float,
     resume: bool = False,
     workers: int = 1,
+    max_upload_dimension: int | None = None,
 ) -> Path:
     from inference_sdk import InferenceConfiguration, InferenceHTTPClient
 
@@ -319,20 +319,43 @@ def run_workflow_batch(
         image_path = Path(candidate["image_path"])
         with Image.open(image_path) as image:
             image_size = image.size
+            upload_path = image_path
+            upload_size = image_size
+            temporary_upload: Path | None = None
+            if max_upload_dimension:
+                upload_dir = output_dir / "_uploads"
+                upload_dir.mkdir(parents=True, exist_ok=True)
+                temporary_upload = upload_dir / f"{image_path.stem}.jpg"
+                converted = image.convert("RGB")
+                converted.thumbnail((max_upload_dimension, max_upload_dimension), Image.Resampling.LANCZOS)
+                upload_size = converted.size
+                converted.save(temporary_upload, format="JPEG", quality=88, optimize=True)
+                upload_path = temporary_upload
         old_boxes = read_yolo_boxes(Path(candidate["label_path"]), image_size)
-        result = client.run_workflow(
-            workspace_name=workspace_name,
-            workflow_id=workflow_id,
-            images={"image": str(image_path)},
-            use_cache=True,
-        )
+        try:
+            result = client.run_workflow(
+                workspace_name=workspace_name,
+                workflow_id=workflow_id,
+                images={"image": str(upload_path)},
+                use_cache=True,
+            )
+        finally:
+            if temporary_upload is not None:
+                temporary_upload.unlink(missing_ok=True)
         predictions = extract_predictions(result)
+        if upload_size != image_size:
+            scale_x = image_size[0] / upload_size[0]
+            scale_y = image_size[1] / upload_size[1]
+            predictions = [replace(box, x1=box.x1 * scale_x, x2=box.x2 * scale_x,
+                                   y1=box.y1 * scale_y, y2=box.y2 * scale_y)
+                           for box in predictions]
         additions = propose_insulator_additions(
             old_boxes, predictions, allowed_classes, min_confidence
         )
         record = {
             **candidate,
             "image_size": image_size,
+            "inference_image_size": upload_size,
             "predictions": [asdict(box) for box in predictions],
             "additions": additions,
             "raw_result": result,

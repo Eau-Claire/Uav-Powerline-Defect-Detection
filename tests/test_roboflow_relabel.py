@@ -4,7 +4,23 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "tools" / "roboflow_relabel"))
 
-from core import Box, extract_predictions, propose_insulator_additions, propose_matches  # noqa: E402
+from core import (  # noqa: E402
+    Box,
+    ROBOFLOW_CLASS_MAP,
+    extract_predictions,
+    propose_insulator_additions,
+    propose_matches,
+)
+
+
+def test_power_pole_classes_are_not_mapped_to_broken_insulator():
+    assert ROBOFLOW_CLASS_MAP["insulator"] == 0
+    assert ROBOFLOW_CLASS_MAP["damagedinsulator"] == 1
+    assert ROBOFLOW_CLASS_MAP["centerdamage"] == 1
+    assert "power-pole" not in ROBOFLOW_CLASS_MAP
+    assert "critical" not in ROBOFLOW_CLASS_MAP
+    assert "cautious" not in ROBOFLOW_CLASS_MAP
+    assert "low" not in ROBOFLOW_CLASS_MAP
 
 
 def test_extract_predictions_from_nested_workflow_result():

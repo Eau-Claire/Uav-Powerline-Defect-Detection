@@ -1,0 +1,7 @@
+Run,Dataset,Model,Evaluation Split,Precision,Recall,F1-Score,mAP@0.5,mAP@0.5:0.95,MEAN_5,Latency (ms),FPS,GFLOPS,Params (M),VRAM (MB)
+nemo_yolo11n,NEMO,yolo11n,test,0.8148,0.6671,0.7336,0.7404,0.4051,0.7053,12.72,78.6,6.5,2.59,75.8
+nemo_yolo11m,NEMO,yolo11m,test,0.7956,0.7236,0.7579,0.7717,0.4261,0.7379,14.45,69.2,68.32,20.06,283.2
+nemo_yolo26n,NEMO,yolo26n,test,0.8323,0.716,0.7698,0.774,0.4258,0.7434,12.68,78.9,5.9,2.51,74.5
+nemo_yolo26m,NEMO,yolo26m,test,0.8639,0.7477,0.8016,0.8086,0.4516,0.7807,13.94,71.8,75.0,21.78,289.8
+nemo_rtdetr50,NEMO,rtdetr50,test,0.8179,0.7338,0.7736,0.7814,0.4366,0.7493,33.56,29.8,137.72,42.74,437.3
+nemo_rtdetr100,NEMO,rtdetr100,test,0.8165,0.7592,0.7868,0.7942,0.4365,0.7702,48.27,20.7,260.61,76.4,570.8

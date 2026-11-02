@@ -97,7 +97,7 @@ def main():
     data={'path':str(SOURCE),'train':str(SOURCE/'images/train'),'val':str(SOURCE/'images/val'),'names':dict(enumerate(expected))}
     if (SOURCE/'images/test').is_dir(): data['test']=str(SOURCE/'images/test')
     # A complete train view needs its own images directory so YOLO resolves staged labels.
-    import shutil,os
+    import shutil
     images=destination/'images/train'; images.mkdir(parents=True,exist_ok=True)
     for p in (SOURCE/'images/train').iterdir():
         target=images/p.name

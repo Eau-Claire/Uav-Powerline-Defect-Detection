@@ -74,7 +74,8 @@ class BenchmarkEvaluator:
                 "model.encoder.encoder.", "model.encoder.aifi."
             ).replace(".self_attn.out_proj.", ".self_attn.o_proj.")
             if current_key.startswith(("model.encoder.aifi.", "model.decoder.layers.")):
-                current_key = current_key.replace(".fc1.", ".mlp.fc1.").replace(".fc2.", ".mlp.fc2.")
+                current_key = re.sub(r"(?<!\.mlp)\.fc1\.", ".mlp.fc1.", current_key)
+                current_key = re.sub(r"(?<!\.mlp)\.fc2\.", ".mlp.fc2.", current_key)
 
             if current_key in state_dict:
                 if not torch.equal(state_dict[current_key], value):
