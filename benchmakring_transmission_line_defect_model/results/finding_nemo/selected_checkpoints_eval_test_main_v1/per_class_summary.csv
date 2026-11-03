@@ -1,0 +1,7 @@
+﻿Model,Description,insulator_AP50,insulator_AP50_95,insulator_broken_AP50,insulator_broken_AP50_95,insulator_flashover_AP50,insulator_flashover_AP50_95,bird_nest_AP50,bird_nest_AP50_95,foreign_object_AP50,foreign_object_AP50_95,broken_strand_AP50,broken_strand_AP50_95
+yolo26n,YOLO26n (epoch 45 - Best validation mAP),0.7651,0.5456,0.8009,0.3942,0.6375,0.2283,0.8619,0.4514,0.7484,0.4778,0.6473,0.3098
+yolo26m,YOLO26m (epoch 45),0.7939,0.5706,0.8286,0.4173,0.7578,0.2709,0.9229,0.4983,0.7377,0.4974,0.6427,0.3231
+yolo11n,YOLO11n (last epoch),0.7489,0.5339,0.7516,0.3775,0.5772,0.2034,0.8802,0.4539,0.6909,0.4448,0.5941,0.2805
+yolo11m,YOLO11m (epoch 45),0.8038,0.5747,0.7976,0.4053,0.6596,0.232,0.8834,0.4551,0.6982,0.4574,0.6159,0.2989
+rtdetr50,RT-DETR-R50vd (epoch 15),0.7636,0.5382,0.8108,0.3976,0.6746,0.2262,0.903,0.458,0.7215,0.4908,0.6261,0.2841
+rtdetr101,RT-DETR-R101vd (epoch 15),0.7758,0.555,0.8252,0.4229,0.7263,0.2514,0.9141,0.503,0.7142,0.4825,0.6727,0.3041

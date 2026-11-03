@@ -1,0 +1,12 @@
+{
+  "name": "test_main_v5_full_consensus_assisted",
+  "source": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\data\\test_main_v3_model_aligned_exploratory",
+  "role": "multi-model-consensus-assisted exploratory analysis only",
+  "warning": "Missing GT boxes were proposed by four evaluated YOLO checkpoints; this is not an independent benchmark.",
+  "added_insulator_boxes": 215,
+  "proposal_images": 214,
+  "minimum_consensus_models": 4,
+  "minimum_mean_confidence": 0.5,
+  "proposal_source": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\results\\finding_nemo\\targeted_audit_test_main_v1_nms50\\insulator_consensus_proposals_full_4of4.csv",
+  "correction_log_sha256": "58c4d32bacc3ba7502198c36c54e2897fec3021427360d410146ba874a9ce173"
+}

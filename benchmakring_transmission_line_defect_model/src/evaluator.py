@@ -48,7 +48,7 @@ class BenchmarkEvaluator:
                 "`python -m pip install -e \".[rtdetr-eval]\"` from Uav-Powerline-Defect-Detection."
             ) from exc
 
-        match = re.search(r"rtdetr(50|100)$", run_key.lower())
+        match = re.search(r"rtdetr_?r?(50|100|101)", run_key.lower())
         if match is None:
             raise ValueError(f"Unsupported Hugging Face RT-DETR run key: {run_key}")
         model_id = "PekingU/rtdetr_r50vd" if match.group(1) == "50" else "PekingU/rtdetr_r101vd"
@@ -413,7 +413,7 @@ class BenchmarkEvaluator:
             and cached_result.get("checkpoint_path") == str(checkpoint_path)
         ):
             if (
-                re.search(r"rtdetr(50|100)$", run_key.lower())
+                re.search(r"rtdetr_?r?(50|100|101)", run_key.lower())
                 and cached_result.get("hardware", {}).get("gflops", 0) <= 0
             ):
                 model, _ = self._load_huggingface_rtdetr(run_key, checkpoint_path)
@@ -422,7 +422,7 @@ class BenchmarkEvaluator:
                 )
                 self._save_results()
                 del model
-            if re.search(r"rtdetr(50|100)$", run_key.lower()):
+            if re.search(r"rtdetr_?r?(50|100|101)", run_key.lower()):
                 accuracy = cached_result.get("accuracy", {})
                 precision = float(accuracy.get("precision", 0.0))
                 recall = float(accuracy.get("recall", 0.0))
@@ -440,7 +440,7 @@ class BenchmarkEvaluator:
 
         print(f"\n--- [EVALUATE] Evaluating '{run_key}' on split '{split}' ---")
 
-        if re.search(r"rtdetr(50|100)$", run_key.lower()):
+        if re.search(r"rtdetr_?r?(50|100|101)", run_key.lower()):
             return self._evaluate_huggingface_rtdetr(
                 run_key, checkpoint_path, test_dataset_yaml, split
             )
