@@ -17,6 +17,44 @@ Reusable data-centric research toolkit for power-line defect detection in UAV im
 
 `MEAN_5` is the mean AP50 over defect classes 1–5; healthy `insulator` is excluded.
 
+## Integrated datasets and references
+
+The 22,618-image six-class benchmark is a harmonized collection built from the following six public sources. Source labels were converted to the taxonomy above; these datasets are not treated as mutually exclusive class partitions. Cite the applicable original sources when using the integrated data or reporting derived results.
+
+| Source | Contribution to the integrated taxonomy | Primary paper or dataset citation | Public access |
+|---|---|---|---|
+| **ZHENG1600** | `insulator`, `insulator_broken`, `insulator_flashover` | Zheng et al., “Insulator-Defect Detection Algorithm Based on Improved YOLOv7,” *Sensors* 22(22):8801, 2022. [doi:10.3390/s22228801](https://doi.org/10.3390/s22228801) | [Dataset Ninja mirror and citation](https://github.com/dataset-ninja/insulator-defect-detection) |
+| **IDID** | `insulator`, `insulator_broken`, `insulator_flashover` | Lewis and Kulkarni, “Insulator Defect Detection” [dataset], IEEE DataPort. [doi:10.21227/vkdw-x769](https://doi.org/10.21227/vkdw-x769) | IEEE DataPort; access may require accepting its terms |
+| **CPLID** | whole-insulator context and broken-insulator instances; synthetic defects are training-only | Tao et al., “Detection of Power Line Insulator Defects Using Aerial Images Analyzed With Convolutional Neural Networks,” *IEEE TSMC: Systems*. [doi:10.1109/TSMC.2018.2871750](https://doi.org/10.1109/TSMC.2018.2871750) | [InsulatorData/InsulatorDataSet](https://github.com/InsulatorData/InsulatorDataSet) |
+| **VPMBGI** | broken-glass instances mapped to `insulator_broken` | Vietnamese Public Merged dataset of Broken Glass Insulator; no single canonical paper, so cite the upstream sources documented by the repository | [phd-benel/VPMBGI](https://github.com/phd-benel/VPMBGI) |
+| **InsuFault-Net** | `insulator`, damaged-insulator, and flashover instances; integrated as training data | “InsuFault-Net: A Deep Learning-Based Insulator Defect Detection Algorithm for Transmission Lines” and its accompanying dataset repository | Upstream availability and provenance are recorded in [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) |
+| **FOTL / EFOD_Drone** | `bird_nest` and `foreign_object` | Gao et al., “YOLOv11-Based UAV Foreign Object Detection for Power Transmission Lines,” 2025 | Upstream availability and the FOTL overlay lineage are recorded in [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) |
+
+The controlled Raw-versus-Curated benchmark uses only the six-source integrated collection above. Later research branches also studied Open Images V7, MPCD, the Power Equipment Image Dataset, and a Roboflow transmission dataset; those sources are augmentation, ablation, or external-stage inputs and must not be described as constituents of the reported six-source benchmark.
+
+Additional source citations:
+
+- **Open Images V7:** Kuznetsova et al., “The Open Images Dataset V4,” *IJCV*, 2020. [arXiv:1811.00982](https://arxiv.org/abs/1811.00982); [dataset site](https://storage.googleapis.com/openimages/web/index.html).
+- **MPCD:** Benelmostafa and Medromi, “PowerLine-MTYOLO,” *Drones* 9(7):505, 2025. [doi:10.3390/drones9070505](https://doi.org/10.3390/drones9070505); [repository](https://github.com/phd-benel/PowerLine-MTYOLO).
+- **Power Equipment Image Dataset:** Xiong et al., “Object recognition for power equipment via human-level concept learning,” *IET Generation, Transmission & Distribution* 15(10):1578–1587, 2021. [doi:10.1049/gtd2.12088](https://doi.org/10.1049/gtd2.12088); [repository](https://github.com/xiongsiheng/Power-equipment-image-dataset).
+
+### Related datasets reviewed but not merged
+
+These references informed taxonomy or external-evaluation planning, but their images are not constituents of the reported six-source benchmark:
+
+- **Insulator-DET:** Li et al., “TLINet: A defects detection method for insulators of overhead transmission lines using partially transformer block,” *PLOS ONE*, 2025.
+- **BGI:** public broken-glass insulator data and a predecessor/overlap source for VPMBGI; it is not merged independently.
+- **CPMID:** “Cross-scale recognition of dense insulators and defects in complex power grid environments,” *Engineering Applications of Artificial Intelligence*, 2025. [doi:10.1016/j.engappai.2025.113283](https://doi.org/10.1016/j.engappai.2025.113283).
+- **TLID:** Hu et al., “Towards Defect Detection of Transmission Line Insulator: A Dataset, Benchmarks and Challenges,” ICPRE 2025. [doi:10.1109/ICPRE67300.2025.11274094](https://doi.org/10.1109/ICPRE67300.2025.11274094).
+- **Porcelain Disk Insulator 2026:** external-domain dataset, Mendeley Data, CC BY 4.0. [doi:10.17632/5pwrd7gmw2.1](https://doi.org/10.17632/5pwrd7gmw2.1).
+- **MPID:** reference dataset accompanying “APF-YOLOv8: Enhancing Multiscale Detection and Intra-Class Variance Handling for UAV-Based Insulator Power Line Inspections.” [Zenodo dataset](https://doi.org/10.5281/zenodo.14604384).
+- **InsPLAD:** Vieira e Silva et al., “InsPLAD: A Dataset and Benchmark for Power Line Asset Inspection in UAV Images,” 2023. [doi:10.1080/01431161.2023.2283900](https://doi.org/10.1080/01431161.2023.2283900); [repository](https://github.com/andreluizbvs/InsPLAD).
+- **TTPLA:** Abdelfattah et al., “TTPLA: An Aerial-Image Dataset for Detection and Segmentation of Transmission Towers and Power Lines,” ACCV 2020.
+- **TL-Defect5K:** Jia, “Mamba-enhanced detection transformer with selective state space models for multi-category defect detection in transmission lines,” *Discover Computing* 29(1):489, 2026. [paper](https://link.springer.com/article/10.1007/s10791-026-10353-0); [repository](https://github.com/Dali8710/TL-Defect5K).
+- **Roboflow transmission-detection v1:** CC BY 4.0; used only in the `v6p5-11` ablation, with `cable_defectueux` mapped to `broken_strand` and `rubbish` mapped to `foreign_object`.
+
+Their exact intended role, mapping restrictions, access notes, and redistribution cautions are maintained in [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md).
+
 ## Current Finding Nemo results
 
 Current training artifacts are mirrored under:
@@ -207,6 +245,12 @@ node --test test_stream.cjs
 - Finding Nemo journal: [`docs/NHAT_KY_2026-11-03.md`](docs/NHAT_KY_2026-11-03.md)
 - Paper evidence: [`artifacts/paper_evidence_20261026/`](artifacts/paper_evidence_20261026/README.md)
 - Benchmark details: [`benchmakring_transmission_line_defect_model/README.md`](benchmakring_transmission_line_defect_model/README.md)
+
+## Model references
+
+- **YOLO11 and YOLO26:** Ultralytics. [ultralytics/ultralytics](https://github.com/ultralytics/ultralytics). Experiments in this repository pin the exact package version in their environment or run metadata.
+- **RT-DETR:** Zhao et al., “DETRs Beat YOLOs on Real-time Object Detection,” CVPR 2024. [arXiv:2304.08069](https://arxiv.org/abs/2304.08069).
+- **SAM 2:** Ravi et al., “SAM 2: Segment Anything in Images and Videos,” 2024. [arXiv:2408.00714](https://arxiv.org/abs/2408.00714).
 
 ## Status — 2026-11-04
 
