@@ -25,7 +25,7 @@ The directory contains the original Raw-versus-Curated experiment, the newer Fin
 
 ```text
 configs/                  benchmark and dataset configuration
-src/                      trainer, evaluator, dataset checks, and reporting
+src/                      self-contained benchmark trainer, evaluator, dataset checks, and reporting
 scripts/                  data preparation, training, evaluation, audit, and restore tools
 results_yolo_model/       original YOLO Raw/Curated results
 results_rtdetr_best/      original RT-DETR best-checkpoint results
@@ -36,6 +36,8 @@ FINDING_NEMO_TEST_AUDIT_V5.md
                            roles and provenance for the v5 audit bundle
 benchmark_pipeline.ipynb  historical interactive orchestration notebook
 ```
+
+This local `src/` belongs specifically to the controlled benchmark. It is separate from the repository-wide reusable package at [`../src/yolov11sdi/`](../src/yolov11sdi/). Captured copies under `../artifacts/paper_evidence_20261026/sources/` are evidence snapshots only.
 
 ## Original Raw-versus-Curated benchmark
 
