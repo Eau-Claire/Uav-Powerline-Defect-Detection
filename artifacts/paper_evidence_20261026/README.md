@@ -4,7 +4,7 @@
 
 ## 1. Dataset inventory / class counts
 
-**Đã xác nhận từ output lưu:** `benchmakring_transmission_line_defect_model/benchmark_pipeline.ipynb`, cell index 2: raw train 18,334 ảnh / 18,334 label files; curated train 17,903 / 17,903; raw val 2,272; curated val_clean 2,271. Script đếm là `src/dataset.py:verify_dataset_structure`, đếm file jpg/png và txt, KHÔNG hash ảnh và KHÔNG kiểm tra label rỗng. Vì vậy đây là số file, không phải bằng chứng 18,334/17,903 nội dung ảnh duy nhất. Notebook legacy v6p5-17 cũng lưu 17,903 train, 2,272 val, 2,271 val_clean.
+**Đã xác nhận từ output lưu:** [`sources/benchmakring_transmission_line_defect_model/benchmark_pipeline.ipynb`](sources/benchmakring_transmission_line_defect_model/benchmark_pipeline.ipynb), cell index 2: raw train 18,334 ảnh / 18,334 label files; curated train 17,903 / 17,903; raw val 2,272; curated val_clean 2,271. Script đếm là [`sources/benchmakring_transmission_line_defect_model/src/dataset.py`](sources/benchmakring_transmission_line_defect_model/src/dataset.py), hàm `verify_dataset_structure`; script đếm file jpg/png và txt, KHÔNG hash ảnh và KHÔNG kiểm tra label rỗng. Vì vậy đây là số file, không phải bằng chứng 18,334/17,903 nội dung ảnh duy nhất. Notebook legacy v6p5-17 cũng lưu 17,903 train, 2,272 val, 2,271 val_clean.
 
 `artifacts/v6p5_train_local/20261009T024019Z_roboflow/build.json`: train 18,334, Roboflow thêm 351 train và 74 external_eval, 968 dropped; base_dataset v6p5_compose_4b9a452e24e2. Không được gọi 18,334 là canonical V6.2E nguyên bản chỉ dựa vào tên YAML.
 
@@ -26,20 +26,20 @@ Xuất images.csv (hash ảnh, tình trạng nhãn), splits.csv, classes.csv, su
 - YOLO: 8 records ngày 2026-10-23 đều trỏ configs/dataset_curated.yaml. YAML hiện có `val: images/val`, `test: images/val_clean`. Không lưu checkpoint_path trong JSON cũ; README nói best.pt, không phải bằng chứng từ checkpoint metadata.
 - RT-DETR: 4 records ngày 2026-10-25 đều trỏ data/curated_combined/data_val_clean.yaml, checkpoint `runs/<run>/weights/last.pt`. Chính file YAML runtime đó không có local; không khẳng định nội dung chỉ từ tên file.
 - Chưa có manifest/hash danh sách ảnh evaluation nên chưa chứng minh 12 runs chấm cùng ảnh và nhãn. split_key=test không đủ chứng minh test độc lập.
-- Code: src/evaluator.py:evaluate_checkpoint (YOLO), _evaluate_huggingface_rtdetr (HF), evaluate_all (xuất summary). YOLO F1=harmonic(mean P, mean R), HF F1=mean(class F1), cần thống nhất.
+- Code: [`sources/benchmakring_transmission_line_defect_model/src/evaluator.py`](sources/benchmakring_transmission_line_defect_model/src/evaluator.py): `evaluate_checkpoint` (YOLO), `_evaluate_huggingface_rtdetr` (HF), `evaluate_all` (xuất summary). YOLO F1=harmonic(mean P, mean R), HF F1=mean(class F1), cần thống nhất.
 - Notebook hiện tại cell 4 đã trỏ v6p2e_test/dataset.yaml, nhưng dùng string.open() nên cần sửa thành Path; nó không chứng minh các records cũ được chấm trên đường dẫn mới.
 
 ## 3. FPS và tài nguyên
 
 Bảng hardware trong LaTeX lấy toàn bộ **raw runs**. Curated YOLO26m: 61.4 FPS / 16.29 ms; raw: 63.6 FPS / 15.72 ms. mAP50 0.8323 là curated, không ghép thành cùng run với 63.6 FPS.
 
-Code `src/evaluator.py:profile_hardware`: YOLO predict tensor zeros [1,3,640,640], 50 warmup, 300 iterations theo benchmark_config.yaml; tính thời gian tổng rồi chia số lượt; GPU index 0. Nhánh HF: batch 2, ảnh thật toàn split, processor chuẩn bị ngoài vùng timing, GPU synchronize trước/sau forward; không có warmup riêng; ms/image là tổng forward time/số ảnh. Hai protocol không đồng nhất. HF FLOPs là THOP estimate, không mặc định đầy đủ mọi operator.
+Code [`sources/benchmakring_transmission_line_defect_model/src/evaluator.py`](sources/benchmakring_transmission_line_defect_model/src/evaluator.py), hàm `profile_hardware`: YOLO predict tensor zeros [1,3,640,640], 50 warmup, 300 iterations theo benchmark_config.yaml; tính thời gian tổng rồi chia số lượt; GPU index 0. Nhánh HF: batch 2, ảnh thật toàn split, processor chuẩn bị ngoài vùng timing, GPU synchronize trước/sau forward; không có warmup riêng; ms/image là tổng forward time/số ảnh. Hai protocol không đồng nhất. HF FLOPs là THOP estimate, không mặc định đầy đủ mọi operator.
 
 README nói RTX 4060, nhưng result JSON không lưu GPU name, CUDA/torch version hoặc precision. Chưa xác nhận hardware từng run bằng log runtime. Checkpoint RT-DETR có trong inventory; checkpoint YOLO cũ chỉ có mô tả README best.pt.
 
 ## 4. Training configurations
 
-YOLO dùng chung `configs/benchmark_config.yaml` và `src/trainer.py:train_single_run`: imgsz640, epochs50, AdamW lr0=.001 lrf=.01 cosine, warmup3, weight_decay=.0005, seed42, AMP, device0. n batch16, m batch8. accumulate 1/2 được khai báo nhưng chỉ in ra, KHÔNG truyền vào train; nbs không đặt. Cần args.yaml của đúng 8 runs để chốt effective batch thực tế.
+YOLO dùng chung [`sources/benchmakring_transmission_line_defect_model/configs/benchmark_config.yaml`](sources/benchmakring_transmission_line_defect_model/configs/benchmark_config.yaml) và [`sources/benchmakring_transmission_line_defect_model/src/trainer.py`](sources/benchmakring_transmission_line_defect_model/src/trainer.py), hàm `train_single_run`: imgsz640, epochs50, AdamW lr0=.001 lrf=.01 cosine, warmup3, weight_decay=.0005, seed42, AMP, device0. n batch16, m batch8. accumulate 1/2 được khai báo nhưng chỉ in ra, KHÔNG truyền vào train; nbs không đặt. Cần args.yaml của đúng 8 runs để chốt effective batch thực tế.
 
 RT-DETR benchmark state dict được evaluator dựng bằng PekingU/rtdetr_r50vd hoặc rtdetr_r101vd (run key rtdetr100 thực tế ánh xạ R101). Không đồng nhất chúng với rtdetr-l.pt / rtdetr-x.pt trong config Ultralytics.
 
@@ -56,7 +56,7 @@ Bằng chứng SAM: output notebook v6p5-17a lưu bảng train insulator thay1,1
 Dedup có HAI phạm vi:
 1. Legacy v6p2-05 freeze: code kiểm tra SHA-256 cả train–val/train–test/val–test; pHash/dHash/embedding, group handling, quarantine liên quan test; bảo toàn test hash set. Notebook local không có executed output; block số0 cuối notebook là acceptance criteria, không phải log chạy.
 2. `artifacts/v6p4_post_clean_audit/` có audit result runtime V6.2E: exact groups0, pHash candidate pairs135 (train–val86, train–test46, val–test3). Đây là ứng viên, không phải 135 confirmed leaks; chưa có disposition đủ cho các cặp trong gói.
-3. Pipeline src/yolov11sdi/dataset/dedup.py: external direct images vs toàn canonical manifest bằng SHA-256; external vs VAL/TEST bằng pHash. Không kiểm tra synthetic như external leakage. Đây là phạm vi code, không bằng chứng tự động mọi bước đã chạy trong benchmark.
+3. Pipeline [`sources/src/yolov11sdi/dataset/dedup.py`](sources/src/yolov11sdi/dataset/dedup.py): external direct images vs toàn canonical manifest bằng SHA-256; external vs VAL/TEST bằng pHash. Không kiểm tra synthetic như external leakage. Đây là phạm vi code, không bằng chứng tự động mọi bước đã chạy trong benchmark.
 
 ## 6. Diffusion augmentation
 

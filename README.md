@@ -90,6 +90,15 @@ docs/                                   data sources, versioning, migration note
 
 `legacy/` is intentionally retained. It is part of the reproducibility record and documents how dataset, annotation, and training decisions evolved.
 
+### Source-code map
+
+There are two active source trees with different responsibilities:
+
+- [`src/yolov11sdi/`](src/yolov11sdi/) is the reusable project package used by the root CLIs and current notebooks: ingestion, composition, deduplication, QA, state, reporting, and training helpers.
+- [`benchmakring_transmission_line_defect_model/src/`](benchmakring_transmission_line_defect_model/src/) is the self-contained Raw-versus-Curated benchmark engine: benchmark configuration, dataset verification, training, evaluation, and report generation.
+
+Files below [`artifacts/paper_evidence_20261026/sources/`](artifacts/paper_evidence_20261026/sources/) are immutable evidence snapshots referenced by `source_manifest.json`; they are not imported as runtime source code. The evidence report links to those captured files explicitly.
+
 Bulk datasets, checkpoints, virtual environments, caches, generated galleries, and credentials are excluded by `.gitignore`; large persistent artifacts belong on Camber.
 
 ## Reusable pipeline
