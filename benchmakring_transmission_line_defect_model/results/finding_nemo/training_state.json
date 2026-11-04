@@ -1,0 +1,69 @@
+{
+  "dataset": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_human_reviewed_6cls\\data.yaml",
+  "remote_root": "stash://bunpmc/projects/finding_nemo",
+  "runs": {
+    "yolo11n": {
+      "status": "completed",
+      "resumed": false,
+      "run_dir": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\yolo11n",
+      "remote": "stash://bunpmc/projects/finding_nemo/yolo11n",
+      "started_at": "2026-11-01 10:53:51",
+      "last_synced_epoch": 50,
+      "updated_at": "2026-11-01 18:02:17",
+      "best_sha256": "57fa38d6cd19af60794dd4ffbc2fb336684e5600fa0b39c4a62688d9e01e9f19",
+      "last_sha256": "0284db0cae7d4ea21176a69717cde3d43820f33c61d849469de6423b27d8819a",
+      "completed_at": "2026-11-01 18:05:38",
+      "sync_error": null
+    },
+    "yolo11m": {
+      "status": "completed",
+      "resumed": false,
+      "run_dir": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\yolo11m",
+      "remote": "stash://bunpmc/projects/finding_nemo/yolo11m",
+      "started_at": "2026-11-01 18:05:42",
+      "last_synced_epoch": 50,
+      "updated_at": "2026-11-02 01:03:57",
+      "best_sha256": "e7d2f909e051b067d043d47d2e430f9e4097029656cf9ba35ed099e9435ce026",
+      "last_sha256": "93072237c874afbf2ae9c256e804a0c1072493b53ecaa96ca8417aa2fdb2d1e0",
+      "completed_at": "2026-11-02 01:08:37",
+      "sync_error": null
+    },
+    "yolo26n": {
+      "status": "completed",
+      "resumed": false,
+      "run_dir": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\yolo26n",
+      "remote": "stash://bunpmc/projects/finding_nemo/yolo26n",
+      "started_at": "2026-11-02 01:08:41",
+      "last_synced_epoch": 50,
+      "updated_at": "2026-11-02 03:29:05",
+      "best_sha256": "a54e289f3ee60b78763cc8ec341b34be459157c0f343a74d8c9631e00042e50a",
+      "last_sha256": "257df73b3e9aacfe6dc4329d5adb5038209c503f1dd8724ae428e13113d52e1c",
+      "completed_at": "2026-11-02 03:32:19",
+      "sync_error": null
+    },
+    "yolo26m": {
+      "status": "completed",
+      "resumed": false,
+      "run_dir": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\yolo26m",
+      "remote": "stash://bunpmc/projects/finding_nemo/yolo26m",
+      "started_at": "2026-11-02 03:32:23",
+      "last_synced_epoch": 50,
+      "updated_at": "2026-11-02 11:03:40",
+      "best_sha256": "18576ce73960dee09cf572744323dc5415a4b9822fc67661d5cdbc058a773d7c",
+      "last_sha256": "f329aadc481b4e92f59b51df933914cf7272671e05159c55a69b1cbb1bd2c780",
+      "completed_at": "2026-11-02 11:08:10",
+      "sync_error": null
+    }
+  },
+  "dataset_yaml_sha256": "d120621c4d2186d5fbb12b22682552251a552055d090107a199c8f58abb53c8f",
+  "review_status_sha256": "8bd7f5ea38b8a6a0895c498a25900dbc99b37b1959a16fac4118bb6d07edcdab",
+  "order": [
+    "yolo11n",
+    "yolo11m",
+    "yolo26n",
+    "yolo26m"
+  ],
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "status": "complete",
+  "completed_at": "2026-11-02 12:04:40"
+}

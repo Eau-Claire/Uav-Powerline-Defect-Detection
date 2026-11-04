@@ -1,0 +1,2 @@
+﻿Model,Description,Checkpoint,Precision,Recall,F1-Score,mAP@0.5,mAP@0.5:0.95,MEAN_5,Latency (ms),FPS,GFLOPS,Params (M),VRAM (MB),Source Stash
+yolo26m,YOLO26m (epoch 45),yolo26m_epoch45.pt,0.8243,0.7552,0.7882,0.785,0.4399,0.7804,15.91,62.9,75.0,21.78,270.4,stash://bunpmc/projects/finding_nemo/yolo26m/weights/epoch45.pt

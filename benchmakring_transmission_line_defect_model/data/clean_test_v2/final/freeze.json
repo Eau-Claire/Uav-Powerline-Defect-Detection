@@ -1,0 +1,9 @@
+{
+  "name": "clean_test_v2_final",
+  "parent_manifest_sha256": "8e6026e5d7f9420691386ec5a5e555021e919a95fedd9b480fca2e65b9668881",
+  "status_counts": {
+    "ok": 1000
+  },
+  "images": 1000,
+  "audit_outcome_sha256": "514c4eb5b98cb32fb999cbe78ea21c2506a28ef438ef734217c9ae96f2618d44"
+}

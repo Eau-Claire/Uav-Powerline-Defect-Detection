@@ -1,0 +1,2 @@
+# Frozen records are verified by SHA-256; keep their bytes exact (no CRLF conversion).
+* -text

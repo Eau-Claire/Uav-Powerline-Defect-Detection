@@ -1,0 +1,11 @@
+{
+  "name": "test_main_v3_model_aligned_exploratory",
+  "source": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\data\\test_main_v1",
+  "role": "model-assisted exploratory analysis only",
+  "warning": "GT boxes were proposed by YOLO26m epoch45; results for that checkpoint are circular and must not replace the primary benchmark.",
+  "changed_boxes": 38,
+  "changed_images": 24,
+  "correction_log_sha256": "724677e8ae193d78e00393ac29a75674dcfbb0916631418a2529574f6b855a65",
+  "proposal_source": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\results\\finding_nemo\\targeted_audit_test_main_v1_nms50\\broken_strand_box_proposals_aggressive.csv",
+  "reviewed_reclasses_applied": true
+}

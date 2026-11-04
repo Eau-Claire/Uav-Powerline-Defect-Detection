@@ -1,0 +1,6 @@
+ultralytics==8.4.154
+inference-sdk==1.8.3
+inference-cli==1.8.3
+python-dotenv==1.2.4
+Pillow>=10
+PyYAML>=6

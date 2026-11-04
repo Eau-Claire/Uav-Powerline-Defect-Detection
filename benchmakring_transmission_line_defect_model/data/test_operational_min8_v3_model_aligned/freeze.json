@@ -1,0 +1,21 @@
+{
+  "name": "test_operational_min8_v3_model_aligned",
+  "role": "secondary operational UAV subset; never replaces test_main_v1",
+  "source": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\data\\test_main_v3_model_aligned_exploratory",
+  "rule": "exclude the entire image if any GT box has min(width,height) below threshold after letterbox scaling",
+  "imgsz": 640,
+  "minimum_side_pixels": 8.0,
+  "source_images": 1931,
+  "kept_images": 1871,
+  "excluded_images": 60,
+  "manifest_sha256": "d3f416c68b7591c6794718d0e508d4ff8d93e2f9ff5ad7faae26f11cee9109bb",
+  "distribution": {
+    "insulator_broken_boxes": 804,
+    "background_images": 150,
+    "foreign_object_boxes": 111,
+    "insulator_boxes": 916,
+    "broken_strand_boxes": 126,
+    "bird_nest_boxes": 172,
+    "insulator_flashover_boxes": 124
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "test_main_v4_consensus_model_assisted",
+  "source": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\data\\test_main_v3_model_aligned_exploratory",
+  "role": "multi-model-consensus-assisted exploratory analysis only",
+  "warning": "Missing GT boxes were proposed by four evaluated YOLO checkpoints; this is not an independent benchmark.",
+  "added_insulator_boxes": 21,
+  "proposal_images": 19,
+  "minimum_consensus_models": 4,
+  "correction_log_sha256": "cd5d5ee0be324b76f1c6bf0c8d999aa28c04ad020eca9d35ea2020259601600a"
+}

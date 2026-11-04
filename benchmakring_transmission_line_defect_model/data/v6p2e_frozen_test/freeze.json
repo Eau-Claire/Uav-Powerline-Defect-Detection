@@ -1,0 +1,12 @@
+{
+  "dataset": "v6p2e_23562a45b343",
+  "test_policy": "exact SHA256 set preserved from V6.1; TEST never moved or removed",
+  "images": 2012,
+  "unique_image_sha256": 1962,
+  "within_test_duplicate_rows_preserved": 50,
+  "labels": 2012,
+  "reconciled_label_files_applied": 0,
+  "manifest_sha256": "b689b04659297d592adcc3c340ed69d4ea6ba7173c05e4f7de0a5938896e9b29",
+  "source_manifest_sha256": "f3087205e3fd8d15b1e62d248fb4e534531e6e4227639a48fbfb3e9642c78def",
+  "distribution_verified": true
+}
