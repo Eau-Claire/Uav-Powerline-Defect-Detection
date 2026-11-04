@@ -1,5 +1,7 @@
 # YOLO11s Baseline V5 on Modal
 
+For deployment on a persistent Docker server while preserving the same backend API contract, see [`../docker_api/README.md`](../docker_api/README.md).
+
 This deployment exposes a multipart JPEG/PNG API for the capstone project:
 
 - `POST /detect`
