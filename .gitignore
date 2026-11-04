@@ -9,6 +9,12 @@ __pycache__/
 .idea/
 .vscode/
 
+# Local deployment/runtime caches
+deployment/modal/.tools/
+deployment/modal/.venv/
+deployment/modal/__pycache__/
+deployment/modal/models/*.pt
+
 # Secrets
 .env
 .docker-anon/
@@ -43,7 +49,7 @@ dist/
 # Model weights
 weights/
 *.pt
-!drone-modal/models/*.pt.source
+!deployment/modal/models/*.pt.source
 
 # Small, valuable records ARE committed: state/*.json, artifacts/freezes/*.json,
 # artifacts/manifests/*.csv, the review decisions CSV.
@@ -65,9 +71,12 @@ artifacts/diffusion_*_proto/labels/
 artifacts/diffusion_fo_proto/tile_*.jpg
 artifacts/diffusion_fo_proto/soup/
 artifacts/**/*.cache
+artifacts/paper_evidence_*/sources/**/*.html
 
 benchmakring_transmission_line_defect_model/data
 benchmakring_transmission_line_defect_model/runs
+benchmakring_transmission_line_defect_model/results/**/predictions_*.jsonl
+benchmakring_transmission_line_defect_model/results/**/gallery/
 *.pth
 # Local training datasets and transfer bundles (GBs; live on Camber, see artifacts/v6p5_transfer/TRANSFER.md)
 artifacts/v6p5_train_local/*/dataset/

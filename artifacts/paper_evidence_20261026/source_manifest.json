@@ -1,0 +1,170 @@
+[
+  {
+    "source": "artifacts/diffusion_fo_proto/meta.csv",
+    "sha256": "5c367f35da31404819212721aea0bf4f29267a4b6a16b4b3210a7d94cc65ba17"
+  },
+  {
+    "source": "artifacts/diffusion_strand_proto/meta.json",
+    "sha256": "1c263e41a9540d8a659ae43ae0206f2d3b1cd906d788f4167718b7ad27d84f7e"
+  },
+  {
+    "source": "artifacts/v6p4_post_clean_audit/cross_split_exact_duplicates.csv",
+    "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  {
+    "source": "artifacts/v6p4_post_clean_audit/cross_split_phash_near_duplicates.csv",
+    "sha256": "9d47bcfa49c0173415789ed4f2e030687782d7af6ac08f488a81b093c1ad09f6"
+  },
+  {
+    "source": "artifacts/v6p4_post_clean_audit/duplicate_gt_candidates.csv",
+    "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  {
+    "source": "artifacts/v6p4_post_clean_audit/v6p4_post_clean_decision.json",
+    "sha256": "52e57e14ae8204b7bf937200738a9ce821c758936eb248b0be7d5a457f3d2acf"
+  },
+  {
+    "source": "artifacts/v6p5_train_local/20261009T024019Z_roboflow/build.json",
+    "sha256": "b659c67207e6de6ee8b3cd3f78992c640968896e384c8cedeec3329dd7ba7340"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/benchmark_pipeline.ipynb",
+    "sha256": "dce3b134d005d10d6b6e654f0ae388ba77bf61ff6d69734cc095e61e762bd98a"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/configs/benchmark_config.yaml",
+    "sha256": "19a40f7e29bf518daeaa3bac9a2ddcbe0fdbbfdc69d4bffa1210b5aee9dea9a1"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/configs/dataset_curated.yaml",
+    "sha256": "9eb94803611597f28b68f9a06e3f3ee885779a9a0072884559db9369ef726f77"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/configs/dataset_raw.yaml",
+    "sha256": "c71447b9ce4cd27fbad0605292be135f409fab294ca23d94fc86fe6f458f95fe"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/kaggle-train-rtdetr-peking_used.ipynb",
+    "sha256": "0a81af5f63c5873eb69c43c8f233efcbfb80f8f94cd4ba4f86098eabe3b20c81"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/kaggle_train_rtdetr.ipynb",
+    "sha256": "278d595ef720f5f69c5ec3ec085a2f3dcf66b5d67edfd68a44660d1e0fe2cf13"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/kaggle_train_rtdetr_peking.ipynb",
+    "sha256": "e98577b0fedd0566eb2c16578be29db688c98f5d45d1a54c06f872b1c27701ed"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/results_rtdetr/benchmark_summary.csv",
+    "sha256": "85de39f88c4c259b03cdf0c985515345ca7ee68ba79b302edac1e420c29511f3"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/results_rtdetr/benchmark_test_results.json",
+    "sha256": "7254c17fcf96453407fca943e80545d95dbcfa667bcefe1053057993864a0a23"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/results_rtdetr/factorial_benchmark_matrix.csv",
+    "sha256": "fb7308fdd200a5a50d1a7ac8ae8d1d27673e6a619972fa5e717fdb99d9218566"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/results_rtdetr/factorial_benchmark_report.md",
+    "sha256": "5177137e30e5061e48f1d554d9e5ce795ec89f627b5bb6d96d09b30208d27af0"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/results_yolo_model/benchmark_summary.csv",
+    "sha256": "cde2efdc75c65ccf90a4068ad72edf74c80bb1308df2fc4969180f07e270f36e"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/results_yolo_model/benchmark_test_results.json",
+    "sha256": "8a374d280369ec00a1ea9afb13eb248f73b77e0901b3872592f8fe93fabb3416"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/results_yolo_model/factorial_benchmark_matrix.csv",
+    "sha256": "3752ba527694f1341fb477677c15b7e8681b95e761a35cd442eb54c27b3b2914"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/results_yolo_model/factorial_benchmark_report.md",
+    "sha256": "9ffc8e22b279447872a7ca90b815a96c54bd2d815b1aca24e71d0e3f49079ce5"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/src/__init__.py",
+    "sha256": "4dc449e8a3b5ebec8a5b713c979601c62580ad996deaf9b45623e9e5110578e6"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/src/config.py",
+    "sha256": "d5187c8ee19370957a87a945204f1b8bf49170107ebc6622160e6cda071ac420"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/src/dataset.py",
+    "sha256": "efcf98226e5a5d179d7d1a7aa81eb52e9a80021b2dbbf97a37850a06b649fe7e"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/src/evaluator.py",
+    "sha256": "21b75b03425be1d4f4f9da3d2d59e8f3551ebd2733c79bc655fc7c6ed923d79c"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/src/report.py",
+    "sha256": "e6a8db0dda44561cb863fd1981accefd92a4beadeb964843dd9c61e11bbf558d"
+  },
+  {
+    "source": "benchmakring_transmission_line_defect_model/src/trainer.py",
+    "sha256": "ff850749504851326420a6222a3334353886d6c02a1bfe7f613cca8898e2422a"
+  },
+  {
+    "source": "docs/SESSION_2026-10-15_v6p5_plateau.md",
+    "sha256": "27c30d37670228aa50bba9b595806a36f8cc1bd699852bac4ca444e4327ffa23"
+  },
+  {
+    "source": "legacy/notebooks/v6p2/v6p2-05_20261003-1119_v6p2e-freeze-auto-quarantine__FINAL.ipynb",
+    "sha256": "5031c76de044f3308f41efc263b3bf444c9764eb43af75e515d5bf1a8b935be1"
+  },
+  {
+    "source": "legacy/notebooks/v6p5/v6p5-17_20261012-6cls-v3-teacher-distill-yolo26n.ipynb",
+    "sha256": "d64d1e5d070e23e6030b5baf8dcd721aa4ee4bf77110ce4823ec9ac896bbd3f1"
+  },
+  {
+    "source": "legacy/notebooks/v6p5/v6p5-17a_20261012-sam-tighten-check.ipynb",
+    "sha256": "cbcd537e2fa69f3997ba31f76b98bc2cbe8dc530c450a66b26ca609382bd5d5d"
+  },
+  {
+    "source": "scripts/label_audit_analyze.py",
+    "sha256": "b72751b80968f89d804ff6ef6ecc077efba7be18e0c732e7a17a5b156c4201a9"
+  },
+  {
+    "source": "scripts/label_audit_build.py",
+    "sha256": "60d60726749450bb9f31f4a772095a7cc736962db5cae700217452aa045c72b2"
+  },
+  {
+    "source": "scripts/label_audit_flip.py",
+    "sha256": "ba02d77f058315c2ab872d12d80cada088fdfbd9dea48f6214214d728fc89f84"
+  },
+  {
+    "source": "scripts/label_audit_predict.py",
+    "sha256": "c803fcd8615c0413255e1cce859a10d9f5843fe028394ac6644cc3d4d8f85fac"
+  },
+  {
+    "source": "scripts/label_audit_sheets.py",
+    "sha256": "3e00d57ec2c40c5ed0ccf16d4beb84741786ebce4685b51fb12b5c41df0307c6"
+  },
+  {
+    "source": "scripts/proto_diffusion_fo.py",
+    "sha256": "f0d87d85d49a33fa6bbf288854410308daad9df893b694287c745f944b83ba6e"
+  },
+  {
+    "source": "scripts/proto_diffusion_strand.py",
+    "sha256": "9aba0e7f8d3928c8fbcee261b6cea8ac29e5ff756b82e9c696eb6164e13c83d4"
+  },
+  {
+    "source": "scripts/sam_tighten.py",
+    "sha256": "621ab286fb3a2a20872849016dbffcc1e3e6f99fc7540f89a712732fc9645601"
+  },
+  {
+    "source": "src/yolov11sdi/dataset/dedup.py",
+    "sha256": "59ea8f9bd2f10ba70891d22cdbd788ef529bc2f404bf255c4ae59951f0545c0c"
+  },
+  {
+    "source": "src/yolov11sdi/hashing.py",
+    "sha256": "064bf61e0789114bc86c7f1008bcc79c2234ddece6625625bbf3740b607e6e27"
+  }
+]

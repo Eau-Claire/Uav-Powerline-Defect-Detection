@@ -1,0 +1,1371 @@
+
+### Cell 0 (markdown)
+# V6.2E — Strict Leakage Audit + Conservative Auto-Quarantine, TEST Locked
+
+This notebook supersedes V6.2D.
+
+The policy is deliberately conservative:
+
+- TEST remains exactly frozen from V6.1.
+- Exact duplicate conflicts in TRAIN+VAL are reconciled or quarantined.
+- Strong near-duplicate TRAIN/VAL↔TEST relations are quarantined from TRAIN/VAL.
+- **All medium-confidence TRAIN/VAL↔TEST candidates are also quarantined automatically.**
+  They are recorded as `UNCERTAIN_QUARANTINE`, not as confirmed leakage.
+- Medium-confidence near-duplicate relations that remain entirely inside TRAIN+VAL
+  are grouped into indivisible split units so they cannot cross TRAIN↔VAL.
+- TRAIN/VAL are split only after these safeguards.
+- Final freeze is allowed only when exact and detected near-duplicate cross-split leakage is zero.
+
+This is intentionally stricter than a normal benchmark split. Losing a few uncertain
+TRAIN/VAL images is preferable to contaminating the fixed TEST set.
+
+No model training occurs here.
+
+
+### Cell 1 (code)
+from pathlib import Path
+import os, sys, json, shutil, subprocess, hashlib, zipfile, math
+from collections import Counter, defaultdict, deque
+from datetime import datetime, timezone
+
+W = Path("/kaggle/working")
+TMP = Path("/tmp/v6p2d")
+BASE_EXTRACT = TMP/"base"
+OVERLAY_EXTRACT = TMP/"overlay"
+OLD_RUNTIME = TMP/"v6p1_runtime"
+NEW_RUNTIME = TMP/"v6p2d_runtime"
+SYNTH_LABELS = TMP/"reconciled_labels"
+REPORTS = W/"v6p2d_strict_audit"
+
+for p in [TMP, BASE_EXTRACT, OVERLAY_EXTRACT, SYNTH_LABELS, REPORTS]:
+    p.mkdir(parents=True, exist_ok=True)
+
+PARENT_TAG = "v6p1_5d0b1149891c"
+BASE_TAG = "56b7ea194ee5"
+OVERLAY_TAG = "ee2d3c4497fd"
+
+DATA_ROOT = "stash://bunpmc/projects/yolov11sdi/datasets"
+PARENT_ROOT = f"{DATA_ROOT}/v6p1/{PARENT_TAG}"
+
+BASE_STASH = f"{DATA_ROOT}/curated_v6_rs1280_{BASE_TAG}.tar"
+OVERLAY_STASH = f"{PARENT_ROOT}/v6p1_fotl_overlay_{OVERLAY_TAG}.tar.gz"
+FREEZE_STASH = f"{PARENT_ROOT}/v6p1.freeze.json"
+
+NAMES = [
+    "insulator",
+    "insulator_broken",
+    "insulator_flashover",
+    "bird_nest",
+    "foreign_object",
+    "broken_strand",
+]
+
+OLD_SPLITS = {"train":17655, "val":2263, "test":2012}
+TARGET_VAL_IMAGES = 2263
+SEED = 42
+
+# Exact duplicate label reconciliation.
+SAME_CLASS_IOU_MERGE = 0.80
+CROSS_CLASS_IOU_CONFLICT = 0.70
+
+# Perceptual leakage thresholds.
+PHASH_AUTO = 4
+DHASH_AUTO = 6
+EMBED_AUTO = 0.990
+
+PHASH_REVIEW = 8
+DHASH_REVIEW = 10
+EMBED_REVIEW = 0.985
+
+# Any unresolved TEST-related medium-confidence pair blocks freeze.
+
+# ImageNet ResNet18 features are used only as a second signal for near-duplicate verification.
+USE_EMBEDDINGS = True
+EMBED_BATCH = 128
+
+UPLOAD_TO_CAMBER = True
+CAMBER_ROOT = f"{DATA_ROOT}/v6p2e"
+
+IMG_EXTS = {".jpg",".jpeg",".png",".bmp",".webp",".tif",".tiff"}
+
+
+### Cell 2 (code)
+subprocess.check_call([
+    sys.executable, "-m", "pip", "install", "-q",
+    "pyyaml", "pandas", "pillow", "imagehash",
+    "torchvision", "iterative-stratification"
+])
+
+import numpy as np
+import pandas as pd
+import yaml
+from PIL import Image, ImageOps, ImageDraw, ImageFont
+import imagehash
+import torch
+import torchvision.transforms as T
+from torchvision.models import resnet18, ResNet18_Weights
+from iterstrat.ml_stratifiers import MultilabelStratifiedShuffleSplit
+
+def images_under(root):
+    return sorted(
+        p for p in Path(root).rglob("*")
+        if p.is_file() and p.suffix.lower() in IMG_EXTS
+    )
+
+def sha256_file(path, chunk=4*1024*1024):
+    h=hashlib.sha256()
+    with open(path,"rb") as f:
+        for b in iter(lambda:f.read(chunk),b""):
+            h.update(b)
+    return h.hexdigest()
+
+def utc_now():
+    return datetime.now(timezone.utc).isoformat()
+
+def xywh_to_xyxy(b):
+    x,y,w,h=b
+    return x-w/2, y-h/2, x+w/2, y+h/2
+
+def iou_xywh(a,b):
+    ax1,ay1,ax2,ay2=xywh_to_xyxy(a)
+    bx1,by1,bx2,by2=xywh_to_xyxy(b)
+    ix1=max(ax1,bx1); iy1=max(ay1,by1)
+    ix2=min(ax2,bx2); iy2=min(ay2,by2)
+    iw=max(0.0,ix2-ix1); ih=max(0.0,iy2-iy1)
+    inter=iw*ih
+    aa=max(0.0,ax2-ax1)*max(0.0,ay2-ay1)
+    ba=max(0.0,bx2-bx1)*max(0.0,by2-by1)
+    den=aa+ba-inter
+    return inter/den if den>0 else 0.0
+
+def parse_label_file(path):
+    p=Path(path)
+    boxes=[]
+    if not p.exists():
+        return boxes
+    for row_no,line in enumerate(p.read_text(errors="ignore").splitlines(),1):
+        if not line.strip():
+            continue
+        parts=line.split()
+        if len(parts)<5:
+            raise RuntimeError(f"Malformed label {p}:{row_no}: {line}")
+        cid=int(float(parts[0]))
+        x,y,w,h=map(float,parts[1:5])
+        if not (0 <= cid < len(NAMES)):
+            raise RuntimeError(f"Bad class {cid}: {p}:{row_no}")
+        if not (0 <= x <= 1 and 0 <= y <= 1 and 0 < w <= 1 and 0 < h <= 1):
+            raise RuntimeError(f"Bad bbox {p}:{row_no}: {(x,y,w,h)}")
+        boxes.append({"cid":cid,"xywh":(x,y,w,h),"row_no":row_no})
+    return boxes
+
+def signature(boxes):
+    return tuple(sorted(
+        (b["cid"],)+tuple(round(v,6) for v in b["xywh"])
+        for b in boxes
+    ))
+
+def phash64(path):
+    with Image.open(path) as im:
+        im=ImageOps.exif_transpose(im).convert("RGB")
+        return int(str(imagehash.phash(im,hash_size=8)),16)
+
+def dhash64(path):
+    with Image.open(path) as im:
+        im=ImageOps.exif_transpose(im).convert("RGB")
+        return int(str(imagehash.dhash(im,hash_size=8)),16)
+
+def ham(a,b):
+    return (int(a)^int(b)).bit_count()
+
+
+### Cell 3 (markdown)
+## 1. Restore exact frozen V6.1 artifacts
+
+### Cell 4 (code)
+from kaggle_secrets import UserSecretsClient
+
+key=UserSecretsClient().get_secret("CAMBER_API_KEY")
+if not key:
+    raise RuntimeError("Missing CAMBER_API_KEY")
+
+os.environ["CAMBER_API_KEY"]=key
+
+if shutil.which("camber") is None and not (Path.home()/".camber/bin/camber").exists():
+    subprocess.check_call("curl -sL https://cli.cambercloud.com/install-v2.sh | bash",shell=True)
+
+os.environ["PATH"]=f"{Path.home()}/.camber/bin:{Path.home()}/.local/bin:"+os.environ.get("PATH","")
+CAMBER=shutil.which("camber") or str(Path.home()/".camber/bin/camber")
+
+def stash_cp(src,dst,required=True):
+    dst=Path(dst); dst.parent.mkdir(parents=True,exist_ok=True)
+    r=subprocess.run([CAMBER,"stash","cp",str(src),str(dst)],
+                     text=True,capture_output=True,env=os.environ.copy())
+    ok=r.returncode==0 and dst.exists()
+    if required and not ok:
+        raise RuntimeError(r.stderr[-1800:] or r.stdout[-1800:])
+    return ok
+
+def stash_put(src,dst):
+    src=Path(src)
+    r=subprocess.run([CAMBER,"stash","cp",str(src),str(dst)],
+                     text=True,capture_output=True,env=os.environ.copy())
+    if r.returncode!=0:
+        raise RuntimeError(r.stderr[-1800:] or r.stdout[-1800:])
+    print("Uploaded:",dst)
+
+parent_freeze=TMP/"v6p1.freeze.json"
+stash_cp(FREEZE_STASH,parent_freeze)
+parent=json.loads(parent_freeze.read_text())
+
+assert parent["final_tag"]==PARENT_TAG
+assert parent["freeze_ready"] is True
+assert parent["final_split_counts"]==OLD_SPLITS
+
+base_tar=TMP/f"base_{BASE_TAG}.tar"
+overlay_tar=TMP/f"overlay_{OVERLAY_TAG}.tar.gz"
+
+if not any(BASE_EXTRACT.rglob("data.yaml")):
+    stash_cp(BASE_STASH,base_tar)
+    subprocess.check_call(["tar","-xf",str(base_tar),"-C",str(BASE_EXTRACT)])
+    base_tar.unlink(missing_ok=True)
+
+if not any(OVERLAY_EXTRACT.rglob("data.yaml")):
+    stash_cp(OVERLAY_STASH,overlay_tar)
+    subprocess.check_call(["tar","-xzf",str(overlay_tar),"-C",str(OVERLAY_EXTRACT)])
+    overlay_tar.unlink(missing_ok=True)
+
+def normalize_names(names):
+    if isinstance(names,dict):
+        return [names[k] for k in sorted(names,key=lambda x:int(x))]
+    return list(names)
+
+def find_root(root):
+    for yp in Path(root).rglob("data.yaml"):
+        try:
+            cfg=yaml.safe_load(yp.read_text())
+            if normalize_names(cfg.get("names",[]))==NAMES:
+                return yp.parent
+        except Exception:
+            pass
+    raise RuntimeError(f"No matching dataset under {root}")
+
+BASE=find_root(BASE_EXTRACT)
+OVERLAY=find_root(OVERLAY_EXTRACT)
+
+print("BASE:",BASE)
+print("OVERLAY:",OVERLAY)
+
+
+### Cell 5 (markdown)
+## 2. Reconstruct exact V6.1 runtime
+
+### Cell 6 (code)
+if OLD_RUNTIME.exists():
+    shutil.rmtree(OLD_RUNTIME)
+
+for sp in ["train","val","test"]:
+    for src in ["base","fotl"]:
+        (OLD_RUNTIME/"images"/sp/src).mkdir(parents=True,exist_ok=True)
+        (OLD_RUNTIME/"labels"/sp/src).mkdir(parents=True,exist_ok=True)
+
+def link_source(src_root,split,source_name):
+    iroot=src_root/"images"/split
+    lroot=src_root/"labels"/split
+    for ip in images_under(iroot):
+        rel=ip.relative_to(iroot)
+        lp=lroot/rel.with_suffix(".txt")
+        dip=OLD_RUNTIME/"images"/split/source_name/rel
+        dlp=OLD_RUNTIME/"labels"/split/source_name/rel.with_suffix(".txt")
+        dip.parent.mkdir(parents=True,exist_ok=True)
+        dlp.parent.mkdir(parents=True,exist_ok=True)
+        os.symlink(ip,dip)
+        if lp.exists():
+            os.symlink(lp,dlp)
+        else:
+            dlp.write_text("")
+
+for sp in ["train","val","test"]:
+    link_source(BASE,sp,"base")
+    link_source(OVERLAY,sp,"fotl")
+
+counts={sp:len(images_under(OLD_RUNTIME/"images"/sp)) for sp in ["train","val","test"]}
+print(counts)
+assert counts==OLD_SPLITS
+
+
+### Cell 7 (markdown)
+## 3. Build full image records and lock TEST
+
+### Cell 8 (code)
+records=[]
+
+for sp in ["train","val","test"]:
+    iroot=OLD_RUNTIME/"images"/sp
+    lroot=OLD_RUNTIME/"labels"/sp
+
+    for ip in images_under(iroot):
+        rel=ip.relative_to(iroot)
+        source=rel.parts[0]
+        lp=lroot/rel.with_suffix(".txt")
+        boxes=parse_label_file(lp)
+
+        box_counts=[0]*len(NAMES)
+        for b in boxes:
+            box_counts[b["cid"]]+=1
+
+        records.append({
+            "rid":len(records),
+            "old_split":sp,
+            "source":source,
+            "relpath":rel.as_posix(),
+            "image_path":str(ip),
+            "label_path":str(lp),
+            "sha256":sha256_file(ip),
+            "boxes":boxes,
+            "label_signature":signature(boxes),
+            "class_presence":[int(x>0) for x in box_counts],
+            "box_counts":box_counts,
+        })
+
+test_records=[r for r in records if r["old_split"]=="test"]
+pool_records=[r for r in records if r["old_split"] in ("train","val")]
+
+OLD_TEST_HASHES=sorted(r["sha256"] for r in test_records)
+
+print("All images:",len(records))
+print("TRAIN+VAL:",len(pool_records))
+print("TEST locked:",len(test_records))
+
+
+### Cell 9 (markdown)
+## 4. Exact duplicate reconciliation inside TRAIN+VAL
+
+The same exact image may carry different label sets.
+
+Resolution:
+- identical labels -> collapse copies;
+- complementary labels -> union;
+- same-class boxes with IoU >= 0.80 -> collapse;
+- high-IoU cross-class disagreement -> quarantine the entire exact-image group.
+
+
+### Cell 10 (code)
+pool_by_sha=defaultdict(list)
+for r in pool_records:
+    pool_by_sha[r["sha256"]].append(r)
+
+exact_resolution=[]
+exact_ambiguous=[]
+resolved_pool=[]
+
+def preferred(grp):
+    return sorted(
+        grp,
+        key=lambda r:(0 if r["source"]=="base" else 1,
+                      0 if r["old_split"]=="train" else 1,
+                      r["relpath"])
+    )
+
+def reconcile_exact_group(h,grp):
+    ordered=preferred(grp)
+    rep=ordered[0]
+
+    if len(grp)==1:
+        return {**rep,"resolution":"unique"},None
+
+    sigs={r["label_signature"] for r in grp}
+    if len(sigs)==1:
+        return {**rep,"resolution":"exact_duplicate_same_labels"},None
+
+    all_boxes=[]
+    for rank,r in enumerate(ordered):
+        for b in r["boxes"]:
+            all_boxes.append({
+                **b,
+                "origin_rank":rank,
+                "origin_relpath":r["relpath"],
+            })
+
+    semantic_conflicts=[]
+    for i,a in enumerate(all_boxes):
+        for b in all_boxes[i+1:]:
+            if a["origin_relpath"]==b["origin_relpath"] or a["cid"]==b["cid"]:
+                continue
+            ov=iou_xywh(a["xywh"],b["xywh"])
+            if ov >= CROSS_CLASS_IOU_CONFLICT:
+                semantic_conflicts.append({
+                    "a":NAMES[a["cid"]],
+                    "b":NAMES[b["cid"]],
+                    "iou":ov,
+                    "src_a":a["origin_relpath"],
+                    "src_b":b["origin_relpath"],
+                })
+
+    if semantic_conflicts:
+        return None,{
+            "sha256":h,
+            "reason":"high_iou_cross_class_conflict",
+            "n_copies":len(grp),
+            "paths":" | ".join(f"{r['old_split']}:{r['source']}:{r['relpath']}" for r in ordered),
+            "conflicts_json":json.dumps(semantic_conflicts,ensure_ascii=False),
+        }
+
+    kept=[]
+    for cand in all_boxes:
+        merged=False
+        for k in kept:
+            if cand["cid"]!=k["cid"]:
+                continue
+            if iou_xywh(cand["xywh"],k["xywh"]) >= SAME_CLASS_IOU_MERGE:
+                merged=True
+                if cand["origin_rank"] < k["origin_rank"]:
+                    k.update(cand)
+                break
+        if not merged:
+            kept.append(dict(cand))
+
+    synth=SYNTH_LABELS/f"{h}.txt"
+    synth.write_text(
+        "\n".join(
+            f"{b['cid']} " + " ".join(f"{v:.6f}" for v in b["xywh"])
+            for b in sorted(kept,key=lambda x:(x["cid"],*x["xywh"]))
+        ) + ("\n" if kept else "")
+    )
+
+    counts=[0]*len(NAMES)
+    for b in kept:
+        counts[b["cid"]]+=1
+
+    sources=sorted({r["source"] for r in grp})
+    merged_rec={
+        **rep,
+        "source":"mixed" if len(sources)>1 else sources[0],
+        "label_path":str(synth),
+        "boxes":[{"cid":b["cid"],"xywh":b["xywh"],"row_no":0} for b in kept],
+        "label_signature":signature(kept),
+        "class_presence":[int(x>0) for x in counts],
+        "box_counts":counts,
+        "resolution":"merged_exact_duplicate_labels",
+    }
+    return merged_rec,None
+
+for h,grp in sorted(pool_by_sha.items()):
+    rec,amb=reconcile_exact_group(h,grp)
+    if amb:
+        exact_ambiguous.append(amb)
+        continue
+    resolved_pool.append(rec)
+    exact_resolution.append({
+        "sha256":h,
+        "resolution":rec["resolution"],
+        "n_input_copies":len(grp),
+        "output_boxes":sum(rec["box_counts"]),
+    })
+
+pd.DataFrame(exact_resolution).to_csv(REPORTS/"exact_duplicate_resolution.csv",index=False)
+pd.DataFrame(exact_ambiguous).to_csv(REPORTS/"exact_duplicate_ambiguous_quarantine.csv",index=False)
+
+print("Raw TRAIN+VAL:",len(pool_records))
+print("Unique SHA groups:",len(pool_by_sha))
+print("Resolved records:",len(resolved_pool))
+print("Exact ambiguous groups quarantined:",len(exact_ambiguous))
+
+
+### Cell 11 (markdown)
+## 5. Exact TEST leakage gate
+
+### Cell 12 (code)
+test_sha=set(r["sha256"] for r in test_records)
+resolved_sha=set(r["sha256"] for r in resolved_pool)
+
+exact_test_overlap=resolved_sha & test_sha
+print("Exact TRAIN+VAL ↔ TEST overlap:",len(exact_test_overlap))
+assert not exact_test_overlap
+
+
+### Cell 13 (markdown)
+## 6. Compute perceptual hashes for all remaining TRAIN+VAL + fixed TEST
+
+SHA256 misses resize/recompression. We therefore compute pHash and dHash.
+
+This step does not decide leakage alone. It only generates candidate pairs.
+
+
+### Cell 14 (code)
+audit_records=resolved_pool + test_records
+
+for i,r in enumerate(audit_records,1):
+    r["phash"]=phash64(r["image_path"])
+    r["dhash"]=dhash64(r["image_path"])
+    if i%2000==0:
+        print("hashed",i,"/",len(audit_records))
+
+hash_df=pd.DataFrame([{
+    "rid":i,
+    "old_split":r["old_split"],
+    "source":r["source"],
+    "sha256":r["sha256"],
+    "phash":f"{r['phash']:016x}",
+    "dhash":f"{r['dhash']:016x}",
+    "image_path":r["image_path"],
+} for i,r in enumerate(audit_records)])
+
+hash_df.to_csv(REPORTS/"perceptual_hash_manifest.csv",index=False)
+print("Perceptual hashes complete.")
+
+
+### Cell 15 (markdown)
+## 7. Candidate generation without O(N²)
+
+For Hamming threshold `t`, split the 64-bit hash into `t+1` bands.
+Any pair with Hamming distance <= `t` must share at least one exact band.
+
+We generate the union of pHash<=8 and dHash<=10 candidates, then verify them.
+
+
+### Cell 16 (code)
+def bit_bands(x,n_bands):
+    base=64//n_bands
+    rem=64%n_bands
+    out=[]
+    shift=0
+    for i in range(n_bands):
+        width=base+(1 if i<rem else 0)
+        mask=(1<<width)-1
+        out.append((i,(x>>shift)&mask,width))
+        shift+=width
+    return out
+
+def candidate_pairs(values,threshold):
+    n_bands=threshold+1
+    buckets=defaultdict(list)
+    pairs=set()
+
+    for idx,x in enumerate(values):
+        for band,val,width in bit_bands(x,n_bands):
+            key=(band,width,val)
+            for j in buckets[key]:
+                a,b=(j,idx) if j<idx else (idx,j)
+                pairs.add((a,b))
+            buckets[key].append(idx)
+    return pairs
+
+pvals=[r["phash"] for r in audit_records]
+dvals=[r["dhash"] for r in audit_records]
+
+pcands=candidate_pairs(pvals,PHASH_REVIEW)
+dcands=candidate_pairs(dvals,DHASH_REVIEW)
+cand_pairs=pcands | dcands
+
+filtered=[]
+for a,b in cand_pairs:
+    pdist=ham(pvals[a],pvals[b])
+    ddist=ham(dvals[a],dvals[b])
+    if pdist<=PHASH_REVIEW or ddist<=DHASH_REVIEW:
+        filtered.append((a,b,pdist,ddist))
+
+print("Raw candidate pairs:",len(cand_pairs))
+print("Distance-filtered candidates:",len(filtered))
+
+
+### Cell 17 (markdown)
+## 8. ResNet18 embedding verification
+
+Perceptual hash alone can confuse repetitive infrastructure imagery.
+We use a fixed ImageNet ResNet18 feature vector only as a second signal.
+
+Embedding similarity is **not** used alone to auto-group images.
+
+
+### Cell 18 (code)
+embedding_matrix=None
+
+if USE_EMBEDDINGS:
+    device="cuda" if torch.cuda.is_available() else "cpu"
+    weights=ResNet18_Weights.IMAGENET1K_V1
+    model=resnet18(weights=weights)
+    model.fc=torch.nn.Identity()
+    model.eval().to(device)
+
+    tfm=weights.transforms()
+
+    feats=[]
+    for start in range(0,len(audit_records),EMBED_BATCH):
+        batch=audit_records[start:start+EMBED_BATCH]
+        xs=[]
+        for r in batch:
+            with Image.open(r["image_path"]) as im:
+                im=ImageOps.exif_transpose(im).convert("RGB")
+                xs.append(tfm(im))
+        x=torch.stack(xs).to(device)
+        with torch.no_grad():
+            f=model(x)
+            f=torch.nn.functional.normalize(f,dim=1)
+        feats.append(f.cpu().numpy().astype("float32"))
+        if start%2048==0:
+            print("embedded",start,"/",len(audit_records))
+
+    embedding_matrix=np.concatenate(feats,axis=0)
+    print("Embeddings:",embedding_matrix.shape)
+else:
+    print("Embeddings disabled.")
+
+
+### Cell 19 (markdown)
+## 9. Classify strong near-duplicates vs review candidates
+
+Auto-group requires both perceptual similarity and high feature similarity.
+
+Strong edge:
+- pHash <= 4 AND dHash <= 6 AND cosine >= 0.990
+
+Review candidate:
+- pHash <= 8 OR dHash <= 10
+- cosine >= 0.985
+- not already strong
+
+Review candidates touching TEST are treated seriously and block freeze by default.
+
+
+### Cell 20 (code)
+strong_edges=[]
+review_pairs=[]
+
+for a,b,pdist,ddist in filtered:
+    if embedding_matrix is not None:
+        cos=float(np.dot(embedding_matrix[a],embedding_matrix[b]))
+    else:
+        cos=float("nan")
+
+    strong = (
+        pdist <= PHASH_AUTO and
+        ddist <= DHASH_AUTO and
+        (not USE_EMBEDDINGS or cos >= EMBED_AUTO)
+    )
+
+    review = (
+        (pdist <= PHASH_REVIEW or ddist <= DHASH_REVIEW) and
+        (not USE_EMBEDDINGS or cos >= EMBED_REVIEW)
+    )
+
+    if strong:
+        strong_edges.append((a,b,pdist,ddist,cos))
+    elif review:
+        review_pairs.append((a,b,pdist,ddist,cos))
+
+print("Strong near-duplicate edges:",len(strong_edges))
+print("Medium review pairs:",len(review_pairs))
+
+
+### Cell 21 (markdown)
+## 10. Build strong near-duplicate connected components
+
+Any strong component is treated as one leakage group.
+
+
+### Cell 22 (code)
+parent_idx=list(range(len(audit_records)))
+
+def find(x):
+    while parent_idx[x]!=x:
+        parent_idx[x]=parent_idx[parent_idx[x]]
+        x=parent_idx[x]
+    return x
+
+def union(a,b):
+    ra,rb=find(a),find(b)
+    if ra!=rb:
+        parent_idx[rb]=ra
+
+for a,b,_,_,_ in strong_edges:
+    union(a,b)
+
+components=defaultdict(list)
+for i in range(len(audit_records)):
+    components[find(i)].append(i)
+
+strong_groups=[g for g in components.values() if len(g)>1]
+
+group_rows=[]
+for gid,g in enumerate(strong_groups):
+    splits=sorted({audit_records[i]["old_split"] for i in g})
+    group_rows.append({
+        "group_id":gid,
+        "n_images":len(g),
+        "old_splits":",".join(splits),
+        "touches_test":any(audit_records[i]["old_split"]=="test" for i in g),
+        "members":" | ".join(
+            f"{audit_records[i]['old_split']}:{audit_records[i]['source']}:{Path(audit_records[i]['image_path']).name}"
+            for i in g
+        ),
+    })
+
+group_df=pd.DataFrame(group_rows)
+group_df.to_csv(REPORTS/"strong_near_duplicate_groups.csv",index=False)
+
+print("Strong near-duplicate groups:",len(strong_groups))
+print("Groups touching TEST:",sum(1 for r in group_rows if r["touches_test"]))
+
+
+### Cell 23 (markdown)
+## 11. Quarantine TRAIN+VAL members of strong groups touching TEST
+
+TEST remains untouched. Any TRAIN/VAL image strongly linked to TEST is removed from the
+training/validation candidate pool.
+
+
+### Cell 24 (code)
+audit_index_by_sha={r["sha256"]:i for i,r in enumerate(audit_records)}
+
+test_touch_trainval_idx=set()
+
+for g in strong_groups:
+    if any(audit_records[i]["old_split"]=="test" for i in g):
+        for i in g:
+            if audit_records[i]["old_split"]!="test":
+                test_touch_trainval_idx.add(i)
+
+test_strong_quarantine=[audit_records[i] for i in sorted(test_touch_trainval_idx)]
+
+pd.DataFrame([{
+    "sha256":r["sha256"],
+    "source":r["source"],
+    "old_split":r["old_split"],
+    "image_path":r["image_path"],
+    "reason":"strong_near_duplicate_of_fixed_test",
+} for r in test_strong_quarantine]).to_csv(
+    REPORTS/"test_related_strong_neardup_quarantine.csv",index=False
+)
+
+print("TRAIN+VAL images quarantined because of strong TEST relation:",
+      len(test_strong_quarantine))
+
+
+### Cell 25 (markdown)
+## 12. Medium-confidence TEST-related candidates
+
+These pairs are not strong enough to call confirmed leakage automatically.
+
+For a conservative benchmark policy, however, the TRAIN/VAL side of every such pair
+is excluded from model-development data.
+
+The audit record labels this action as `UNCERTAIN_QUARANTINE`. It does **not** claim
+that these pairs are confirmed duplicates.
+
+
+### Cell 26 (code)
+test_review=[]
+
+for a,b,pdist,ddist,cos in review_pairs:
+    ra,rb=audit_records[a],audit_records[b]
+    touches_test=(ra["old_split"]=="test") ^ (rb["old_split"]=="test")
+    if not touches_test:
+        continue
+
+    tr=rb if ra["old_split"]=="test" else ra
+    te=ra if ra["old_split"]=="test" else rb
+
+    test_review.append({
+        "decision":"UNCERTAIN_QUARANTINE",
+        "trainval_path":tr["image_path"],
+        "trainval_sha256":tr["sha256"],
+        "trainval_source":tr["source"],
+        "test_path":te["image_path"],
+        "test_sha256":te["sha256"],
+        "phash_distance":pdist,
+        "dhash_distance":ddist,
+        "embedding_cosine":cos,
+    })
+
+review_df=pd.DataFrame(test_review)
+review_df.to_csv(
+    REPORTS/"test_related_medium_candidates_quarantined.csv",
+    index=False
+)
+
+medium_test_sha=set(
+    r["trainval_sha256"] for r in test_review
+)
+
+medium_unique_df=pd.DataFrame([
+    {
+        "trainval_sha256":sha,
+        "decision":"UNCERTAIN_QUARANTINE",
+        "reason":"medium_confidence_near_duplicate_candidate_of_fixed_test",
+    }
+    for sha in sorted(medium_test_sha)
+])
+medium_unique_df.to_csv(
+    REPORTS/"test_related_medium_unique_quarantine.csv",
+    index=False
+)
+
+print("Medium-confidence TRAIN/VAL ↔ TEST candidate pairs:",len(test_review))
+print("Unique TRAIN/VAL images conservatively quarantined:",len(medium_test_sha))
+
+
+### Cell 27 (code)
+# Generate review contact sheets.
+sheet_dir=REPORTS/"test_review_contact_sheets"
+sheet_dir.mkdir(parents=True,exist_ok=True)
+
+def thumb(path,size=(360,250)):
+    with Image.open(path) as im:
+        im=ImageOps.exif_transpose(im).convert("RGB")
+        im.thumbnail(size)
+        canvas=Image.new("RGB",size,"white")
+        canvas.paste(im,((size[0]-im.width)//2,(size[1]-im.height)//2))
+        return canvas
+
+for start in range(0,min(len(test_review),120),6):
+    chunk=test_review[start:start+6]
+    sheet=Image.new("RGB",(760,310*len(chunk)),"white")
+    draw=ImageDraw.Draw(sheet)
+
+    for row_i,c in enumerate(chunk):
+        y=row_i*310
+        try:
+            sheet.paste(thumb(c["trainval_path"]),(10,y+10))
+            sheet.paste(thumb(c["test_path"]),(390,y+10))
+        except Exception as e:
+            draw.text((10,y+10),repr(e),fill="black")
+
+        draw.text(
+            (10,y+270),
+            f"p={c['phash_distance']} d={c['dhash_distance']} cos={c['embedding_cosine']:.5f}",
+            fill="black"
+        )
+
+    sheet.save(sheet_dir/f"review_{start:04d}.jpg",quality=90)
+
+print("Contact sheets:",sheet_dir)
+
+
+### Cell 28 (markdown)
+## 13. Build final TRAIN+VAL candidate pool
+
+Remove from TRAIN/VAL:
+
+- exact semantic-conflict groups;
+- strong near-duplicates of TEST;
+- all medium-confidence near-duplicate candidates of TEST.
+
+TEST itself is never changed.
+
+
+### Cell 29 (code)
+strong_test_sha={r["sha256"] for r in test_strong_quarantine}
+
+all_test_related_quarantine_sha = strong_test_sha | medium_test_sha
+
+candidate_pool=[
+    r for r in resolved_pool
+    if r["sha256"] not in all_test_related_quarantine_sha
+]
+
+print("Resolved TRAIN+VAL before TEST-related quarantine:",len(resolved_pool))
+print("Strong TEST-related TRAIN/VAL images quarantined:",len(strong_test_sha))
+print("Medium-confidence TEST-related TRAIN/VAL images quarantined:",len(medium_test_sha))
+print("Unique TEST-related TRAIN/VAL images quarantined:",
+      len(all_test_related_quarantine_sha))
+print("Candidate TRAIN+VAL after quarantine:",len(candidate_pool))
+
+remaining_test_related = (
+    all_test_related_quarantine_sha
+    & {r["sha256"] for r in candidate_pool}
+)
+assert not remaining_test_related
+print("✅ No quarantined TEST-related image remains in TRAIN+VAL candidate pool.")
+
+
+### Cell 30 (markdown)
+## 14. Build conservative similarity groups inside TRAIN+VAL
+
+To prevent leakage between TRAIN and VAL, split units are built from:
+
+- strong near-duplicate edges;
+- medium-confidence near-duplicate edges whose two surviving members are both in TRAIN+VAL.
+
+This is deliberately conservative. Medium-confidence pairs are not declared duplicates;
+they are simply kept on the same side of the split.
+
+
+### Cell 31 (code)
+cand_sha_to_pos={r["sha256"]:i for i,r in enumerate(candidate_pool)}
+cand_audit_indices=[
+    audit_index_by_sha[r["sha256"]]
+    for r in candidate_pool
+]
+
+cand_parent=list(range(len(candidate_pool)))
+
+def cfind(x):
+    while cand_parent[x]!=x:
+        cand_parent[x]=cand_parent[cand_parent[x]]
+        x=cand_parent[x]
+    return x
+
+def cunion(a,b):
+    ra,rb=cfind(a),cfind(b)
+    if ra!=rb:
+        cand_parent[rb]=ra
+
+audit_idx_to_cand={
+    ai:ci for ci,ai in enumerate(cand_audit_indices)
+}
+
+# Strong edges are always grouped.
+for a,b,_,_,_ in strong_edges:
+    if a in audit_idx_to_cand and b in audit_idx_to_cand:
+        cunion(audit_idx_to_cand[a],audit_idx_to_cand[b])
+
+# Medium-confidence pairs are also grouped when both members survived
+# and both belong to the model-development pool.
+medium_trainval_edges=0
+for a,b,_,_,_ in review_pairs:
+    if a in audit_idx_to_cand and b in audit_idx_to_cand:
+        cunion(audit_idx_to_cand[a],audit_idx_to_cand[b])
+        medium_trainval_edges += 1
+
+cand_groups=defaultdict(list)
+for i in range(len(candidate_pool)):
+    cand_groups[cfind(i)].append(i)
+
+groups=list(cand_groups.values())
+
+print("TRAIN+VAL candidate images:",len(candidate_pool))
+print("Grouped split units:",len(groups))
+print("Medium-confidence TRAIN+VAL edges grouped:",medium_trainval_edges)
+print("Multi-image conservative similarity groups:",sum(len(g)>1 for g in groups))
+print("Largest group size:",max(len(g) for g in groups))
+
+
+### Cell 32 (markdown)
+## 15. Group-level multilabel stratification
+
+Each conservative similarity group becomes one indivisible split unit.
+
+Features:
+
+- six class-presence labels;
+- source base / FOTL / mixed;
+- extra bird_nest bit.
+
+Because groups are indivisible, the final validation image count may differ slightly
+from 2,263. Leakage safety has priority over matching an exact split count.
+
+
+### Cell 33 (code)
+group_features=[]
+group_sizes=[]
+
+bird_id=NAMES.index("bird_nest")
+
+for g in groups:
+    class_presence=[0]*len(NAMES)
+    source_set=set()
+
+    for pos in g:
+        r=candidate_pool[pos]
+        source_set.add(r["source"])
+        for cid,v in enumerate(r["class_presence"]):
+            class_presence[cid]=max(class_presence[cid],v)
+
+    source_bits=[
+        int("base" in source_set),
+        int("fotl" in source_set),
+        int("mixed" in source_set),
+    ]
+
+    group_features.append(
+        class_presence + source_bits + [class_presence[bird_id]]
+    )
+    group_sizes.append(len(g))
+
+G=np.arange(len(groups)).reshape(-1,1)
+GY=np.asarray(group_features,dtype=np.int64)
+
+target_frac=TARGET_VAL_IMAGES/max(1,len(candidate_pool))
+
+splitter=MultilabelStratifiedShuffleSplit(
+    n_splits=1,
+    test_size=target_frac,
+    random_state=SEED,
+)
+
+g_train_idx,g_val_idx=next(splitter.split(G,GY))
+
+train_groups=[groups[int(i)] for i in g_train_idx]
+val_groups=[groups[int(i)] for i in g_val_idx]
+
+new_train=[candidate_pool[pos] for g in train_groups for pos in g]
+new_val=[candidate_pool[pos] for g in val_groups for pos in g]
+new_test=test_records
+
+print("Grouped train images:",len(new_train))
+print("Grouped val images:",len(new_val))
+print("Fixed test images:",len(new_test))
+print("Target val images:",TARGET_VAL_IMAGES)
+print("Val deviation:",len(new_val)-TARGET_VAL_IMAGES)
+
+
+### Cell 34 (markdown)
+## 16. Final strict leakage assertions
+
+
+### Cell 35 (code)
+train_sha={r["sha256"] for r in new_train}
+val_sha={r["sha256"] for r in new_val}
+test_sha={r["sha256"] for r in new_test}
+
+assert not (train_sha & val_sha)
+assert not (train_sha & test_sha)
+assert not (val_sha & test_sha)
+
+NEW_TEST_HASHES=sorted(r["sha256"] for r in new_test)
+assert NEW_TEST_HASHES==OLD_TEST_HASHES
+
+final_split_by_sha={}
+for r in new_train: final_split_by_sha[r["sha256"]]="train"
+for r in new_val: final_split_by_sha[r["sha256"]]="val"
+for r in new_test: final_split_by_sha[r["sha256"]]="test"
+
+def cross_split_edges(edges):
+    out=[]
+    for a,b,pdist,ddist,cos in edges:
+        sa=audit_records[a]["sha256"]
+        sb=audit_records[b]["sha256"]
+        spa=final_split_by_sha.get(sa,"quarantine")
+        spb=final_split_by_sha.get(sb,"quarantine")
+
+        if spa in {"train","val","test"} and spb in {"train","val","test"} and spa!=spb:
+            out.append({
+                "split_a":spa,
+                "split_b":spb,
+                "path_a":audit_records[a]["image_path"],
+                "path_b":audit_records[b]["image_path"],
+                "phash_distance":pdist,
+                "dhash_distance":ddist,
+                "embedding_cosine":cos,
+            })
+    return out
+
+strong_cross=cross_split_edges(strong_edges)
+medium_cross=cross_split_edges(review_pairs)
+
+pd.DataFrame(strong_cross).to_csv(
+    REPORTS/"FINAL_strong_neardup_cross_split.csv",
+    index=False
+)
+pd.DataFrame(medium_cross).to_csv(
+    REPORTS/"FINAL_medium_candidate_cross_split.csv",
+    index=False
+)
+
+remaining_quarantined = (
+    all_test_related_quarantine_sha
+    & (train_sha | val_sha)
+)
+
+print("Exact SHA cross-split overlap: 0")
+print("Strong near-duplicate cross-split edges:",len(strong_cross))
+print("Medium-confidence candidate cross-split edges:",len(medium_cross))
+print("TEST hash set unchanged:",NEW_TEST_HASHES==OLD_TEST_HASHES)
+print("Quarantined TEST-related images still in TRAIN/VAL:",
+      len(remaining_quarantined))
+
+assert len(strong_cross)==0
+assert len(medium_cross)==0
+assert len(remaining_quarantined)==0
+
+print("✅ STRICT leakage gates passed.")
+print("✅ All medium-confidence TEST-related candidates were conservatively quarantined.")
+
+
+### Cell 36 (markdown)
+## 17. Final class distribution audit
+
+This is computed only after leakage-safe grouping.
+
+
+### Cell 37 (code)
+def summarize(recs):
+    imgs=Counter()
+    boxes=Counter()
+    for r in recs:
+        for cid,v in enumerate(r["class_presence"]):
+            if v:
+                imgs[cid]+=1
+        for cid,n in enumerate(r["box_counts"]):
+            boxes[cid]+=n
+    return imgs,boxes
+
+summary={
+    "train":summarize(new_train),
+    "val":summarize(new_val),
+    "test":summarize(new_test),
+}
+
+rows=[]
+for cid,name in enumerate(NAMES):
+    row={"class":name}
+    for sp in ["train","val","test"]:
+        row[f"{sp}_images"]=summary[sp][0][cid]
+        row[f"{sp}_boxes"]=summary[sp][1][cid]
+    row["total_boxes"]=sum(summary[sp][1][cid] for sp in ["train","val","test"])
+    rows.append(row)
+
+dist=pd.DataFrame(rows)
+dist.to_csv(REPORTS/"v6p2e_final_distribution.csv",index=False)
+display(dist)
+
+bird=dist[dist["class"]=="bird_nest"].iloc[0]
+assert bird["val_images"] >= 400, f"bird_nest val images too low: {bird['val_images']}"
+assert bird["val_boxes"] >= 400, f"bird_nest val boxes too low: {bird['val_boxes']}"
+
+print("✅ bird_nest validation support acceptable.")
+
+
+### Cell 38 (markdown)
+## 18. Build runtime view
+
+Images are symlinked. Reconciled exact-duplicate labels are preserved through their synthetic label paths.
+
+
+### Cell 39 (code)
+if NEW_RUNTIME.exists():
+    shutil.rmtree(NEW_RUNTIME)
+
+for sp in ["train","val","test"]:
+    (NEW_RUNTIME/"images"/sp).mkdir(parents=True,exist_ok=True)
+    (NEW_RUNTIME/"labels"/sp).mkdir(parents=True,exist_ok=True)
+
+def link_record(r,sp,i):
+    ext=Path(r["image_path"]).suffix.lower()
+    name=f"{r['sha256'][:16]}_{i:06d}{ext}"
+    dip=NEW_RUNTIME/"images"/sp/name
+    dlp=NEW_RUNTIME/"labels"/sp/Path(name).with_suffix(".txt")
+    os.symlink(r["image_path"],dip)
+    lp=Path(r["label_path"])
+    if lp.exists():
+        os.symlink(lp,dlp)
+    else:
+        dlp.write_text("")
+
+for i,r in enumerate(new_train): link_record(r,"train",i)
+for i,r in enumerate(new_val): link_record(r,"val",i)
+for i,r in enumerate(new_test): link_record(r,"test",i)
+
+new_counts={sp:len(images_under(NEW_RUNTIME/"images"/sp)) for sp in ["train","val","test"]}
+print("Final split counts:",new_counts)
+
+(NEW_RUNTIME/"data.yaml").write_text(yaml.safe_dump({
+    "path":str(NEW_RUNTIME),
+    "train":"images/train",
+    "val":"images/val",
+    "test":"images/test",
+    "names":NAMES,
+},sort_keys=False))
+
+
+### Cell 40 (markdown)
+## 19. Freeze manifest and audit report
+
+This cell is reached only after:
+
+- exact cross-split leakage = 0;
+- strong near-duplicate cross-split leakage = 0;
+- medium-confidence candidate cross-split leakage = 0;
+- all TEST-related uncertain candidates have been removed from TRAIN/VAL;
+- TEST hash set is unchanged.
+
+
+### Cell 41 (code)
+manifest=[]
+
+for sp,recs in [("train",new_train),("val",new_val),("test",new_test)]:
+    for r in recs:
+        manifest.append({
+            "split":sp,
+            "source":r["source"],
+            "sha256":r["sha256"],
+            "image_path_source":r["image_path"],
+            "label_path_source":r["label_path"],
+            "resolution":r.get("resolution","test_original"),
+            "previous_v6p1_split":r["old_split"],
+        })
+
+manifest_df=pd.DataFrame(manifest).sort_values(["split","sha256"])
+manifest_path=REPORTS/"v6p2e_split_manifest.csv"
+manifest_df.to_csv(manifest_path,index=False)
+
+synth_zip=W/"v6p2e_reconciled_labels.zip"
+with zipfile.ZipFile(synth_zip,"w",zipfile.ZIP_DEFLATED) as z:
+    for p in SYNTH_LABELS.rglob("*.txt"):
+        z.write(p,p.relative_to(SYNTH_LABELS))
+
+h=hashlib.sha256()
+h.update(PARENT_TAG.encode())
+h.update(json.dumps(NAMES).encode())
+for row in manifest_df.to_dict("records"):
+    h.update(json.dumps(row,sort_keys=True).encode())
+for p in sorted(SYNTH_LABELS.rglob("*.txt")):
+    h.update(p.name.encode())
+    h.update(p.read_bytes())
+
+# Quarantine policy contributes to the dataset fingerprint.
+for sha in sorted(all_test_related_quarantine_sha):
+    h.update(("quarantine:"+sha).encode())
+
+FINAL_SHA=h.hexdigest()
+FINAL_TAG=f"v6p2e_{FINAL_SHA[:12]}"
+
+freeze={
+    "schema_version":"v6p2e-strict-conservative-quarantine-1",
+    "created_utc":utc_now(),
+    "dataset_name":"V6.2E",
+    "final_tag":FINAL_TAG,
+    "parent_dataset_tag":PARENT_TAG,
+    "base_tag":BASE_TAG,
+    "overlay_tag":OVERLAY_TAG,
+    "taxonomy":NAMES,
+    "split_counts":new_counts,
+    "test_policy":"exact SHA256 set preserved from V6.1; TEST never moved or removed",
+    "exact_duplicate_audit":{
+        "raw_trainval":len(pool_records),
+        "sha_groups":len(pool_by_sha),
+        "resolved_records":len(resolved_pool),
+        "ambiguous_groups_quarantined":len(exact_ambiguous),
+    },
+    "near_duplicate_audit":{
+        "strong_edges":len(strong_edges),
+        "strong_groups":len(strong_groups),
+        "strong_test_related_trainval_quarantined":len(strong_test_sha),
+        "medium_test_candidate_pairs":len(test_review),
+        "medium_test_related_unique_trainval_quarantined":len(medium_test_sha),
+        "all_test_related_unique_trainval_quarantined":len(all_test_related_quarantine_sha),
+        "medium_trainval_edges_grouped":medium_trainval_edges,
+        "phash_auto_threshold":PHASH_AUTO,
+        "dhash_auto_threshold":DHASH_AUTO,
+        "embedding_auto_threshold":EMBED_AUTO,
+        "medium_candidate_policy":"UNCERTAIN_QUARANTINE; not classified as confirmed leakage",
+    },
+    "integrity":{
+        "exact_cross_split_overlap":0,
+        "strong_neardup_cross_split_edges":len(strong_cross),
+        "medium_candidate_cross_split_edges":len(medium_cross),
+        "test_related_quarantine_remaining_in_trainval":len(remaining_quarantined),
+        "test_hash_set_unchanged":NEW_TEST_HASHES==OLD_TEST_HASHES,
+    },
+    "limitations":[
+        "Legacy base sources do not all expose scene/video-group metadata.",
+        "Perceptual and embedding audits reduce but cannot prove absence of all semantic scene overlap.",
+        "Medium-confidence TEST-related candidates were conservatively excluded rather than classified as confirmed duplicates.",
+        "No derivative EFOD_Drone data are used in validation/test.",
+    ],
+    "freeze_ready":True,
+}
+
+freeze_path=REPORTS/"v6p2e.freeze.json"
+freeze_path.write_text(json.dumps(freeze,indent=2))
+
+report_lines=[
+    "# V6.2E Strict Leakage Audit Report",
+    "",
+    f"- Final tag: `{FINAL_TAG}`",
+    f"- Parent: `{PARENT_TAG}`",
+    f"- Train / Val / Test: {new_counts['train']} / {new_counts['val']} / {new_counts['test']}",
+    f"- Exact ambiguous TRAIN+VAL groups quarantined: {len(exact_ambiguous)}",
+    f"- Strong near-duplicate groups detected: {len(strong_groups)}",
+    f"- Strong TEST-related TRAIN/VAL images quarantined: {len(strong_test_sha)}",
+    f"- Medium-confidence TEST-related candidate pairs: {len(test_review)}",
+    f"- Medium-confidence unique TRAIN/VAL images quarantined: {len(medium_test_sha)}",
+    f"- Total unique TEST-related TRAIN/VAL images quarantined: {len(all_test_related_quarantine_sha)}",
+    f"- Strong near-duplicate cross-split edges after final split: {len(strong_cross)}",
+    f"- Medium candidate cross-split edges after final split: {len(medium_cross)}",
+    f"- TEST hash set unchanged: {NEW_TEST_HASHES==OLD_TEST_HASHES}",
+    "",
+    "## Final class distribution",
+    "",
+    dist.to_markdown(index=False),
+    "",
+    "## Method",
+    "",
+    "The split was rebuilt under a conservative leakage-control policy. Exact duplicate "
+    "images were reconciled before splitting. Strong perceptual near-duplicates were "
+    "grouped into indivisible units, and any TRAIN/VAL image strongly related to the "
+    "fixed TEST set was quarantined. In addition, all medium-confidence TRAIN/VAL-to-TEST "
+    "near-duplicate candidates were conservatively removed from model-development data "
+    "without being labeled as confirmed duplicates. Medium-confidence relationships "
+    "remaining entirely within TRAIN+VAL were grouped so they could not cross the "
+    "TRAIN/VAL boundary.",
+]
+
+report_path=REPORTS/"V6P2E_STRICT_LEAKAGE_REPORT.md"
+report_path.write_text("\n".join(report_lines))
+
+records_zip=W/f"{FINAL_TAG}_audit_records.zip"
+with zipfile.ZipFile(records_zip,"w",zipfile.ZIP_DEFLATED) as z:
+    for p in REPORTS.rglob("*"):
+        if p.is_file():
+            z.write(p,p.relative_to(REPORTS.parent))
+
+print(json.dumps(freeze,indent=2))
+
+
+### Cell 42 (markdown)
+## 20. Upload final V6.2E freeze records to Camber
+
+
+### Cell 43 (code)
+if UPLOAD_TO_CAMBER:
+    remote=f"{CAMBER_ROOT}/{FINAL_TAG}"
+
+    upload_files=[
+        freeze_path,
+        manifest_path,
+        REPORTS/"exact_duplicate_resolution.csv",
+        REPORTS/"exact_duplicate_ambiguous_quarantine.csv",
+        REPORTS/"perceptual_hash_manifest.csv",
+        REPORTS/"strong_near_duplicate_groups.csv",
+        REPORTS/"test_related_strong_neardup_quarantine.csv",
+        REPORTS/"test_related_medium_candidates_quarantined.csv",
+        REPORTS/"test_related_medium_unique_quarantine.csv",
+        REPORTS/"FINAL_strong_neardup_cross_split.csv",
+        REPORTS/"FINAL_medium_candidate_cross_split.csv",
+        REPORTS/"v6p2e_final_distribution.csv",
+        report_path,
+        synth_zip,
+        records_zip,
+    ]
+
+    for p in upload_files:
+        if p.exists():
+            stash_put(p,f"{remote}/{p.name}")
+
+    print("✅ FINAL DATASET TAG:",FINAL_TAG)
+    print("✅ TEST preserved exactly from:",PARENT_TAG)
+    print("✅ CAMBER ROOT:",remote)
+else:
+    print("FINAL DATASET TAG:",FINAL_TAG)
+
+
+### Cell 44 (markdown)
+# Acceptance criteria
+
+Do not train on this dataset unless the notebook reaches all of these:
+
+```text
+Exact SHA cross-split overlap: 0
+Strong near-duplicate cross-split edges: 0
+Medium-confidence candidate cross-split edges: 0
+TEST hash set unchanged: True
+Quarantined TEST-related images still in TRAIN/VAL: 0
+✅ STRICT leakage gates passed.
+✅ bird_nest validation support acceptable.
+✅ FINAL DATASET TAG: v6p2e_...
+```
+
+The medium-confidence TEST-related pairs are recorded as **uncertain quarantines**,
+not confirmed leakage. This keeps the methodology conservative without overstating
+what the similarity detectors can prove.

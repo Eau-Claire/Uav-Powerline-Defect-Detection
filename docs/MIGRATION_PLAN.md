@@ -14,12 +14,12 @@ Historical context: `docs/context/chatgpt_context.md`.
 
 | Item | Where | Finding |
 |---|---|---|
-| Repo notebooks | `notebooks/` | **empty**, no V6.x code in the repo |
+| Current repo notebooks | `notebooks/` | 9 ordered setup, build, training, evaluation, and resume notebooks |
 | V6.1–V6.5 Kaggle notebooks | `~/Downloads` (outside the repo) | 39 relevant; 34 unique copied to `legacy/notebooks/` |
 | FiftyOne viewer | `view_fiftyone.py`, `run_fiftyone.sh`, `.venv` | kept as-is (separate tool) |
 | Power Equipment clone | `Power-equipment-image-dataset/` | local raw copy + helper scripts; kept. The pipeline uses the **HF zip** (`sxiong/...`) so tags match Kaggle |
-| `drone-modal/`, `sci-demo/` | demo apps | untouched; `drone-modal/.tools/camber` is a Camber CLI binary (v1.0.40, not logged in) |
-| Checkpoints | `drone-modal/models/baseline_v5_seed42_best.pt` | V5 demo model only, unrelated to V6.5 |
+| `deployment/modal/` | optional Modal runtime (relocated from `drone-modal/` on 2026-11-04) | working API and local camera bridge; local CLI/venv/model are ignored |
+| Checkpoints | `deployment/modal/models/baseline_v5_seed42_best.pt` | V5 deployment model only, unrelated to V6.5 |
 | Frozen artifacts / manifests | none locally | everything lives on Camber Stash |
 
 ### Duplicate implementations found

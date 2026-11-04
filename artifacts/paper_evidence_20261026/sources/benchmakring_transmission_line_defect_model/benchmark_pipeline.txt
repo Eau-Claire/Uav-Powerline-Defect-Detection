@@ -1,0 +1,288 @@
+
+### Cell 0 (markdown)
+# Controlled 2x6 Factorial Benchmark Pipeline
+## A Data-Centric Benchmark for Multi-Class Power-Line Defect Detection
+**Authors:** Phạm Hoàng Minh Châu, Đỗ Trung Quân, Nguyễn Nhật Thông  
+**Mentor:** Đặng Ngọc Minh Đức  
+
+This notebook orchestrates the end-to-end benchmark workflow:
+1. **Environment Setup & GPU Verification (RTX 4060)**
+2. **Dataset Configuration:** Raw Combined (V6.2E) vs Curated Combined (8-rule curation)
+3. **Resumable Training Runner:** 12 experimental variants (2 datasets × 6 models)
+4. **Evaluation on Frozen Test Set:** Accuracy metrics + Hardware latency/FPS profiling
+5. **Factorial Analysis & Reporting:** Data Curation Gain vs Model Scaling Gain
+
+### Cell 1 (code)
+# Cell 1: Environment Setup & Module Imports
+import sys, os, time
+from pathlib import Path
+import torch
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Ensure local src is in path
+CURRENT_DIR = Path.cwd()
+if (CURRENT_DIR / "benchmakring_transmission_line_defect_model").exists():
+    CURRENT_DIR = CURRENT_DIR / "benchmakring_transmission_line_defect_model"
+    os.chdir(CURRENT_DIR)
+if str(CURRENT_DIR) not in sys.path:
+    sys.path.insert(0, str(CURRENT_DIR))
+
+from src.config import get_benchmark_config, get_class_names
+from src.dataset import setup_dataset_yaml, verify_dataset_structure
+from src.trainer import BenchmarkTrainer
+from src.evaluator import BenchmarkEvaluator
+from src.report import BenchmarkReporter
+
+print("=== Environment Verification ===")
+print("PyTorch Version:", torch.__version__)
+print("CUDA Available :", torch.cuda.is_available())
+if torch.cuda.is_available():
+    print("GPU Device Name:", torch.cuda.get_device_name(0))
+    print("Total VRAM (GB):", round(torch.cuda.get_device_properties(0).total_memory / (1024**3), 2))
+print("Classes (6-class taxonomy):", get_class_names())
+
+OUTPUT
+=== Environment Verification ===
+PyTorch Version: 2.14.1+cu126
+CUDA Available : True
+GPU Device Name: NVIDIA GeForce RTX 4060 Laptop GPU
+Total VRAM (GB): 8.0
+Classes (6-class taxonomy): {0: 'insulator', 1: 'insulator_broken', 2: 'insulator_flashover', 3: 'bird_nest', 4: 'foreign_object', 5: 'broken_strand'}
+
+
+### Cell 2 (code)
+# Cell 2: Dataset Verification (Raw Combined vs Curated Combined)
+cfg = get_benchmark_config()
+raw_dir = CURRENT_DIR / "data" / "raw_combined"
+curated_dir = CURRENT_DIR / "data" / "curated_combined"
+
+raw_stats = verify_dataset_structure(raw_dir, "val")
+curated_stats = verify_dataset_structure(curated_dir, "val_clean")
+
+stats_df = pd.DataFrame([
+    {"Dataset": "Raw Combined (V6.2E uncurated)", "Train Images": raw_stats["train"]["images"], "Train Labels": raw_stats["train"]["labels"], "Val/Val_clean": raw_stats["val"]["images"], "YAML": cfg["datasets"]["raw"]["yaml_path"]},
+    {"Dataset": "Curated Combined (8-rule curation)", "Train Images": curated_stats["train"]["images"], "Train Labels": curated_stats["train"]["labels"], "Val/Val_clean": curated_stats["val"]["images"], "YAML": cfg["datasets"]["curated"]["yaml_path"]}
+])
+print("=== Dataset Verification Status ===")
+display(stats_df)
+
+OUTPUT
+=== Dataset Verification Status ===
+
+
+OUTPUT
+                              Dataset  Train Images  Train Labels  \
+0      Raw Combined (V6.2E uncurated)         18334         18334   
+1  Curated Combined (8-rule curation)         17903         17903   
+
+   Val/Val_clean                          YAML  
+0           2272      configs/dataset_raw.yaml  
+1           2271  configs/dataset_curated.yaml  
+
+### Cell 3 (code)
+# Cell 3: Training Management (Fully Resumable 2x6 Factorial)
+trainer = BenchmarkTrainer()
+
+# Display current status of all 12 runs
+status_table = pd.DataFrame(list(trainer.get_run_status().items()), columns=["Run Key", "Status"])
+display(status_table)
+
+# To train a single variant:
+# trainer.train_single_run(dataset_type="raw", model_key="yolo11n")
+
+# To launch the full benchmark suite (automatically resumes if stopped!)    :
+trainer.run_all_benchmarks(datasets=["raw", "curated"], models=["yolo11n", "yolo11m", "yolo26n", "yolo26m"])
+
+OUTPUT
+                Run Key     Status
+0           raw_yolo11n  COMPLETED
+1           raw_yolo11m  COMPLETED
+2           raw_yolo26n  COMPLETED
+3           raw_yolo26m  COMPLETED
+4        raw_rtdetr_r50    PENDING
+5       raw_rtdetr_r101    PENDING
+6       curated_yolo11n  COMPLETED
+7       curated_yolo11m  COMPLETED
+8       curated_yolo26n  COMPLETED
+9       curated_yolo26m  COMPLETED
+10   curated_rtdetr_r50    PENDING
+11  curated_rtdetr_r101    PENDING
+
+OUTPUT
+
+>>> Launching Factorial Benchmark: 2 datasets x 4 models = 8 runs <<<
+[SKIP] Run 'raw_yolo11n' already completed. Using saved checkpoint.
+[SKIP] Run 'raw_yolo11m' already completed. Using saved checkpoint.
+[SKIP] Run 'raw_yolo26n' already completed. Using saved checkpoint.
+[SKIP] Run 'raw_yolo26m' already completed. Using saved checkpoint.
+[SKIP] Run 'curated_yolo11n' already completed. Using saved checkpoint.
+[SKIP] Run 'curated_yolo11m' already completed. Using saved checkpoint.
+[SKIP] Run 'curated_yolo26n' already completed. Using saved checkpoint.
+[SKIP] Run 'curated_yolo26m' already completed. Using saved checkpoint.
+
+
+OUTPUT
+{'raw_yolo11n': {'run_key': 'raw_yolo11n',
+  'dataset': 'raw',
+  'model': 'yolo11n',
+  'family': 'yolo11',
+  'status': 'completed',
+  'best_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo11n\\weights\\best.pt',
+  'last_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo11n\\weights\\last.pt',
+  'run_dir': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo11n',
+  'training_time_seconds': 7689.53542470932,
+  'peak_vram_mb': 2143.17578125,
+  'completed_at': '2026-10-21 02:52:56'},
+ 'raw_yolo11m': {'run_key': 'raw_yolo11m',
+  'dataset': 'raw',
+  'model': 'yolo11m',
+  'family': 'yolo11',
+  'status': 'completed',
+  'best_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo11m\\weights\\best.pt',
+  'last_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo11m\\weights\\last.pt',
+  'run_dir': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo11m',
+  'training_time_seconds': 23660.46770143509,
+  'peak_vram_mb': 4105.5146484375,
+  'completed_at': '2026-10-21 09:27:20'},
+ 'raw_yolo26n': {'run_key': 'raw_yolo26n',
+  'dataset': 'raw',
+  'model': 'yolo26n',
+  'family': 'yolo26',
+  'status': 'completed',
+  'best_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo26n\\weights\\best.pt',
+  'last_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo26n\\weights\\last.pt',
+  'run_dir': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo26n',
+  'training_time_seconds': 9511.922673225403,
+  'peak_vram_mb': 2377.40234375,
+  'completed_at': '2026-10-21 17:17:48'},
+ 'raw_yolo26m': {'run_key': 'raw_yolo26m',
+  'dataset': 'raw',
+  'model': 'yolo26m',
+  'family': 'yolo26',
+  'status': 'completed',
+  'best_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo26m\\weights\\best.pt',
+  'last_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo26m\\weights\\last.pt',
+  'run_dir': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\raw_yolo26m',
+  'training_time_seconds': 42821.5145406723,
+  'peak_vram_mb': 4632.24072265625,
+  'completed_at': '2026-10-22 05:11:45'},
+ 'curated_yolo11n': {'run_key': 'curated_yolo11n',
+  'dataset': 'curated',
+  'model': 'yolo11n',
+  'family': 'yolo11',
+  'status': 'completed',
+  'best_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo11n\\weights\\best.pt',
+  'last_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo11n\\weights\\last.pt',
+  'run_dir': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo11n',
+  'training_time_seconds': 9163.330654382706,
+  'peak_vram_mb': 4632.24072265625,
+  'completed_at': '2026-10-22 07:44:29'},
+ 'curated_yolo11m': {'run_key': 'curated_yolo11m',
+  'dataset': 'curated',
+  'model': 'yolo11m',
+  'family': 'yolo11',
+  'status': 'completed',
+  'best_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo11m\\weights\\best.pt',
+  'last_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo11m\\weights\\last.pt',
+  'run_dir': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo11m',
+  'training_time_seconds': 24353.471735715866,
+  'peak_vram_mb': 4632.24072265625,
+  'completed_at': '2026-10-22 14:30:22'},
+ 'curated_yolo26n': {'run_key': 'curated_yolo26n',
+  'dataset': 'curated',
+  'model': 'yolo26n',
+  'family': 'yolo26',
+  'status': 'completed',
+  'best_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo26n\\weights\\best.pt',
+  'last_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo26n\\weights\\last.pt',
+  'run_dir': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo26n',
+  'training_time_seconds': 10026.115335226059,
+  'peak_vram_mb': 2358.80126953125,
+  'completed_at': '2026-10-22 17:52:38'},
+ 'curated_yolo26m': {'run_key': 'curated_yolo26m',
+  'dataset': 'curated',
+  'model': 'yolo26m',
+  'family': 'yolo26',
+  'status': 'completed',
+  'best_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo26m\\weights\\best.pt',
+  'last_weights': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo26m\\weights\\last.pt',
+  'run_dir': 'D:\\Data-Centric-UAV-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\curated_yolo26m',
+  'training_time_seconds': 32217.76338815689,
+  'peak_vram_mb': 4631.767578125,
+  'completed_at': '2026-10-23 02:49:36'}}
+
+### Cell 4 (code)
+# Cell 4: Evaluate RT-DETR 50/100 raw and curated models on V6.2E test
+evaluator = BenchmarkEvaluator()
+
+# Both raw and curated checkpoints are evaluated on the same independent test set.
+evaluation_yaml = r"D:\Data-Centric-UAV-Powerline-Defect-Detection\Uav-Powerline-Defect-Detection\data\working\v6p2e_test\dataset.yaml"
+# Ultralytics requires train and val keys even when evaluating split="test".
+import yaml
+with evaluation_yaml.open("r", encoding="utf-8") as f:
+    evaluation_data = yaml.safe_load(f)
+if not evaluation_data.get("train"):
+    evaluation_data["train"] = evaluation_data["test"]
+    with evaluation_yaml.open("w", encoding="utf-8") as f:
+        yaml.safe_dump(evaluation_data, f, sort_keys=False)
+
+checkpoint_paths = {
+    "curated_rtdetr50": CURRENT_DIR / "runs" / "curated_rtdetr50" / "weights" / "last.pt",
+    "curated_rtdetr100": CURRENT_DIR / "runs" / "curated_rtdetr100" / "weights" / "last.pt",
+    "raw_rtdetr50": CURRENT_DIR / "runs" / "raw_rtdetr50" / "weights" / "last.pt",
+    "raw_rtdetr100": CURRENT_DIR / "runs" / "raw_rtdetr100" / "weights" / "last.pt",
+}
+missing_checkpoints = [str(path) for path in checkpoint_paths.values() if not path.is_file()]
+if missing_checkpoints:
+    raise FileNotFoundError("Missing RT-DETR checkpoints:\n" + "\n".join(missing_checkpoints))
+
+selected_runs = {
+    run_key: {"last_weights": str(checkpoint_path)}
+    for run_key, checkpoint_path in checkpoint_paths.items()
+}
+split_by_dataset = {"raw": "test", "curated": "test"}
+
+print(f"Evaluating four RT-DETR checkpoints on V6.2E test set: {evaluation_yaml}")
+df_summary = evaluator.evaluate_all(
+    selected_runs,
+    evaluation_yaml,
+    split_by_dataset=split_by_dataset,
+    checkpoint_field="last_weights"
+)
+if not df_summary.empty:
+    display(df_summary)
+else:
+    print("No completed models found to evaluate. Run training first.")
+
+### Cell 5 (code)
+# Cell 5: 2x6 Factorial Matrix, Visualization & Report Generation
+reporter = BenchmarkReporter()
+report_md = reporter.generate_report()
+
+# Load matrix for visual plotting
+matrix_csv = CURRENT_DIR / "results" / "factorial_benchmark_matrix.csv"
+if matrix_csv.exists():
+    df_mat = pd.read_csv(matrix_csv)
+    display(df_mat)
+    
+    # Bar chart: Raw vs Curated mAP@0.5
+    if "Raw mAP50" in df_mat.columns and "Curated mAP50" in df_mat.columns:
+        plt.figure(figsize=(10, 5))
+        x = range(len(df_mat))
+        # Convert numeric if available
+        try:
+            raw_vals = pd.to_numeric(df_mat["Raw mAP50"], errors='coerce')
+            cur_vals = pd.to_numeric(df_mat["Curated mAP50"], errors='coerce')
+            plt.bar([i - 0.2 for i in x], raw_vals, width=0.4, label="Raw Combined", color="salmon")
+            plt.bar([i + 0.2 for i in x], cur_vals, width=0.4, label="Curated Combined", color="teal")
+            plt.xticks(x, df_mat["Architecture"])
+            plt.ylabel("mAP @ 0.5")
+            plt.title("Controlled 2x6 Factorial: Raw vs Curated Data Performance")
+            plt.legend()
+            plt.grid(axis="y", linestyle="--", alpha=0.7)
+            plt.show()
+        except Exception as e:
+            print("Plotting error:", e)
+
+print("Report saved in: results/factorial_benchmark_report.md")
