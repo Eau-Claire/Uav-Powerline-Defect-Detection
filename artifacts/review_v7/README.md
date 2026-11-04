@@ -1,29 +1,32 @@
-# Review v7: chỉ những gì cần người quyết
+# V7 review: decisions requiring human input
 
-Tự động (đã làm, `datasets/v6p5_v7`, chi tiết `changes_v7.csv`): chỉnh 331 box lệch rõ theo teacher (conf ≥ 0.8, IoU 0.5–0.75),
-gộp 5 nhóm vết nứt thành 1 box/tán, thêm 301 insulator thiếu nhãn. Val **không** bị sửa tự động (để điểm không bị thổi phồng).
+The automated V7 pass (`datasets/v6p5_v7`; details in `changes_v7.csv`) corrected 331 clearly misaligned boxes using teacher predictions (`confidence ≥ 0.8`, `IoU 0.5–0.75`), merged five crack groups into one box per damaged insulator disc, and added 301 missing insulator labels. Validation labels were not changed automatically, avoiding inflated validation metrics.
 
-## A. Quyết định quy ước (ảnh hưởng lớn nhất tới gap mAP50 → mAP50-95)
-1. insulator_broken: **1 box / tán hỏng** (đề xuất) hay 1 box / vết nứt?
-2. broken_strand: **box sát chỗ tưa** (đề xuất) hay cả đoạn dây? (nguồn 640×640 đang vẽ cả đoạn, 640×480 vẽ sát)
-3. insulator_flashover: **cả tán bị cháy** (đề xuất) hay chỉ vùng vết cháy?
-4. Drone/UAV bay trong ảnh có tính là foreign_object không?
+## A. Annotation-convention decisions
 
-## B. Rò rỉ train → val (`val_train_near_dups.json`)
-148 ảnh val_clean_v6 (6.5%) gần trùng ảnh train (đã kiểm tra mắt 8/8 là trùng thật, có bản là ảnh augment của Roboflow).
-Đề xuất: **xoá các ảnh train trùng** ở v8 (giữ val nguyên). 409 ảnh val có bản gần trùng ngay trong val → CI bootstrap đang hẹp hơn thực tế.
+These choices have the largest effect on the mAP50-to-mAP50:95 gap:
 
-## C. Hàng đợi `review_queue.csv` (283 dòng, cột `suggest` = gợi ý của mình sau khi xem mẫu, cột `decision` để bạn điền)
-Sheet ảnh: `*_NN.jpg` (số `#id` trên ảnh = cột `id`). Trắng = box đang xét, màu = nhãn hiện có.
+1. `insulator_broken`: use one box per damaged disc (recommended), or one box per crack?
+2. `broken_strand`: tightly box the frayed region (recommended), or box the entire conductor segment? Existing 640×640 sources use the full segment, whereas 640×480 sources use tight boxes.
+3. `insulator_flashover`: box the entire burned disc (recommended), or only the visible burn mark?
+4. Should a drone/UAV visible in the image count as `foreign_object`?
 
-| Nhóm | Số | Gợi ý | Việc của bạn |
-|---|---|---|---|
-| val bird_nest missing_label | 13 | **add**: đã xem, ~11/13 là tổ thật chưa gán | xác nhận nhanh 1 sheet |
-| val FO missed_gt | 12 | **ok**: nhãn đúng, model yếu (diều/túi/bóng) | không cần |
-| val bird_nest missed_gt | 42 | **ok**: đã xem, gần hết là tổ thật bị che / lẫn thiết bị | không cần |
-| val insulator_broken missed_gt | 82 | nhiều box là chói sáng / mẻ cực nhỏ / đặt trên kẹp-dây buộc (#64, #77) | **cần người có chuyên môn**: ok / drop |
-| val broken_strand missed_gt | 27 | phụ thuộc quy ước A2 | làm sau khi chốt A2 |
-| val flashover missed_gt | 11 | có ảnh có **vòng tròn đỏ vẽ sẵn** (#24, #25): model có thể học "vòng đỏ = lỗi" | ok / drop, đánh dấu ảnh vòng đỏ |
-| train flashover / FO | 90 | ưu tiên thấp | để sau |
+## B. Train-to-validation leakage (`val_train_near_dups.json`)
 
-Thứ tự đề xuất: A (5 phút) → bird_nest add (2 phút) → insulator_broken 82 ô (4 sheet, ~20 phút). Phần còn lại không bắt buộc.
+There are 148 `val_clean_v6` images (6.5%) with near-duplicates in training. Manual inspection confirmed 8/8 sampled pairs as true duplicates, including Roboflow augmentations. The recommendation for V8 is to delete the duplicated training images while leaving validation unchanged. Another 409 validation images have near-duplicates within validation, so the current bootstrap confidence interval is probably too narrow.
+
+## C. `review_queue.csv`
+
+The queue contains 283 rows. Column `suggest` records the preliminary recommendation after sample inspection; column `decision` is for the reviewer. Contact sheets are named `*_NN.jpg`; the displayed `#id` matches column `id`. White boxes identify the candidate under review, and colored boxes show existing labels.
+
+| Group | Count | Preliminary recommendation | Required action |
+|---|---:|---|---|
+| validation `bird_nest` missing label | 13 | **add**: approximately 11/13 appear to be real unlabeled nests | Quickly confirm one sheet |
+| validation FO missed GT | 12 | **keep**: labels look correct; the model misses kites, bags, and balloons | None |
+| validation `bird_nest` missed GT | 42 | **keep**: most are real nests obscured by equipment | None |
+| validation `insulator_broken` missed GT | 82 | Many boxes cover glare, tiny chips, clamps, or ties (`#64`, `#77`) | Domain-expert keep/drop review |
+| validation `broken_strand` missed GT | 27 | Depends on decision A2 | Review after A2 is settled |
+| validation flashover missed GT | 11 | Some images contain pre-drawn red circles (`#24`, `#25`), which may become a shortcut | Keep/drop and flag marked images |
+| training flashover / FO | 90 | Low priority | Review later |
+
+Recommended order: section A (5 minutes), `bird_nest` additions (2 minutes), then the 82 `insulator_broken` cells across four sheets (about 20 minutes). The remaining review is optional.

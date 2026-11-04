@@ -1,14 +1,12 @@
-# Powerline AI trên Raspberry Pi 3
+# Power-Line AI on Raspberry Pi 3
 
-Model dự kiến: **curated YOLO11n**, checkpoint đã đặt tại `models/best.pt`.
-Nguồn và SHA-256 nằm trong `checkpoint_source.json`. Đã load và xác minh YOLO11n, đúng 6 class; đã export ONNX và kiểm tra CPU parity. Chưa export NCNN và chưa đo trên Pi 3.
+Target model: **curated YOLO11n**, stored locally as `models/best.pt`. Source provenance and SHA-256 are recorded in `checkpoint_source.json`. The checkpoint has been loaded and verified as a six-class YOLO11n model; ONNX export and CPU parity checks passed. NCNN export and physical Pi 3 benchmarks are still pending.
 
-Pi chạy NCNN CPU; không cài PyTorch và không export trên Pi. Thư mục này độc lập với `../modal` (YOLO26m).
+The Pi runtime uses NCNN on CPU. Do not install PyTorch or export models on the Pi. This directory is independent from the YOLO26m service in `../modal`.
 
-## 1. Người bàn giao: export trên máy tính
+## 1. Export and package on a workstation
 
-Dùng Python 3.11 trên máy tính có kết nối Internet (export có thể tải công cụ phụ thuộc).
-Chạy từ thư mục `deployment/pi3`:
+Use Python 3.11 on an Internet-connected workstation. Run from `deployment/pi3`:
 
 ```bash
 python3.11 -m venv .venv-export
@@ -18,16 +16,15 @@ python prepare_model.py
 python package_runtime.py
 ```
 
-Windows PowerShell: tạo venv bằng `py -3.11 -m venv .venv-export`, kích hoạt bằng `.venv-export\Scripts\Activate.ps1`, các lệnh Python tiếp theo giống trên.
+On Windows PowerShell, create the environment with `py -3.11 -m venv .venv-export`, activate it with `.venv-export\Scripts\Activate.ps1`, and run the same Python commands.
 
-`prepare_model.py` mặc định đọc `models/best.pt`, kiểm tra đúng 6 class rồi xuất `models/pi_ncnn_model` ở input 640, FP32, batch 1. Chỉ dùng checkpoint tin cậy.
-`package_runtime.py` tạo `dist/powerline-pi3.tar.gz` và file SHA-256; dừng nếu chưa có export. Gói chỉ chứa runtime và model NCNN, không chứa checkpoint PT, môi trường Python hay credential.
+`prepare_model.py` reads `models/best.pt`, verifies the six-class contract, and exports `models/pi_ncnn_model` at 640 px, FP32, batch 1. Use only a trusted checkpoint. `package_runtime.py` creates `dist/powerline-pi3.tar.gz` and its SHA-256 file; it stops when an export is missing. The package contains only the runtime and NCNN model—not the PT checkpoint, Python environment, or credentials.
 
-Gửi hai file trong `dist/` cho người deploy. Có thể export `python prepare_model.py --size 320` để thử giảm tải, rồi đóng gói lại; phải đánh giá lại độ chính xác, không dùng số benchmark 640 cho cấu hình này.
+Send both files from `dist/` to the deployer. A 320 px experiment can be exported with `python prepare_model.py --size 320`, but its accuracy must be evaluated independently; do not reuse 640 px benchmark values.
 
-## 2. Bạn deploy: cài trên Pi
+## 2. Install and run on the Pi
 
-Chuẩn bị Raspberry Pi OS **64-bit**, Internet, đủ dung lượng thẻ nhớ và nguồn ổn định. Kiểm tra `uname -m` trả về `aarch64`.
+Use 64-bit Raspberry Pi OS, a stable power supply, sufficient storage, and Internet access. Confirm that `uname -m` returns `aarch64`.
 
 ```bash
 sha256sum -c powerline-pi3.tar.gz.sha256
@@ -37,87 +34,93 @@ bash setup.sh
 bash run.sh --image /home/pi/sample.jpg --warmup 1
 ```
 
-Script cài NumPy/OpenCV bằng apt, tạo `.venv` và cài NCNN wheel. Không có wheel tương thích thì dừng, không tự build trên Pi. Khi lỗi, gửi lại output `uname -m`, `python3 --version` và lỗi pip để chọn wheel/build phù hợp. Phiên bản cài thực tế được lưu trong `runtime-versions.txt`.
+`setup.sh` installs NumPy and OpenCV through APT, creates `.venv`, and installs the NCNN wheel. It stops when no compatible wheel exists; it does not attempt a local NCNN build. On failure, report `uname -m`, `python3 --version`, and the pip error so an appropriate wheel or build can be selected. Installed versions are recorded in `runtime-versions.txt`.
 
-Chạy camera USB (dừng bằng Ctrl+C):
+USB camera mode:
 
 ```bash
 bash run.sh --camera 0 --warmup 1
 ```
 
-Đo thời gian xử lý ảnh sau warmup:
+Post-warmup image timing:
 
 ```bash
 bash run.sh --image /home/pi/sample.jpg --warmup 3 --repeat 20
 ```
 
-Mỗi dòng stdout là JSON chứa `detections` và `local_ms`. Mỗi detection có `class_id`, `class_name`, `confidence`, `bbox_xyxy` theo pixel của ảnh gốc. `local_ms` tính preprocessing + inference + postprocessing, không gồm đọc ảnh, gọi cloud hoặc ghi output; không phải FPS toàn pipeline. Không mở cửa sổ GUI. Camera CSI/Picamera2 chưa có adapter.
+Each stdout line is JSON containing `detections` and `local_ms`. A detection includes `class_id`, `class_name`, `confidence`, and `bbox_xyxy` in source-image pixels. `local_ms` covers preprocessing, inference, and postprocessing; it excludes image reads, cloud calls, and output writes and is not end-to-end FPS. No GUI window is opened. CSI/Picamera2 cameras currently require an adapter.
 
-Các tùy chọn: `--conf 0.25 --iou 0.45 --threads 3`. Không cam kết realtime trên Pi 3; cần kiểm tra RAM, nhiệt độ và latency trên thiết bị thật.
+Useful options include `--conf 0.25 --iou 0.45 --threads 3`. Real-time performance on a Pi 3 is not guaranteed; measure latency, RAM, temperature, and throttling on the physical device.
 
-## 3. Cloud tùy chọn
+## 3. Optional cloud fallback
 
-Mặc định chạy local độc lập. Nếu đặt `POWERLINE_CLOUD_URL`, `MODAL_KEY`, `MODAL_SECRET` trong môi trường, runtime gửi ảnh JPEG lên Modal khi local phát hiện class khác `insulator`. Đây là gọi HTTPS đồng bộ, không phải consumer RabbitMQ hoặc tích hợp BE. Những lỗi local bỏ sót sẽ không được tự động chuyển lên cloud. Không lưu credential trong gói bàn giao.
+Local-only operation is the default. When `POWERLINE_CLOUD_URL`, `MODAL_KEY`, and `MODAL_SECRET` are present, the runtime sends JPEG frames to Modal when local inference detects a class other than `insulator`. This is a synchronous HTTPS call, not a RabbitMQ consumer or backend integration. Local false negatives are not automatically escalated. Never include credentials in the deployment package.
 
-## Trạng thái kiểm chứng
+## Verification status
 
-Code setup, export và đóng gói đã chuẩn bị; export thực tế, đối chiếu output PT/NCNN và smoke test ảnh/camera trên Pi vẫn cần thực hiện. Không coi có `best.pt` là đã có runtime NCNN sẵn chạy.
+Setup, export, and packaging code is present. Physical NCNN export parity, image/camera smoke tests on the Pi, and device benchmarks remain required. The presence of `best.pt` does not mean an NCNN runtime is ready.
 
-Tham khảo [Ultralytics Raspberry Pi guide](https://docs.ultralytics.com/guides/raspberry-pi/): tài liệu hiện tập trung Pi 4/5; không dùng benchmark đó làm kết quả Pi 3.
+The [Ultralytics Raspberry Pi guide](https://docs.ultralytics.com/guides/raspberry-pi/) focuses primarily on Pi 4 and Pi 5. Do not report its benchmarks as Pi 3 results.
 
-## 4. Cảnh báo từ Pi về BE
+## 4. Send alerts from the Pi to the backend
 
-Luồng: inference → SQLite outbox → worker HTTPS → BE VisionBridge → NotificationPushEvent → notification frontend. Pi chỉ cần truy cập HTTPS của BE; không cần expose RabbitMQ ra Internet.
+Flow:
 
-BE đã có `POST /api/v1/vision/detections/json` (kiểm tra prefix gateway thực tế). Endpoint yêu cầu Bearer token có role hợp lệ; UAV phải đăng ký và có mission `Executing`. BE tự tìm mission từ UAV.
+```text
+inference → SQLite outbox → HTTPS worker → BE VisionBridge
+          → NotificationPushEvent → frontend notification
+```
+
+The Pi only needs HTTPS access to the backend; RabbitMQ must not be exposed to the Internet.
+
+The legacy backend endpoint is `POST /api/v1/vision/detections/json` subject to the deployed gateway prefix. It requires a valid bearer token and UAV role. The UAV must be registered and have an `Executing` mission; the backend resolves the mission from the UAV.
 
 ```bash
 cp alerts.example.json alerts.json
-# Sửa drone_id, category_code và các rule trước khi chạy.
+# Review drone_id, category_code, and every rule before use.
 bash run.sh --camera 0 --alerts-config alerts.json --outbox alerts.sqlite3
 ```
 
-Mở terminal thứ hai trong cùng thư mục:
+Start the sender in another terminal:
 
 ```bash
-export POWERLINE_BE_AUTH_MODE=jwt # Legacy endpoint; device-key is the new default
+export POWERLINE_BE_AUTH_MODE=jwt  # legacy endpoint only; device-key is preferred
 export POWERLINE_BE_ALERT_URL='https://uavpms.duckdns.org/api/v1/vision/detections/json'
-export POWERLINE_BE_TOKEN_FILE='/home/pi/.config/powerline/be.token'
-# Ghi JWT hợp lệ vào file trên, chmod 600; không commit token.
+export POWERLINE_BE_TOKEN_FILE='/run/secrets/powerline-be.jwt'
+# Write a valid JWT to that file and chmod 600. Never commit the token.
 .venv/bin/python send_alerts.py --outbox alerts.sqlite3
 ```
 
-Mẫu bật `insulator_broken`, `insulator_flashover`, `broken_strand` ở confidence 0.8, cooldown 30 giây/class. Đây là cấu hình khởi đầu cần nhóm xác nhận, không phải phân loại mức nguy hiểm đã được thẩm định. `category_code` phải đổi thành đúng `DefectCategory.CategoryCode` trong DB; không giả định tên class YOLO chính là mã DB. Đặt `IsEmergencyClass=true` cho các category cần BE phát `CriticalAlert`; cấu hình Pi chỉ quyết định gửi gì, BE quyết định độ khẩn cấp. BE hiện có fallback category ID=1 cho mã không tồn tại, vì vậy cần đối chiếu mapping trước khi bật thật.
+The example enables `insulator_broken`, `insulator_flashover`, and `broken_strand` at confidence 0.8 with a 30-second per-class cooldown. This is an initial configuration requiring team approval, not a validated hazard classification. `category_code` must match `DefectCategory.CategoryCode` in the database; a YOLO class name is not automatically a database code. Set `IsEmergencyClass=true` in the backend category when a defect should generate `CriticalAlert`. The Pi decides what to send; the backend decides severity. The legacy backend falls back to category ID 1 for unknown codes, so validate mappings before production use.
 
-Worker giữ bản ghi khi lỗi mạng, token hết hạn hoặc BE trả `Success=false`, thử lại sau 10 giây. Có thể cập nhật file token khi đang chạy. Cooldown giữ qua restart; một class chỉ gửi detection confidence cao nhất mỗi khoảng cooldown, có thể gộp nhiều đối tượng khác nhau. Outbox không có giới hạn dung lượng tự động; cần theo dõi ổ đĩa khi mất mạng lâu. BE hiện chưa có idempotency cho endpoint này: timeout sau khi server đã lưu có thể tạo bản ghi trùng khi retry. Không bảo đảm exactly-once hoặc thời hạn cảnh báo.
+The worker retains records after network failures, expired tokens, or backend responses with `Success=false`, and retries after 10 seconds. The token file can be replaced while the worker is running. Cooldowns survive restarts. Only the highest-confidence detection for a class is sent during a cooldown window, which can collapse distinct objects. The outbox has no automatic size cap and must be monitored during long outages.
 
-Payload hiện chỉ chứa bbox/class/confidence/thời gian, không gửi ảnh bằng endpoint JSON; GPS=0,0 được BE coi là chưa có vị trí. Không bịa GPS hoặc track ID. Chưa có refresh token, telemetry GPS, ảnh bằng chứng và kiểm thử end-to-end với BE thật.
+The legacy endpoint has no idempotency guarantee: a timeout after the server commits can create duplicates on retry. The JSON payload contains bounding box, class, confidence, and time, but no image. Coordinates `0,0` are treated as unknown GPS; never invent GPS or track IDs. Refresh tokens, GPS telemetry, evidence images, and authenticated end-to-end production tests are still pending.
 
-## 5. Export ONNX trên máy tính
+## 5. ONNX export on a workstation
 
 ```bash
 python -m pip install -r requirements-export.txt onnx onnxruntime
 python export_onnx.py
 ```
 
-Output `models/best.onnx`: batch 1, RGB NCHW 640×640, FP32, opset 17, không tích hợp NMS. Input phải letterbox và chia 255 giống `detect.py`; output YOLO11 cần decode và NMS. Script kiểm tra ONNX và so sánh tensor với PyTorch, ghi `models/best.onnx.json`. Runtime `run.sh` vẫn dùng NCNN; có ONNX không có nghĩa Pi đã chuyển sang ONNX Runtime.
+The output `models/best.onnx` uses batch 1, RGB NCHW 640×640, FP32, opset 17, and does not include NMS. Input must be letterboxed and divided by 255 exactly as in `detect.py`; YOLO11 output requires decoding and NMS. The exporter checks the ONNX model, compares it against PyTorch, and writes `models/best.onnx.json`. `run.sh` still uses NCNN; an ONNX file does not switch the Pi runtime to ONNX Runtime.
 
-Swagger triển khai đã kiểm tra: `/swagger/services/ai-inspection/v1/swagger.json` có hai POST vision. GET `/api/v1/vision/health` trả 401 khi không có token: domain truy cập được, chưa xác minh nghiệp vụ có auth. Chưa gửi detection vào môi trường thật.
+The current export is approximately 10.1 MB with output shape `[1,10,8400]`. ONNX checker and PyTorch/ONNX Runtime comparison passed on a seed-42 random tensor with `rtol=1e-3`, `atol=1e-3`, and maximum absolute difference `0.00090027`. This is not a dataset accuracy evaluation or Pi benchmark. An unauthenticated empty request to the live backend returned HTTP 401, confirming reachability but not authenticated alert creation.
 
-ONNX đã xuất thành công: `models/best.onnx` (~10.1 MB), output `[1,10,8400]`. ONNX checker và đối chiếu PyTorch/ONNX Runtime trên tensor ngẫu nhiên seed 42 đã pass (`rtol=1e-3`, `atol=1e-3`, sai lệch tuyệt đối lớn nhất 0.00090027). Đây chưa phải đánh giá độ chính xác bằng dataset hoặc benchmark trên Pi. POST JSON rỗng tới BE thật không JWT cũng trả HTTP 401; chưa kiểm thử ghi cảnh báo có auth.
+## Device key and idempotency
 
-## Device key + idempotency (chuẩn bị cho BE mới)
-
-BE phải triển khai contract `../BE_HANDOFF.md` trước. Endpoint mới `/api/v1/edge/detections` chưa deploy.
+The backend must first implement the contract in `../BE_HANDOFF.md`; the new `/api/v1/edge/detections` endpoint is not yet deployed.
 
 ```bash
-python3 generate_device_key.py --out /home/pi/.config/powerline/device.key
-# Đăng ký SHA-256 được in ra vào BE, liên kết UAV.
-cp device.env.example device.env
+python generate_device_key.py --out device.env
+# Register the printed SHA-256 with the backend and associate it with the UAV.
 set -a
 source device.env
 set +a
 .venv/bin/python send_alerts.py --outbox alerts.sqlite3
 ```
 
-Chạy detect với alerts-config trước để tạo/migrate outbox. Mỗi bản ghi có event_id UUID được lưu bền vững, giữ qua retry/restart; sender truyền Idempotency-Key. Sender mặc định device-key, bỏ DroneId khỏi payload và BE lấy UAV từ key. Bật POWERLINE_BE_AUTH_MODE=jwt chỉ để dùng endpoint cũ. File key không được commit hoặc gửi chat. BE phải implement receipt transaction/unique constraint; chỉ gửi header chưa đủ chống trùng.
+Run detection once with `--alerts-config` to create or migrate the outbox. Every record has a durable UUID `event_id` retained across retries and restarts; the sender transmits it as `Idempotency-Key`. Device-key mode is the default, omits `DroneId` from the payload, and lets the backend resolve the UAV from the key. Set `POWERLINE_BE_AUTH_MODE=jwt` only for the legacy endpoint.
+
+Never commit or share the key file in chat. The backend must implement a transactional receipt table or unique constraint; sending the header alone does not prevent duplicates.

@@ -1,65 +1,64 @@
-# Gói bằng chứng cho paper — 2026-10-26
+# Paper evidence bundle — 2026-10-26
 
-Đây là kiểm tra code và artifacts local, không phải một lần chạy lại benchmark. `sources/` giữ bản sao 42 file nguồn theo cấu trúc repo; `source_manifest.json` lưu SHA-256 từng file. Notebook có thêm bản `.txt` gồm source và output đã lưu. Không chứa checkpoint/dataset đầy đủ. Các giá trị thiếu được ghi rõ, không suy diễn thành kết quả đã chạy.
+This bundle records a local code-and-artifact audit; it is not a benchmark rerun. `sources/` contains byte-preserving copies of 42 source files in their repository-relative layout, and `source_manifest.json` stores each SHA-256. Notebook `.txt` exports include saved source and output. Full datasets and checkpoints are not included. Missing values are stated explicitly and are never inferred as executed results.
 
-## 1. Dataset inventory / class counts
+## 1. Dataset inventory and class counts
 
-**Đã xác nhận từ output lưu:** [`sources/benchmakring_transmission_line_defect_model/benchmark_pipeline.ipynb`](sources/benchmakring_transmission_line_defect_model/benchmark_pipeline.ipynb), cell index 2: raw train 18,334 ảnh / 18,334 label files; curated train 17,903 / 17,903; raw val 2,272; curated val_clean 2,271. Script đếm là [`sources/benchmakring_transmission_line_defect_model/src/dataset.py`](sources/benchmakring_transmission_line_defect_model/src/dataset.py), hàm `verify_dataset_structure`; script đếm file jpg/png và txt, KHÔNG hash ảnh và KHÔNG kiểm tra label rỗng. Vì vậy đây là số file, không phải bằng chứng 18,334/17,903 nội dung ảnh duy nhất. Notebook legacy v6p5-17 cũng lưu 17,903 train, 2,272 val, 2,271 val_clean.
+Saved output in [`sources/benchmakring_transmission_line_defect_model/benchmark_pipeline.ipynb`](sources/benchmakring_transmission_line_defect_model/benchmark_pipeline.ipynb), cell 2, reports raw train 18,334 images / 18,334 label files, curated train 17,903 / 17,903, raw validation 2,272, and curated `val_clean` 2,271. The counter is `verify_dataset_structure` in [`sources/benchmakring_transmission_line_defect_model/src/dataset.py`](sources/benchmakring_transmission_line_defect_model/src/dataset.py). It counts JPG/PNG and TXT files; it does not hash images or detect empty labels. These are file counts, not proof of 18,334 or 17,903 unique image contents. Legacy notebook V6.5-17 also records 17,903 train, 2,272 validation, and 2,271 `val_clean` files.
 
-`artifacts/v6p5_train_local/20261009T024019Z_roboflow/build.json`: train 18,334, Roboflow thêm 351 train và 74 external_eval, 968 dropped; base_dataset v6p5_compose_4b9a452e24e2. Không được gọi 18,334 là canonical V6.2E nguyên bản chỉ dựa vào tên YAML.
+`sources/artifacts/v6p5_train_local/20261009T024019Z_roboflow/build.json` records 18,334 training files, 351 Roboflow training additions, 74 external-evaluation images, 968 dropped items, and base dataset `v6p5_compose_4b9a452e24e2`. The name of a YAML file alone is insufficient to call those 18,334 files the original canonical V6.2E dataset.
 
-Chưa tìm thấy script/output tạo đúng bảng class-count 25,807 / 23,204 box của bản thảo. Chưa biết số label rỗng thực tế. Tổng class-image trong bản thảo là 17,969 raw, 17,061 curated, 2,154 val, 1,904 test. Không thể lấy hiệu với tổng ảnh để suy số background vì ảnh có thể chứa nhiều lớp.
+No script or output in this bundle reproduces the manuscript's exact 25,807 / 23,204 box-count table. The actual number of empty label files is unknown. The manuscript's class-image totals are 17,969 raw, 17,061 curated, 2,154 validation, and 1,904 test. Their difference from unique image totals cannot be interpreted as background counts because images may contain multiple classes.
 
-**Script mới cung cấp:** `inventory_dataset.py`, không phải script lịch sử. Chạy trên từng dataset thật:
+`inventory_dataset.py` is a newly supplied audit utility, not a historical benchmark script:
 
 ```bash
 python inventory_dataset.py /path/to/raw_combined --out /path/to/inventory_raw
 python inventory_dataset.py /path/to/curated_combined --out /path/to/inventory_curated
 ```
 
-Xuất images.csv (hash ảnh, tình trạng nhãn), splits.csv, classes.csv, summary.json. Class images đếm một lần/ảnh/lớp, boxes đếm mỗi dòng YOLO hợp lệ. Phân biệt missing label, empty label, invalid label; số ảnh duy nhất SHA-256 là theo byte file. Chưa chạy trên dataset thật vì checkout không chứa dữ liệu đó.
+It emits `images.csv`, `splits.csv`, `classes.csv`, and `summary.json`; distinguishes missing, empty, and invalid labels; counts one class-image occurrence per image/class and one box per valid YOLO row; and computes byte-level image SHA-256 uniqueness. It has not been run against the full datasets because they are absent from this checkout.
 
-## 2. Evaluation logs và split
+## 2. Evaluation logs and split identity
 
-`evaluation_inventory.csv` tổng hợp cả 12 records từ `results_yolo_model/benchmark_test_results.json` và `results_rtdetr/benchmark_test_results.json`, giữ đường dẫn Windows gốc, split key, thời gian, checkpoint nếu có, accuracy/hardware. CSV summary gốc cũng có trong sources.
+`evaluation_inventory.csv` combines 12 records from the historical YOLO and RT-DETR result JSON files while preserving Windows paths, split keys, timestamps, checkpoint paths when present, accuracy, and hardware measurements.
 
-- YOLO: 8 records ngày 2026-10-23 đều trỏ configs/dataset_curated.yaml. YAML hiện có `val: images/val`, `test: images/val_clean`. Không lưu checkpoint_path trong JSON cũ; README nói best.pt, không phải bằng chứng từ checkpoint metadata.
-- RT-DETR: 4 records ngày 2026-10-25 đều trỏ data/curated_combined/data_val_clean.yaml, checkpoint `runs/<run>/weights/last.pt`. Chính file YAML runtime đó không có local; không khẳng định nội dung chỉ từ tên file.
-- Chưa có manifest/hash danh sách ảnh evaluation nên chưa chứng minh 12 runs chấm cùng ảnh và nhãn. split_key=test không đủ chứng minh test độc lập.
-- Code: [`sources/benchmakring_transmission_line_defect_model/src/evaluator.py`](sources/benchmakring_transmission_line_defect_model/src/evaluator.py): `evaluate_checkpoint` (YOLO), `_evaluate_huggingface_rtdetr` (HF), `evaluate_all` (xuất summary). YOLO F1=harmonic(mean P, mean R), HF F1=mean(class F1), cần thống nhất.
-- Notebook hiện tại cell 4 đã trỏ v6p2e_test/dataset.yaml, nhưng dùng string.open() nên cần sửa thành Path; nó không chứng minh các records cũ được chấm trên đường dẫn mới.
+- Eight YOLO records from 2026-10-23 point to `configs/dataset_curated.yaml`. Its current `val` is `images/val`, while `test` is `images/val_clean`. The old JSON does not record checkpoint paths; a README statement that it used `best.pt` is not checkpoint metadata.
+- Four RT-DETR records from 2026-10-25 point to `data/curated_combined/data_val_clean.yaml` and `runs/<run>/weights/last.pt`. That runtime YAML is absent, so its contents cannot be inferred from its filename.
+- No evaluation image manifest or hash set proves that all 12 runs used identical images and labels. A `split_key=test` field alone does not establish an independent test.
+- [`sources/benchmakring_transmission_line_defect_model/src/evaluator.py`](sources/benchmakring_transmission_line_defect_model/src/evaluator.py) computes YOLO F1 as the harmonic mean of mean precision and mean recall, but HF F1 as mean per-class F1. A unified definition is required.
+- A current notebook cell points to `v6p2e_test/dataset.yaml`, but the saved code calls `.open()` on a string and does not prove old records were evaluated on that new path.
 
-## 3. FPS và tài nguyên
+## 3. FPS and resources
 
-Bảng hardware trong LaTeX lấy toàn bộ **raw runs**. Curated YOLO26m: 61.4 FPS / 16.29 ms; raw: 63.6 FPS / 15.72 ms. mAP50 0.8323 là curated, không ghép thành cùng run với 63.6 FPS.
+The manuscript's hardware table uses raw-run measurements. Curated YOLO26m is 61.4 FPS / 16.29 ms; raw YOLO26m is 63.6 FPS / 15.72 ms. Curated mAP50 0.8323 must not be paired with raw-run 63.6 FPS as if they came from one run.
 
-Code [`sources/benchmakring_transmission_line_defect_model/src/evaluator.py`](sources/benchmakring_transmission_line_defect_model/src/evaluator.py), hàm `profile_hardware`: YOLO predict tensor zeros [1,3,640,640], 50 warmup, 300 iterations theo benchmark_config.yaml; tính thời gian tổng rồi chia số lượt; GPU index 0. Nhánh HF: batch 2, ảnh thật toàn split, processor chuẩn bị ngoài vùng timing, GPU synchronize trước/sau forward; không có warmup riêng; ms/image là tổng forward time/số ảnh. Hai protocol không đồng nhất. HF FLOPs là THOP estimate, không mặc định đầy đủ mọi operator.
+In [`sources/benchmakring_transmission_line_defect_model/src/evaluator.py`](sources/benchmakring_transmission_line_defect_model/src/evaluator.py), `profile_hardware` runs YOLO on a zero tensor `[1,3,640,640]` with 50 warmups and 300 timed iterations. The HF branch uses batch 2 and real split images, prepares processor output outside timing, synchronizes around forward passes, and has no separate warmup. These protocols are not equivalent. HF FLOPs are THOP estimates and may omit unsupported operators.
 
-README nói RTX 4060, nhưng result JSON không lưu GPU name, CUDA/torch version hoặc precision. Chưa xác nhận hardware từng run bằng log runtime. Checkpoint RT-DETR có trong inventory; checkpoint YOLO cũ chỉ có mô tả README best.pt.
+The README names an RTX 4060, but historical result JSON does not store GPU name, CUDA/PyTorch version, or precision. Exact runtime logs are required to verify hardware for each run.
 
 ## 4. Training configurations
 
-YOLO dùng chung [`sources/benchmakring_transmission_line_defect_model/configs/benchmark_config.yaml`](sources/benchmakring_transmission_line_defect_model/configs/benchmark_config.yaml) và [`sources/benchmakring_transmission_line_defect_model/src/trainer.py`](sources/benchmakring_transmission_line_defect_model/src/trainer.py), hàm `train_single_run`: imgsz640, epochs50, AdamW lr0=.001 lrf=.01 cosine, warmup3, weight_decay=.0005, seed42, AMP, device0. n batch16, m batch8. accumulate 1/2 được khai báo nhưng chỉ in ra, KHÔNG truyền vào train; nbs không đặt. Cần args.yaml của đúng 8 runs để chốt effective batch thực tế.
+YOLO uses [`sources/benchmakring_transmission_line_defect_model/configs/benchmark_config.yaml`](sources/benchmakring_transmission_line_defect_model/configs/benchmark_config.yaml) and `train_single_run` in [`sources/benchmakring_transmission_line_defect_model/src/trainer.py`](sources/benchmakring_transmission_line_defect_model/src/trainer.py): 640 px, 50 epochs, AdamW, `lr0=.001`, `lrf=.01`, cosine schedule, 3 warmup epochs, weight decay `.0005`, seed 42, AMP, and device 0. Nano batch is 16 and medium batch is 8. Declared accumulation 1/2 is printed but not passed to training, and `nbs` is unset. Exact `args.yaml` from all eight runs is required to establish effective batch size.
 
-RT-DETR benchmark state dict được evaluator dựng bằng PekingU/rtdetr_r50vd hoặc rtdetr_r101vd (run key rtdetr100 thực tế ánh xạ R101). Không đồng nhất chúng với rtdetr-l.pt / rtdetr-x.pt trong config Ultralytics.
+The evaluator reconstructs RT-DETR state dictionaries with PekingU R50vd or R101vd; run key `rtdetr100` maps to R101. These are not interchangeable with Ultralytics `rtdetr-l.pt` or `rtdetr-x.pt` entries elsewhere in the config.
 
-Notebook `kaggle-train-rtdetr-peking_used.ipynb` và bản text đính kèm chứa training loop thực tế được lưu: AdamW backbone1e-4/head1e-3, weight_decay1e-4, cosine eta_min1e-6, batch8 accum2 trong call R50, default epochs50; xem call R101 trong notebook. Không có warmup3 trong loop đó. Loader validation images/val. Notebook Kaggle không đủ chứng minh tên GPU đã chạy; cần log đúng 4 runs và mapping checkpoint xuất ra với last.pt.
+The saved PekingU training notebook records AdamW with backbone LR `1e-4`, head LR `1e-3`, weight decay `1e-4`, cosine minimum LR `1e-6`, R50 batch 8 with accumulation 2, and 50 default epochs. Its validation loader uses `images/val`, and it has no three-epoch warmup. Exact four-run logs and checkpoint mappings are still required. Legacy V3 teacher/student settings belong to another experiment and must not substitute for benchmark metadata.
 
-Không lấy args.yaml của legacy v3 teacher/student để thay cho benchmark: legacy v3 output ghi NVIDIA L4, teacher40 epochs/student60 epochs, đây là thí nghiệm khác.
+## 5. Curation and duplicate control
 
-## 5. Eight-rule curation / duplicate control
+The primary `scripts/label_audit_build.py` implements A hflip, B add-nest, C person, D synthetic-FO, E quarantine, F tiny, G review, and H tighten. Rules A/C/G/H may affect `val_clean`; B/D/E/F are primarily training operations. The exact V3 code revision, arguments, and output records are required because later code added P/I rules and changed SAM policy.
 
-Code chính `scripts/label_audit_build.py`: A hflip; B add_nest; C person; D syn_fo; E quarantine; F tiny; G review; H tighten. A/C/G/H có áp dụng cho val_clean; B/D/E/F chủ yếu train. Cần đối chiếu đúng phiên bản code và args của build v3; code hiện tại đã phát triển thêm P/I và thay đổi chính sách SAM.
+The saved V6.5-17a notebook reports train box adjustments of 1,141 insulators and 453 foreign objects, plus 27 and 2 on `val_clean`, with additional bird-nest candidates. This is an analysis table, not proof that every candidate was applied. A182, approximately 55% synthetic removal, and approximately 9% person screening remain proposal descriptions until recomputed from the exact build's `changes.csv`, `review_decisions.csv`, `sam_boxes.csv`, and manifest.
 
-Bằng chứng SAM: output notebook v6p5-17a lưu bảng train insulator thay1,141, FO453; val_clean insulator27, FO2; cũng có bird_nest candidates. Đây là bảng phân tích SAM, không tự chứng minh tất cả candidate được áp dụng. Các con số A182 train/26val, ~55% synthetic, ~9% person là mô tả proposal, chưa tái tính từ changes.csv của đúng build trong gói này. Chưa có log đủ A–H và số quyết định human review v3 để xác nhận toàn bộ. Cần manifest.json, changes.csv, review_decisions.csv, sam_boxes.csv đúng build; không thay bằng số review v6/v7.
+Duplicate control has three distinct scopes:
 
-Dedup có HAI phạm vi:
-1. Legacy v6p2-05 freeze: code kiểm tra SHA-256 cả train–val/train–test/val–test; pHash/dHash/embedding, group handling, quarantine liên quan test; bảo toàn test hash set. Notebook local không có executed output; block số0 cuối notebook là acceptance criteria, không phải log chạy.
-2. `artifacts/v6p4_post_clean_audit/` có audit result runtime V6.2E: exact groups0, pHash candidate pairs135 (train–val86, train–test46, val–test3). Đây là ứng viên, không phải 135 confirmed leaks; chưa có disposition đủ cho các cặp trong gói.
-3. Pipeline [`sources/src/yolov11sdi/dataset/dedup.py`](sources/src/yolov11sdi/dataset/dedup.py): external direct images vs toàn canonical manifest bằng SHA-256; external vs VAL/TEST bằng pHash. Không kiểm tra synthetic như external leakage. Đây là phạm vi code, không bằng chứng tự động mọi bước đã chạy trong benchmark.
+1. Legacy V6.2E freeze code checks cross-split SHA-256, pHash, dHash, embeddings, groups, quarantine actions, and preservation of test hashes. Its local notebook has no executed output; the final acceptance block is a specification, not a run log.
+2. `sources/artifacts/v6p4_post_clean_audit/` records zero exact groups and 135 pHash candidate pairs: 86 train–validation, 46 train–test, and 3 validation–test. These are candidates, not 135 confirmed leaks; the bundle lacks a complete disposition record.
+3. [`sources/src/yolov11sdi/dataset/dedup.py`](sources/src/yolov11sdi/dataset/dedup.py) checks direct external images against the canonical manifest with SHA-256 and against validation/test with pHash. It does not prove that every benchmark build ran those checks, nor does it treat synthetic inputs as direct external images.
 
 ## 6. Diffusion augmentation
 
-**Đã có prototype, chưa có bằng chứng được dùng train benchmark.** Model trong cả hai script: `diffusers/stable-diffusion-xl-1.0-inpainting-0.1`. scripts/proto_diffusion_fo.py và proto_diffusion_strand.py; metadata trong artifacts/diffusion_fo_proto/meta.csv (14 rows) và diffusion_strand_proto/meta.json (16 rows). Xem diffusion_inventory.json cho status counts. `status=ok` là trạng thái generation, không phải human acceptance.
+Diffusion augmentation reached prototype stage but is not evidenced as benchmark training input. Both prototype scripts use `diffusers/stable-diffusion-xl-1.0-inpainting-0.1`. Metadata contains 14 foreign-object rows and 16 strand rows; `diffusion_inventory.json` summarizes statuses. `status=ok` means generation completed, not that a human accepted the image.
 
-Contact sheets gốc: artifacts/diffusion_fo_proto/sheet.jpg và artifacts/diffusion_strand_proto/sheet.jpg. Nhật ký docs/SESSION_2026-10-15_v6p5_plateau.md mục5 ghi FO ~25% dùng được, strand0/16, không dùng train; không có per-image human approval manifest trong gói. Mô tả phù hợp: exploratory synthesis prototype excluded from reported training; việc tích hợp augmentation vào benchmark là future work. Không nói diffusion chưa từng thực hiện, cũng không nói nó tạo ra cải thiện benchmark.
+Original contact sheets are `artifacts/diffusion_fo_proto/sheet.jpg` and `artifacts/diffusion_strand_proto/sheet.jpg`. The 2026-10-15 session log estimates about 25% usable foreign-object samples and 0/16 usable strand samples and states that they were excluded from training. No per-image approval manifest is included. The defensible description is: exploratory synthesis prototype, excluded from reported training; integration into the benchmark remains future work.
