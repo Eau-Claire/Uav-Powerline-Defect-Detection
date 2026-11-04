@@ -1,0 +1,128 @@
+{
+  "artifact_audit": {
+    "v6p4_data_root": "stash://bunpmc/projects/yolov11m/datasets/v6p4_clean/v6p4_clean_official",
+    "v6p4_checkpoint_root": "stash://bunpmc/projects/yolov11m/checkpoints/v6p4_clean/v6p4_clean_official/yolo11m_v6p4_clean_official_best.pt",
+    "checkpoint_sha256": "a6e34cdbab6e8dbf8565c520dcc7bcc835c11ecca0009d7c5cd34d0abff7ca52",
+    "checkpoint_copies_identical": true,
+    "official_yaml_path": "/tmp/v6p4_clean_runtime",
+    "official_freeze": {
+      "schema_version": "v6p4-data-centric-freeze-clean-1",
+      "created_utc": "2026-10-07T09:45:54.668633+00:00",
+      "dataset_name": "V6.4-clean",
+      "final_tag": "v6p4_clean_official",
+      "parent_tag": "v6p2e_23562a45b343",
+      "split_counts": {
+        "train": 17483,
+        "val": 2272,
+        "test": 2012
+      },
+      "label_modifications": {
+        "missing_gt_added": 79,
+        "human_verified_bird_nests": 79,
+        "false_alarm_excluded": "Case 3",
+        "broken_strand_policy": "Defect-Level Cluster"
+      },
+      "artifacts": {
+        "labels_zip": "v6p4_clean_reconciled_labels.zip",
+        "reports_zip": "v6p4_clean_reports.zip",
+        "weights": "yolo11m_v6p4_clean_official_best.pt"
+      }
+    },
+    "labels_zip_txt_count": 113,
+    "reports_zip_member_count": 22,
+    "exact_v6p4_train_runtime_packaged": false,
+    "reason": "Current official bundle contains checkpoint/metadata/label archive/reports, but not the image runtime nor an exact replay package for all training mutations (79 missing-GT edits + 600 hard crops)."
+  },
+  "strict_iou": {
+    "mAP50": 0.8387384540070597,
+    "mAP50_95": 0.47170881908590145,
+    "gap": 0.36702963492115825,
+    "precision": 0.8773129222981528,
+    "recall": 0.7798219733752009,
+    "target_gap_le_0p30": false,
+    "per_class": [
+      {
+        "cid": 0,
+        "class": "insulator",
+        "AP50": 0.9768393644536388,
+        "AP50_95": 0.7085647747134799,
+        "gap_50_to_50_95": 0.26827458974015894,
+        "AP75": 0.8034647072997956,
+        "AP90": 0.2991024267337748,
+        "AP95": 0.03567847852750731
+      },
+      {
+        "cid": 1,
+        "class": "insulator_broken",
+        "AP50": 0.8730958679565921,
+        "AP50_95": 0.4598596946906001,
+        "gap_50_to_50_95": 0.413236173265992,
+        "AP75": 0.4290364225052101,
+        "AP90": 0.027026318598268536,
+        "AP95": 0.0021457085828343312
+      },
+      {
+        "cid": 2,
+        "class": "insulator_flashover",
+        "AP50": 0.8583897662518872,
+        "AP50_95": 0.37762027846960533,
+        "gap_50_to_50_95": 0.4807694877822819,
+        "AP75": 0.24589883678008856,
+        "AP90": 0.009848484848484848,
+        "AP95": 0.0
+      },
+      {
+        "cid": 3,
+        "class": "bird_nest",
+        "AP50": 0.8801361161156324,
+        "AP50_95": 0.5401235049200092,
+        "gap_50_to_50_95": 0.3400126111956232,
+        "AP75": 0.596686658850894,
+        "AP90": 0.04760779823208599,
+        "AP95": 0.0008686791402975043
+      },
+      {
+        "cid": 4,
+        "class": "foreign_object",
+        "AP50": 0.6559549423039435,
+        "AP50_95": 0.37610716277857,
+        "gap_50_to_50_95": 0.2798477795253735,
+        "AP75": 0.33664213693961736,
+        "AP90": 0.10271434051596272,
+        "AP95": 0.037500000000000006
+      },
+      {
+        "cid": 5,
+        "class": "broken_strand",
+        "AP50": 0.7880146669606642,
+        "AP50_95": 0.36797749894314424,
+        "gap_50_to_50_95": 0.42003716801752,
+        "AP75": 0.2699145137395546,
+        "AP90": 0.0041036414565826336,
+        "AP95": 4.201680672268908e-05
+      }
+    ]
+  },
+  "parent_dataset_gate": {
+    "label_errors": 0,
+    "duplicate_gt_candidates": 0,
+    "cross_split_exact_duplicate_groups": 0,
+    "cross_split_phash_pairs": 135
+  },
+  "next_action": [
+    "STRICT_LOCALIZATION_GAP_STILL_HIGH",
+    "broken_strand:CENTER_LOCALIZATION",
+    "broken_strand:EXTENT_SHAPE_REVIEW",
+    "foreign_object:CENTER_LOCALIZATION",
+    "foreign_object:EXTENT_SHAPE_REVIEW",
+    "insulator_flashover:CENTER_LOCALIZATION",
+    "insulator_flashover:EXTENT_SHAPE_REVIEW",
+    "insulator_broken:CENTER_LOCALIZATION",
+    "insulator_broken:EXTENT_SHAPE_REVIEW",
+    "bird_nest:CENTER_LOCALIZATION"
+  ],
+  "notes": [
+    "Kh\u00f4ng d\u00f9ng reconstructed parent TRAIN \u0111\u1ec3 tuy\u00ean b\u1ed1 exact V6.4 train audit.",
+    "RAW VAL evaluation h\u1ee3p l\u1ec7 cho checkpoint v\u00ec VAL \u0111\u01b0\u1ee3c freeze t\u1eeb V6.2E."
+  ]
+}

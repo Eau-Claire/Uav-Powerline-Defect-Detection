@@ -1,0 +1,776 @@
+
+### Cell 0 (markdown)
+# RT-DETR-R50vd & RT-DETR-R101vd Training on Kaggle
+## Official Peking University Pre-trained Weights (Hugging Face Transformers)
+**Authors:** Phạm Hoàng Minh Châu, Đỗ Trung Quân, Nguyễn Nhật Thông | **Mentor:** Đặng Ngọc Minh Đức
+
+### 📌 Pre-trained Model Hub:
+- **RT-DETR-R50vd**: [`PekingU/rtdetr_r50vd`](https://huggingface.co/PekingU/rtdetr_r50vd) (ResNet-50-vd backbone, COCO pre-trained)
+- **RT-DETR-R101vd**: [`PekingU/rtdetr_r101vd`](https://huggingface.co/PekingU/rtdetr_r101vd) (ResNet-101-vd backbone, COCO pre-trained)
+
+### ⚙️ Kaggle Settings (Right Sidebar):
+1. **Accelerator**: Chọn **GPU T4 x 2** (hoặc GPU P100).
+2. **Internet**: Bật sang **ON** (để tải weights từ Hugging Face).
+3. **Dataset Input**: Thêm dataset `raw_combined` mà bạn đã upload.
+
+### Cell 1 (code)
+# Cell 1: Environment & Package Installation
+import os, sys, time, json
+from pathlib import Path
+import torch
+
+print("=== Kaggle Environment Verification ===")
+print("Python Version :", sys.version.split()[0])
+print("PyTorch Version:", torch.__version__)
+print("CUDA Available :", torch.cuda.is_available())
+
+num_gpus = torch.cuda.device_count()
+print(f"Detected {num_gpus} GPU(s):")
+for i in range(num_gpus):
+    total_mem_gb = torch.cuda.get_device_properties(i).total_memory / (1024**3)
+    print(f"  [{i}] {torch.cuda.get_device_name(i)} ({total_mem_gb:.1f} GB VRAM)")
+
+# Install stable transformers compatible with PyTorch (avoids bleeding-edge broken Dynamo/FlexAttention code)
+!pip uninstall -y torchvision
+!pip install -q "transformers>=4.44.0,<4.48.0" "accelerate<1.0.0" pycocotools
+
+# Hotfix: Compatibility patch for PyTorch missing _chunk_or_narrow_cat
+import torch._utils
+if not hasattr(torch._utils, "_chunk_or_narrow_cat"):
+    def _chunk_or_narrow_cat(tensor, num_chunks, narrow_dim, cat_dim=0):
+        return torch.cat(torch.chunk(tensor, num_chunks, dim=narrow_dim), dim=cat_dim)
+    torch._utils._chunk_or_narrow_cat = _chunk_or_narrow_cat
+    print("🔧 Đã kích hoạt PyTorch compatibility patch (_chunk_or_narrow_cat)!")
+
+# === EXECUTION SWITCHES (Rất hữu ích khi Save Version) ===
+# Bật/tắt model muốn chạy trong phiên này (tránh vượt trần 12h của Kaggle):
+TRAIN_R50 = True    # RT-DETR-R50vd (~5 tiếng trên 2x T4)
+TRAIN_R101 = True   # RT-DETR-R101vd (~8 tiếng trên 2x T4)
+
+# === CAMBER CLOUD AUTO-SYNC (Tùy chọn) ===
+# Tự động đẩy checkpoints và weights lên Camber Stash:
+CAMBER_API_KEY = ""  # Dán API Token từ Camber (hoặc dùng Kaggle Secrets 'CAMBER_API_KEY')
+CAMBER_STASH_DEST = "stash://myusername/powerline_benchmarks/"  # Thay myusername bằng user Camber của bạn
+
+if not CAMBER_API_KEY:
+    try:
+        from kaggle_secrets import UserSecretsClient
+        CAMBER_API_KEY = UserSecretsClient().get_secret("CAMBER_API_KEY")
+    except Exception:
+        pass
+
+if CAMBER_API_KEY and "myusername" not in CAMBER_STASH_DEST:
+    os.environ["CAMBER_API_KEY"] = CAMBER_API_KEY
+    !pip install -q --upgrade camber
+    print("☁️ Camber Cloud Auto-Sync: ĐÃ KÍCH HOẠT! Checkpoints sẽ được đẩy lên Stash.")
+else:
+    print("ℹ️ Camber Cloud Auto-Sync: Chưa cấu hình (bạn vẫn tải file qua tab Output bình thường).")
+
+### Cell 2 (code)
+# Cell 2: Fast Multithreaded Dataset Copy to NVMe SSD (/tmp)
+import os, shutil
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+from tqdm import tqdm
+
+input_root = Path("/kaggle/input")
+src_dataset_dir = None
+
+# Fast discovery without deep recursive overhead
+for root, dirs, files in os.walk("/kaggle/input"):
+    if "images" in dirs and "labels" in dirs:
+        src_dataset_dir = Path(root)
+        break
+    if root.endswith("images/train") or root.endswith("images\\train"):
+        src_dataset_dir = Path(root).parent.parent
+        break
+
+if src_dataset_dir is None:
+    raise FileNotFoundError("Không tìm thấy thư mục dataset chứa 'images' và 'labels' trong /kaggle/input/. Hãy kiểm tra lại mục Input của notebook!")
+
+print(f"Found Dataset Source: {src_dataset_dir}")
+dest_dataset_dir = Path("/tmp/raw_combined")
+dest_dataset_dir.mkdir(parents=True, exist_ok=True)
+
+# Check existing files to avoid re-copying
+all_src_files = [p for p in src_dataset_dir.rglob("*.*") if p.is_file() and not p.name.endswith(".cache")]
+total_files = len(all_src_files)
+
+files_to_copy = []
+for src_file in all_src_files:
+    rel_path = src_file.relative_to(src_dataset_dir)
+    dst_file = dest_dataset_dir / rel_path
+    if not dst_file.exists():
+        files_to_copy.append((src_file, dst_file))
+
+already_copied = total_files - len(files_to_copy)
+print(f"📊 Trạng thái NVMe: Đã có sẵn {already_copied:,} / {total_files:,} files ({already_copied/total_files*100:.1f}%) trong /tmp/raw_combined")
+
+if files_to_copy:
+    print(f"🚀 Đang copy nốt {len(files_to_copy):,} file còn lại bằng 16 luồng song song...")
+    def _copy_worker(pair):
+        s, d = pair
+        d.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(s, d)
+    with ThreadPoolExecutor(max_workers=16) as pool:
+        for _ in tqdm(pool.map(_copy_worker, files_to_copy), total=len(files_to_copy), desc="Copying to SSD", unit="file"):
+            pass
+    print("✅ Hoàn tất 100% dữ liệu trên NVMe SSD!")
+else:
+    print("✅ Toàn bộ dữ liệu đã có sẵn trên NVMe SSD. Sẵn sàng!")
+
+### Cell 3 (code)
+# Cell 3: Automatic YOLO-to-COCO JSON Annotation Generator (Runs in ~5 seconds!)
+from PIL import Image
+from tqdm import tqdm
+
+CLASS_NAMES = [
+    "insulator",
+    "insulator_broken",
+    "insulator_flashover",
+    "bird_nest",
+    "foreign_object",
+    "broken_strand"
+]
+
+ann_dir = dest_dataset_dir / "annotations"
+ann_dir.mkdir(parents=True, exist_ok=True)
+
+def convert_yolo_to_coco(split_name: str):
+    out_json = ann_dir / f"{split_name}.json"
+    if out_json.exists():
+        print(f"✅ Đã có sẵn {out_json.name}. Bỏ qua bước tạo lại.")
+        return out_json
+    
+    print(f"Đang tạo COCO JSON cho split '{split_name}'...")
+    img_dir = dest_dataset_dir / "images" / split_name
+    lbl_dir = dest_dataset_dir / "labels" / split_name
+    
+    images_list = []
+    annotations_list = []
+    categories = [{"id": i, "name": name} for i, name in enumerate(CLASS_NAMES)]
+    
+    ann_id = 0
+    img_files = sorted(list(img_dir.glob("*.jpg")) + list(img_dir.glob("*.jpeg")) + list(img_dir.glob("*.png")))
+    
+    for img_id, img_path in enumerate(tqdm(img_files, desc=f"Converting {split_name}")):
+        with Image.open(img_path) as im:
+            w, h = im.size
+            
+        images_list.append({
+            "id": img_id,
+            "file_name": img_path.name,
+            "width": w,
+            "height": h
+        })
+        
+        lbl_path = lbl_dir / f"{img_path.stem}.txt"
+        if lbl_path.exists():
+            with open(lbl_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    parts = line.strip().split()
+                    if len(parts) >= 5:
+                        cls_id = int(parts[0])
+                        xc, yc, bw, bh = [float(x) for x in parts[1:5]]
+                        # Convert normalized [xc, yc, w, h] to COCO [xmin, ymin, w, h]
+                        xmin = (xc - bw / 2.0) * w
+                        ymin = (yc - bh / 2.0) * h
+                        box_w = bw * w
+                        box_h = bh * h
+                        area = box_w * box_h
+                        
+                        annotations_list.append({
+                            "id": ann_id,
+                            "image_id": img_id,
+                            "category_id": cls_id,
+                            "bbox": [round(xmin, 2), round(ymin, 2), round(box_w, 2), round(box_h, 2)],
+                            "area": round(area, 2),
+                            "iscrowd": 0
+                        })
+                        ann_id += 1
+                        
+    coco_dict = {
+        "images": images_list,
+        "annotations": annotations_list,
+        "categories": categories
+    }
+    with open(out_json, "w", encoding="utf-8") as f:
+        json.dump(coco_dict, f)
+    print(f"✅ Tạo xong {out_json.name}: {len(images_list):,} ảnh, {len(annotations_list):,} nhãn!")
+    return out_json
+
+train_json = convert_yolo_to_coco("train")
+val_json = convert_yolo_to_coco("val")
+
+### Cell 4 (code)
+# Cell 4: PyTorch Dataset & DataLoader for Hugging Face RT-DETR
+import torch
+import torch._utils
+if not hasattr(torch._utils, "_chunk_or_narrow_cat"):
+    def _chunk_or_narrow_cat(tensor, num_chunks, narrow_dim, cat_dim=0):
+        return torch.cat(torch.chunk(tensor, num_chunks, dim=narrow_dim), dim=cat_dim)
+    torch._utils._chunk_or_narrow_cat = _chunk_or_narrow_cat
+import numpy as np
+from PIL import Image
+from torch.utils.data import Dataset, DataLoader
+
+# Bulletproof Image Processor:
+# RT-DETR official config (PekingU/rtdetr_r50vd) specifies:
+# resize to 640x640 (Bilinear), rescale by 1/255, do_normalize=False.
+class PowerlineImageProcessor:
+    def __init__(self, size=(640, 640)):
+        self.size = size
+        
+    @classmethod
+    def from_pretrained(cls, *args, **kwargs):
+        return cls(size=(640, 640))
+        
+    def save_pretrained(self, save_dir):
+        import json
+        from pathlib import Path
+        config = {
+            "do_normalize": False,
+            "do_rescale": True,
+            "do_resize": True,
+            "image_processor_type": "RTDetrImageProcessor",
+            "rescale_factor": 1.0 / 255.0,
+            "size": {"height": self.size[0], "width": self.size[1]}
+        }
+        p = Path(save_dir) / "preprocessor_config.json"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=2)
+            
+    def __call__(self, images, return_tensors="pt"):
+        if not isinstance(images, list):
+            images = [images]
+        tensors = []
+        for img in images:
+            img_rgb = img.convert("RGB").resize(self.size, Image.BILINEAR)
+            arr = np.array(img_rgb, dtype=np.float32).transpose(2, 0, 1) / 255.0
+            tensors.append(torch.from_numpy(arr))
+        return {"pixel_values": torch.stack(tensors) if return_tensors == "pt" else tensors}
+
+try:
+    from transformers import RTDetrImageProcessor
+    print("✅ Successfully loaded official Hugging Face RTDetrImageProcessor")
+except Exception as e:
+    print(f"⚠️ Hugging Face image backend unavailable ({e}). Using native high-speed PyTorch processor!")
+    RTDetrImageProcessor = PowerlineImageProcessor
+
+class PowerlineCOCODataset(Dataset):
+    def __init__(self, img_dir, json_path, processor):
+        self.img_dir = Path(img_dir)
+        self.processor = processor
+        with open(json_path, "r", encoding="utf-8") as f:
+            coco = json.load(f)
+            
+        self.images = {img["id"]: img for img in coco["images"]}
+        self.img_ids = list(self.images.keys())
+        
+        # Group annotations by image_id
+        self.img_to_anns = {i: [] for i in self.img_ids}
+        for ann in coco["annotations"]:
+            self.img_to_anns[ann["image_id"]].append(ann)
+            
+    def __len__(self):
+        return len(self.img_ids)
+        
+    def __getitem__(self, idx):
+        img_id = self.img_ids[idx]
+        img_info = self.images[img_id]
+        img_path = self.img_dir / img_info["file_name"]
+        
+        image = Image.open(img_path).convert("RGB")
+        w, h = img_info["width"], img_info["height"]
+        
+        anns = self.img_to_anns[img_id]
+        boxes = []
+        classes = []
+        for ann in anns:
+            # COCO bbox: [xmin, ymin, bw, bh]
+            xmin, ymin, bw, bh = ann["bbox"]
+            # Convert to normalized [xc, yc, w, h] in [0, 1] as required by RT-DETR
+            xc = (xmin + bw / 2.0) / w
+            yc = (ymin + bh / 2.0) / h
+            nw = bw / w
+            nh = bh / h
+            boxes.append([xc, yc, nw, nh])
+            classes.append(ann["category_id"])
+            
+        if not boxes:
+            boxes = torch.zeros((0, 4), dtype=torch.float32)
+            classes = torch.zeros((0,), dtype=torch.long)
+        else:
+            boxes = torch.tensor(boxes, dtype=torch.float32)
+            classes = torch.tensor(classes, dtype=torch.long)
+            
+        # Process image
+        inputs = self.processor(images=image, return_tensors="pt")
+        pixel_values = inputs["pixel_values"].squeeze(0)
+        
+        target = {"class_labels": classes, "boxes": boxes}
+        return pixel_values, target
+
+def collate_fn(batch):
+    pixel_values = torch.stack([item[0] for item in batch])
+    targets = [item[1] for item in batch]
+    return pixel_values, targets
+
+print("DataLoader components initialized successfully!")
+
+### Cell 5 (code)
+# Cell 5: Standardized Training Pipeline for Peking University RT-DETR Models
+import sys, types, enum
+import torch
+import torch._utils
+import numpy as np
+
+# 0. Unload any previously cached/failed transformers or torchvision submodules
+for mod in list(sys.modules.keys()):
+    if mod.startswith("transformers.models.rt_detr") or mod.startswith("transformers.image_"):
+        del sys.modules[mod]
+
+# 1. Cleanly remove broken torchvision and tell transformers to use pure Pillow
+import importlib.machinery
+for k in ["torchvision", "torchvision.transforms", "torchvision.transforms.functional"]:
+    sys.modules.pop(k, None)
+
+try:
+    import transformers.utils.import_utils as _t_iu
+    _orig_pkg = getattr(_t_iu, "_is_package_available", None)
+    if _orig_pkg is not None:
+        def _safe_pkg_avail(pkg_name, return_version=False):
+            if pkg_name == "torchvision":
+                return (False, None) if return_version else False
+            return _orig_pkg(pkg_name, return_version)
+        _t_iu._is_package_available = _safe_pkg_avail
+    _t_iu.is_torchvision_available = lambda: False
+    _t_iu._torchvision_available = False
+    import transformers.utils as _t_u
+    _t_u.is_torchvision_available = lambda: False
+    _t_u._torchvision_available = False
+    for _attr in ["is_jax_tensor", "is_flax_tensor", "is_tf_tensor"]:
+        if not hasattr(_t_u, _attr):
+            setattr(_t_u, _attr, lambda x: False)
+    if not hasattr(_t_u, "is_torch_tensor"):
+        setattr(_t_u, "is_torch_tensor", lambda x: isinstance(x, torch.Tensor))
+    try:
+        import transformers.utils.generic as _t_ug
+        for _attr in ["is_jax_tensor", "is_flax_tensor", "is_tf_tensor"]:
+            if not hasattr(_t_ug, _attr):
+                setattr(_t_ug, _attr, lambda x: False)
+        if not hasattr(_t_ug, "is_torch_tensor"):
+            setattr(_t_ug, "is_torch_tensor", lambda x: isinstance(x, torch.Tensor))
+    except Exception:
+        pass
+except Exception:
+    pass
+
+# 2. Mock torch._dynamo with proper __path__ and __spec__ for Python 3.13 (Bypasses Dynamo/FlexAttention on Kaggle)
+class _MockDynamoModule(types.ModuleType):
+    __path__ = []
+    def __getattr__(self, name):
+        if name == "config":
+            m = types.ModuleType("torch._dynamo.config")
+            m.__spec__ = importlib.machinery.ModuleSpec("torch._dynamo.config", None)
+            return m
+        def _dummy(*args, **kwargs):
+            if len(args) == 1 and callable(args[0]) and not kwargs:
+                return args[0]
+            return lambda fn: fn
+        return _dummy
+
+_mock_dynamo = _MockDynamoModule("torch._dynamo")
+_mock_dynamo.__path__ = []
+_mock_dynamo.__spec__ = importlib.machinery.ModuleSpec("torch._dynamo", None, is_package=True)
+_mock_dynamo.assume_constant_result = lambda fn: fn
+_mock_dynamo.disable = lambda fn=None, *args, **kwargs: (lambda f: f) if fn is None else fn
+_mock_dynamo.is_compiling = lambda: False
+_mock_dynamo.config = types.ModuleType("torch._dynamo.config")
+_mock_dynamo.config.__spec__ = importlib.machinery.ModuleSpec("torch._dynamo.config", None)
+
+sys.modules["torch._dynamo"] = _mock_dynamo
+sys.modules["torch._dynamo.config"] = _mock_dynamo.config
+torch._dynamo = _mock_dynamo
+
+# Provide dummy submodules for transformers/masking_utils imports
+for submod in ["_trace_wrapped_higher_order_op", "backends", "utils", "variables"]:
+    full_name = f"torch._dynamo.{submod}"
+    if full_name not in sys.modules:
+        m = types.ModuleType(full_name)
+        m.__spec__ = importlib.machinery.ModuleSpec(full_name, None)
+        m.TransformGetItemToIndex = type("TransformGetItemToIndex", (), {})
+        sys.modules[full_name] = m
+
+# 3. Patch torch.utils._config_module.Config (Fixes: Config() got an unexpected keyword argument 'deprecated')
+try:
+    import torch.utils._config_module as _cm
+    _old_config = _cm.Config
+    def _safe_config(*args, **kwargs):
+        kwargs.pop("deprecated", None)
+        kwargs.pop("deprecation_message", None)
+        return _old_config(*args, **kwargs)
+    _cm.Config = _safe_config
+except Exception:
+    pass
+
+# 4. Patch torch.compiler.disable (No-op decorator)
+try:
+    import torch.compiler
+    torch.compiler.disable = lambda fn=None, *args, **kwargs: (lambda f: f) if fn is None else fn
+except Exception:
+    pass
+
+# 5. Patch missing PyTorch internal operator (_chunk_or_narrow_cat)
+if not hasattr(torch._utils, "_chunk_or_narrow_cat"):
+    def _chunk_or_narrow_cat(tensor, num_chunks, narrow_dim, cat_dim=0):
+        return torch.cat(torch.chunk(tensor, num_chunks, dim=narrow_dim), dim=cat_dim)
+    torch._utils._chunk_or_narrow_cat = _chunk_or_narrow_cat
+
+# 6. Bypass broken torch.distributed.tensor & flex_attention (prevents _c10d_functional & opaque_object errors)
+try:
+    import transformers.utils.import_utils as _t_iu
+    _t_iu.is_torch_distributed_available = lambda: False
+    _t_iu.is_torch_flex_attn_available = lambda: False
+    import transformers.utils as _t_u
+    _t_u.is_torch_distributed_available = lambda: False
+    _t_u.is_torch_flex_attn_available = lambda: False
+except Exception:
+    pass
+
+# Patch missing torch._library.opaque_object.is_custom_class_obj
+try:
+    import torch._library.opaque_object as _oo
+    if not hasattr(_oo, "is_custom_class_obj"):
+        _oo.is_custom_class_obj = lambda x: False
+except Exception:
+    if "torch._library.opaque_object" not in sys.modules:
+        _oo = types.ModuleType("torch._library.opaque_object")
+        _oo.__spec__ = importlib.machinery.ModuleSpec("torch._library.opaque_object", None)
+        _oo.is_custom_class_obj = lambda x: False
+        sys.modules["torch._library.opaque_object"] = _oo
+
+# Patch missing torch.fx.experimental._config.AggressiveGuardFreeMode
+class AggressiveGuardFreeMode(enum.IntEnum):
+    DISABLED = 0
+    ALWAYS_GUARD = 0
+    GUARD_OR_TRUE = 1
+    GUARD_OR_FALSE = 2
+
+try:
+    import torch.fx.experimental._config as _fx_cfg
+    _cls = type(_fx_cfg)
+    _orig_getattr = getattr(_cls, "__getattr__", None)
+    def _safe_getattr(self, name):
+        if name == "AggressiveGuardFreeMode":
+            return AggressiveGuardFreeMode
+        if _orig_getattr is not None:
+            return _orig_getattr(self, name)
+        raise AttributeError(f"{name} does not exist")
+    _cls.__getattr__ = _safe_getattr
+    if "torch.fx.experimental._config" in sys.modules:
+        sys.modules["torch.fx.experimental._config"].__dict__["AggressiveGuardFreeMode"] = AggressiveGuardFreeMode
+except Exception:
+    pass
+
+# Nạp trước symbolic_shapes và vá has_hint & size_hint
+try:
+    import torch.fx.experimental.symbolic_shapes as _sym_shapes
+    _sym_shapes.has_hint = lambda a: True
+    _sym_shapes.size_hint = lambda a: int(a) if hasattr(a, "__int__") else 1
+    _sym_shapes.guard_scalar = lambda a: a
+    _sym_shapes.guard_size_oblivious = lambda a: a
+    _sym_shapes.is_symbolic = lambda a: False
+except Exception:
+    pass
+
+# Bypass hoàn toàn torch._refs trong nn.init bằng NumPy C-buffers
+import numpy as np
+import torch.nn.init as _init
+def _safe_normal_(tensor, mean=0.0, std=1.0, generator=None):
+    with torch.no_grad():
+        arr = np.random.normal(mean, std, size=tensor.shape).astype(np.float32)
+        tensor.copy_(torch.from_numpy(arr))
+        return tensor
+
+def _safe_uniform_(tensor, a=0.0, b=1.0, generator=None):
+    with torch.no_grad():
+        arr = np.random.uniform(a, b, size=tensor.shape).astype(np.float32)
+        tensor.copy_(torch.from_numpy(arr))
+        return tensor
+
+_init.normal_ = _safe_normal_
+_init._no_grad_normal_ = _safe_normal_
+_init.uniform_ = _safe_uniform_
+_init._no_grad_uniform_ = _safe_uniform_
+
+if "torch.distributed.tensor" not in sys.modules:
+    _mock_dt = types.ModuleType("torch.distributed.tensor")
+    _mock_dt.__spec__ = importlib.machinery.ModuleSpec("torch.distributed.tensor", None)
+    _mock_dt.DTensor = None
+    _mock_dt.DeviceMesh = None
+    _mock_dt.init_device_mesh = None
+    _mock_dt._dtensor_spec = types.ModuleType("torch.distributed.tensor._dtensor_spec")
+    _mock_dt._dtensor_spec.__spec__ = importlib.machinery.ModuleSpec("torch.distributed.tensor._dtensor_spec", None)
+    _mock_dt._dtensor_spec.DTensorSpec = None
+    _mock_dt._dtensor_spec.TensorMeta = None
+    sys.modules["torch.distributed.tensor"] = _mock_dt
+    sys.modules["torch.distributed.tensor._dtensor_spec"] = _mock_dt._dtensor_spec
+
+try:
+    from transformers import RTDetrForObjectDetection
+    print("✅ ĐÃ NẠP THÀNH CÔNG RTDetrForObjectDetection!")
+except Exception as e:
+    print(f"Fallback import attempt due to: {e}")
+    from transformers.models.rt_detr.modeling_rt_detr import RTDetrForObjectDetection
+import torch.optim as optim
+
+# Direct Single-GPU Execution: RT-DETR uses List[Dict] target structures that are
+# incompatible with DataParallel. Running on a single GPU with gradient accumulation
+# achieves 100% stability, zero memory fragmentation, and max Tensor Core throughput.
+# Danh sách 6 class tiêu chuẩn (giúp Cell 5 có thể chạy test độc lập mà không cần chạy Cell 3 trước)
+CLASS_NAMES = globals().get("CLASS_NAMES", [
+    "insulator",
+    "insulator_broken",
+    "insulator_flashover",
+    "bird_nest",
+    "foreign_object",
+    "broken_strand"
+])
+id2label = {i: name for i, name in enumerate(CLASS_NAMES)}
+label2id = {name: i for i, name in enumerate(CLASS_NAMES)}
+
+def train_peking_rtdetr(model_variant: str = "r50vd", epochs: int = 50, batch_size: int = 8, accum_steps: int = 2):
+    """
+    Trains official Peking University RT-DETR-R50vd or RT-DETR-R101vd.
+    Loads 100% official pre-trained weights from Hugging Face Hub.
+    """
+    assert model_variant in ["r50vd", "r101vd"], "model_variant must be 'r50vd' or 'r101vd'"
+    repo_id = f"PekingU/rtdetr_{model_variant}"
+    run_name = f"raw_rtdetr_{model_variant}"
+    save_dir = Path(f"/kaggle/working/runs/{run_name}")
+    save_dir.mkdir(parents=True, exist_ok=True)
+    
+    print("=" * 70)
+    print(f"LAUNCHING TRAINING: {run_name.upper()}")
+    print(f"  Base HuggingFace Model : {repo_id}")
+    print(f"  Epochs                 : {epochs}")
+    print(f"  Batch Size             : {batch_size}")
+    print(f"  Optimizer              : AdamW (backbone: 1e-4, head: 1e-3, cos_lr)")
+    print("=" * 70)
+    
+    # 1. Load Processor & Datasets
+    processor = RTDetrImageProcessor.from_pretrained(repo_id)
+    train_ds = PowerlineCOCODataset(dest_dataset_dir / "images" / "train", train_json, processor)
+    val_ds = PowerlineCOCODataset(dest_dataset_dir / "images" / "val", val_json, processor)
+    
+    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=4, collate_fn=collate_fn, pin_memory=True)
+    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False, num_workers=4, collate_fn=collate_fn, pin_memory=True)
+    
+    # 2. Load Model with official pre-trained weights
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Loading {repo_id} weights from Hugging Face...")
+    try:
+        from transformers import RTDetrConfig
+        config = RTDetrConfig.from_pretrained(repo_id)
+        config.num_labels = len(CLASS_NAMES)
+        config.id2label = id2label
+        config.label2id = label2id
+        model = RTDetrForObjectDetection.from_pretrained(
+            repo_id,
+            config=config,
+            ignore_mismatched_sizes=True
+        )
+    except Exception:
+        model = RTDetrForObjectDetection.from_pretrained(
+            repo_id,
+            num_labels=len(CLASS_NAMES),
+            id2label=id2label,
+            label2id=label2id,
+            ignore_mismatched_sizes=True
+        )
+    
+    # Direct Single-GPU Execution (avoids DataParallel List[Dict] target mismatch)
+    model = model.to(device)
+    gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'
+    print(f"✅ Model moved to {device} ({gpu_name})")
+    
+    # 3. Optimizer & Cosine Scheduler as required by Benchmark Proposal
+    # Differential learning rate: 1e-4 for backbone, 1e-3 for transformer
+    backbone_params = []
+    other_params = []
+    for name, param in model.named_parameters():
+        if not param.requires_grad:
+            continue
+        if "backbone" in name:
+            backbone_params.append(param)
+        else:
+            other_params.append(param)
+            
+    optimizer = optim.AdamW([
+        {"params": backbone_params, "lr": 1e-4},
+        {"params": other_params, "lr": 1e-3}
+    ], weight_decay=0.0005)
+    
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs, eta_min=1e-5)
+    scaler = torch.cuda.amp.GradScaler()
+    
+    # Check for resume
+    last_ckpt_path = save_dir / "last_checkpoint.pt"
+    best_ckpt_path = save_dir / "best_model.pt"
+    start_epoch = 0
+    best_val_loss = float("inf")
+    
+    if last_ckpt_path.exists():
+        print(f"[RESUME] Found existing checkpoint: {last_ckpt_path}. Resuming...")
+        ckpt = torch.load(last_ckpt_path, map_location=device)
+        (model.module if hasattr(model, 'module') else model).load_state_dict(ckpt["model_state"])
+        optimizer.load_state_dict(ckpt["optimizer_state"])
+        scheduler.load_state_dict(ckpt["scheduler_state"])
+        start_epoch = ckpt["epoch"] + 1
+        best_val_loss = ckpt.get("best_val_loss", float("inf"))
+        print(f"Resumed successfully from Epoch {start_epoch}!")
+        
+    # 4. Training Loop
+    print(f"\n>>> Starting Training Loop ({start_epoch+1} to {epochs}) <<<")
+    for epoch in range(start_epoch, epochs):
+        model.train()
+        train_loss = 0.0
+        pbar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{epochs} [Train]")
+        
+        optimizer.zero_grad()
+        for step_idx, (pixel_values, targets) in enumerate(pbar):
+            pixel_values = pixel_values.to(device)
+            gpu_targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
+            
+            with torch.cuda.amp.autocast():
+                outputs = model(pixel_values=pixel_values, labels=gpu_targets)
+                loss = outputs.loss.mean() if hasattr(outputs.loss, 'mean') else outputs.loss
+                loss = loss / accum_steps
+                
+            scaler.scale(loss).backward()
+            
+            if (step_idx + 1) % accum_steps == 0 or (step_idx + 1) == len(train_loader):
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=0.1)
+                scaler.step(optimizer)
+                scaler.update()
+                optimizer.zero_grad()
+            
+            train_loss += loss.item() * accum_steps
+            pbar.set_postfix({"loss": f"{loss.item() * accum_steps:.4f}"})
+            
+        scheduler.step()
+        avg_train_loss = train_loss / len(train_loader)
+        
+        # Validation
+        model.eval()
+        val_loss = 0.0
+        with torch.no_grad():
+            for pixel_values, targets in tqdm(val_loader, desc=f"Epoch {epoch+1}/{epochs} [Val]", leave=False):
+                pixel_values = pixel_values.to(device)
+                gpu_targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
+                with torch.cuda.amp.autocast():
+                    outputs = model(pixel_values=pixel_values, labels=gpu_targets)
+                    loss = outputs.loss.mean() if hasattr(outputs.loss, 'mean') else outputs.loss
+                    val_loss += loss.item()
+                    
+        avg_val_loss = val_loss / len(val_loader)
+        print(f"Epoch {epoch+1:02d} Summary -> Train Loss: {avg_train_loss:.4f} | Val Loss: {avg_val_loss:.4f} | LR: {scheduler.get_last_lr()[0]:.6f}")
+        
+        # Save Checkpoint (every epoch for last, best for minimum val loss)
+        raw_model = model.module if hasattr(model, 'module') else model
+        save_payload = {
+            "epoch": epoch,
+            "model_state": raw_model.state_dict(),
+            "optimizer_state": optimizer.state_dict(),
+            "scheduler_state": scheduler.state_dict(),
+            "best_val_loss": best_val_loss,
+            "train_loss": avg_train_loss,
+            "val_loss": avg_val_loss
+        }
+        torch.save(save_payload, last_ckpt_path)
+        
+        if avg_val_loss < best_val_loss:
+            best_val_loss = avg_val_loss
+            torch.save(save_payload, best_ckpt_path)
+            raw_model.save_pretrained(save_dir / "best_huggingface_model")
+            processor.save_pretrained(save_dir / "best_huggingface_model")
+            print(f"  🌟 New best model saved! (Val Loss: {best_val_loss:.4f})")
+            
+    print(f"\n[DONE] Finished training for {run_name.upper()}! Saved in: {save_dir}")
+    
+    # Auto-sync model output to Camber Cloud Stash if enabled
+    if os.environ.get("CAMBER_API_KEY") and "myusername" not in globals().get("CAMBER_STASH_DEST", "myusername"):
+        try:
+            dest = globals().get("CAMBER_STASH_DEST", "").rstrip("/") + f"/{run_name}/"
+            print(f"☁️ Đang tự động backup {run_name} lên Camber Stash: {dest}...")
+            import subprocess
+            res = subprocess.run(["camber", "stash", "cp", "-r", str(save_dir), dest], capture_output=True, text=True)
+            if res.returncode == 0:
+                print(f"✅ Đã backup an toàn {run_name} lên Camber Cloud Stash!")
+            else:
+                print(f"⚠️ Camber upload notice: {res.stderr[:200]}")
+        except Exception as e:
+            print(f"⚠️ Camber sync warning: {e}")
+    
+    # Clean up GPU VRAM so the next model starts with 100% clean memory
+    del model, optimizer, scheduler, train_loader, val_loader
+    import gc; gc.collect()
+    torch.cuda.empty_cache()
+    print("🧹 Đã dọn dẹp bộ nhớ VRAM sạch sẽ để sẵn sàng cho model tiếp theo.")
+    return best_ckpt_path
+
+### Cell 6 (code)
+# Cell 6: Train RT-DETR-R50vd (Peking University Pre-trained)
+# Batch size = 16 (8 per GPU on 2x T4)
+if TRAIN_R50:
+    train_peking_rtdetr(model_variant="r50vd", epochs=50, batch_size=8, accum_steps=2)
+else:
+    print("⏩ Bỏ qua RT-DETR-R50vd (TRAIN_R50 = False)")
+
+### Cell 7 (code)
+# Cell 7: Train RT-DETR-R101vd (Peking University Pre-trained)
+# Batch size = 8 (4 per GPU on 2x T4)
+if TRAIN_R101:
+    train_peking_rtdetr(model_variant="r101vd", epochs=50, batch_size=4, accum_steps=4)
+else:
+    print("⏩ Bỏ qua RT-DETR-R101vd (TRAIN_R101 = False)")
+
+### Cell 8 (code)
+# Cell 8: Zip Checkpoints and Logs for One-Click Download
+runs_dir = Path("/kaggle/working/runs")
+if runs_dir.exists():
+    print("Packaging weights and results...")
+    zip_path = shutil.make_archive("/kaggle/working/peking_rtdetr_checkpoints", "zip", runs_dir)
+    print(f"Successfully created: {zip_path}")
+    print(f"Size: {Path(zip_path).stat().st_size / (1024**2):.1f} MB")
+    print("Tải file 'peking_rtdetr_checkpoints.zip' từ mục Output về máy local!")
+else:
+    print("Chưa có thư mục runs. Hãy chạy train trước.")
+
+### Cell 9 (code)
+# Cell 9: (Tùy chọn) Tự động Upload Toàn bộ Output lên Camber Cloud Stash
+import os, subprocess
+from pathlib import Path
+
+zip_path = Path("/kaggle/working/peking_rtdetr_checkpoints.zip")
+camber_key = os.environ.get("CAMBER_API_KEY")
+stash_dest = globals().get("CAMBER_STASH_DEST", "")
+
+if camber_key and stash_dest and "myusername" not in stash_dest:
+    if zip_path.exists():
+        print(f"☁️ Bắt đầu upload {zip_path.name} ({zip_path.stat().st_size / (1024**2):.1f} MB) lên Camber Stash...")
+        print(f"   Đích đến: {stash_dest}")
+        res = subprocess.run(["camber", "stash", "cp", str(zip_path), stash_dest], capture_output=True, text=True)
+        if res.returncode == 0:
+            print(f"🎉 UPLOAD THÀNH CÔNG LÊN CAMBER STASH: {stash_dest}")
+            print(res.stdout)
+        else:
+            print(f"❌ Lỗi khi upload: {res.stderr}")
+    else:
+        print("⚠️ Không tìm thấy file zip output. Hãy chạy Cell 8 trước!")
+else:
+    print("ℹ️ Chưa kích hoạt Camber Upload.")
+    print("   👉 Để tự động lưu lên Camber: Hãy điền CAMBER_API_KEY và thay 'myusername' trong CAMBER_STASH_DEST ở Cell 1!")

@@ -1,0 +1,9 @@
+{
+  "model": "diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+  "foreign_object_metadata_rows": 14,
+  "foreign_object_status_counts": {
+    "ok": 14
+  },
+  "broken_strand_metadata_rows": 16,
+  "note": "Generation metadata counts, not human-approved training counts. Session notes say not used for training."
+}
