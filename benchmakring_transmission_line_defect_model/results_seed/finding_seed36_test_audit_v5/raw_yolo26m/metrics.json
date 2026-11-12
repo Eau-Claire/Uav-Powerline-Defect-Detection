@@ -1,0 +1,26 @@
+{
+  "run": "raw_yolo26m",
+  "seed": 36,
+  "dataset": "raw",
+  "model": "yolo26m",
+  "weight_sha256": "da00e5b7b2094657ecfbd4da01f18b3bb57c9211d672bb23ae2ae9a0512a1b84",
+  "test_images": 1931,
+  "precision": 0.8502053948055385,
+  "recall": 0.7404958139010086,
+  "map50": 0.8032497444915828,
+  "map50_95": 0.44525202446745177,
+  "speed_ms": {
+    "preprocess": 0.6657843086569197,
+    "inference": 9.413136872073546,
+    "loss": 0.000999896427235339,
+    "postprocess": 1.1319425168382629
+  },
+  "per_class_map50_95": {
+    "insulator": 0.5955819784601473,
+    "insulator_broken": 0.4372888474141431,
+    "insulator_flashover": 0.2671969883507334,
+    "bird_nest": 0.4846774145357654,
+    "foreign_object": 0.502447454171823,
+    "broken_strand": 0.3843194638720983
+  }
+}

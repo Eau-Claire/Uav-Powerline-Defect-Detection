@@ -1,0 +1,24 @@
+{
+  "ablation": "destiny_m124",
+  "weight": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\weights\\finding_destiny\\yolo26m_m_124\\weights\\best.pt",
+  "weight_sha256": "bdd75596053602422fedb5b455a35d47f02c03a2a54f199ad8c37a8703d64594",
+  "test_images": 1931,
+  "precision": 0.8656051879952938,
+  "recall": 0.7168591915053323,
+  "map50": 0.7967488642521613,
+  "map50_95": 0.4140510896576482,
+  "speed_ms": {
+    "preprocess": 0.6506607975047797,
+    "inference": 9.483630295165947,
+    "loss": 0.0009180217378794257,
+    "postprocess": 1.0004078197983546
+  },
+  "per_class_map50_95": {
+    "insulator": 0.5813232949447349,
+    "insulator_broken": 0.42456089406233677,
+    "insulator_flashover": 0.2475723692944864,
+    "bird_nest": 0.46235312101203874,
+    "foreign_object": 0.4241372016660915,
+    "broken_strand": 0.3443596569662011
+  }
+}

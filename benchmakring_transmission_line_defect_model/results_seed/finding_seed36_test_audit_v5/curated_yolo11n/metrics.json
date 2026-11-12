@@ -1,0 +1,26 @@
+{
+  "run": "curated_yolo11n",
+  "seed": 36,
+  "dataset": "curated",
+  "model": "yolo11n",
+  "weight_sha256": "32001b68a088a8c6db0fb36ec344c71544d706ed20a9fe17702c450f39928225",
+  "test_images": 1931,
+  "precision": 0.8098428791313946,
+  "recall": 0.6433095160125578,
+  "map50": 0.7244251067532052,
+  "map50_95": 0.3961662095677151,
+  "speed_ms": {
+    "preprocess": 0.6709918176953594,
+    "inference": 2.4495025893487252,
+    "loss": 0.0010174003013334676,
+    "postprocess": 1.3839921284303331
+  },
+  "per_class_map50_95": {
+    "insulator": 0.5622182683801674,
+    "insulator_broken": 0.40079432059743586,
+    "insulator_flashover": 0.22402406824177484,
+    "bird_nest": 0.4338102289022361,
+    "foreign_object": 0.42280446564265217,
+    "broken_strand": 0.3333459056420241
+  }
+}
