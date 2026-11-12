@@ -85,3 +85,5 @@ artifacts/v6p5_transfer/*.tar.gz
 
 *.png
 *.jpg
+
+artifacts/camber_downloads/*
