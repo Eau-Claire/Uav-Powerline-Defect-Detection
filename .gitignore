@@ -87,3 +87,8 @@ artifacts/v6p5_transfer/*.tar.gz
 *.jpg
 
 artifacts/camber_downloads/*
+
+# Local mirror of selected Camber model artifacts. Keep the inventory/docs/scripts,
+# but never commit downloaded checkpoints and generated reports.
+/camber/artifacts/
+/camber/inventory.csv
