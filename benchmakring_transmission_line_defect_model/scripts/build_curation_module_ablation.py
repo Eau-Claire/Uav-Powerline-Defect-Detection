@@ -1,8 +1,9 @@
 """Build cumulative data-curation ablations from ``data/raw_combined``.
 
-The protocol is intentionally train-only. Validation (``val``) and held-out
-evaluation (``val_clean``, exposed as ``test``) are linked byte-for-byte from
-the raw dataset for every stage.
+The protocol is intentionally train-only. Validation (``val`` and the retained
+``val_clean`` snapshot) is linked byte-for-byte from the raw dataset. The
+canonical held-out test split is linked from
+``data/finding_nemo_human_reviewed_6cls/test`` for every stage.
 
 Stages:
   m0_raw       no curation (YAML points directly at raw_combined)
@@ -202,12 +203,12 @@ def apply_stage(image: Path, label: Path, stage: int, inputs: dict, stats: Count
     return rows
 
 
-def dataset_yaml(root: Path) -> dict:
+def dataset_yaml(root: Path, test_images: str = "images/test") -> dict:
     return {
         "path": root.resolve().as_posix(),
         "train": "images/train",
         "val": "images/val",
-        "test": "images/val_clean",
+        "test": test_images,
         "names": NAMES,
     }
 
@@ -220,7 +221,28 @@ def hash_labels(root: Path) -> str:
     return digest.hexdigest()
 
 
-def build_stage(raw: Path, out: Path, stage: int, inputs: dict, force: bool) -> dict:
+def validate_reviewed_test(root: Path) -> None:
+    image_dir = root / "images/test"
+    label_dir = root / "labels/test"
+    images = [p for p in image_dir.iterdir() if p.is_file() and p.suffix != ".cache"]
+    labels = [p for p in label_dir.iterdir() if p.is_file() and p.suffix == ".txt"]
+    boxes = sum(
+        sum(1 for line in p.read_text(encoding="utf-8").splitlines() if line.strip())
+        for p in labels
+    )
+    paired = {p.stem for p in images} == {p.stem for p in labels}
+    if len(images) != 1931 or len(labels) != 1931 or boxes != 2850 or not paired:
+        raise ValueError(
+            "Expected the frozen human-reviewed test split to contain "
+            f"1,931 images, 1,931 labels and 2,850 boxes; found "
+            f"{len(images)} images, {len(labels)} labels and {boxes} boxes in {root}; "
+            f"image/label stems paired={paired}"
+        )
+
+
+def build_stage(
+    raw: Path, reviewed_test: Path, out: Path, stage: int, inputs: dict, force: bool
+) -> dict:
     if out.exists():
         if not force:
             raise FileExistsError(f"Output exists: {out}; pass --force to replace it")
@@ -233,6 +255,11 @@ def build_stage(raw: Path, out: Path, stage: int, inputs: dict, force: bool) -> 
             for src in sorted((raw / kind / split).iterdir()):
                 if src.is_file() and src.suffix != ".cache":
                     link_file(src, out / kind / split / src.name)
+
+    for kind in ("images", "labels"):
+        for src in sorted((reviewed_test / kind / "test").iterdir()):
+            if src.is_file() and src.suffix != ".cache":
+                link_file(src, out / kind / "test" / src.name)
 
     image_dir = raw / "images/train"
     label_dir = raw / "labels/train"
@@ -256,8 +283,16 @@ def build_stage(raw: Path, out: Path, stage: int, inputs: dict, force: bool) -> 
         "source": raw.resolve().as_posix(),
         "stage": stage,
         "modules": list(range(1, stage + 1)),
-        "protocol": "train-only; val and val_clean are byte-identical hard links to raw_combined",
-        "split_policy": {"train": "curated", "val": "frozen raw val", "test": "frozen raw val_clean"},
+        "protocol": (
+            "train-only curation; validation is frozen; test is the frozen "
+            "finding_nemo_human_reviewed_6cls split"
+        ),
+        "split_policy": {
+            "train": "curated",
+            "val": "frozen raw val",
+            "val_clean": "retained frozen validation snapshot",
+            "test": "frozen finding_nemo_human_reviewed_6cls test (1,931 images; 2,850 boxes)",
+        },
         "judge": {"model": "YOLO11n", "reported_mAP50": 0.7564},
         "thresholds": {"missing_conf": 0.60, "missing_max_iou": 0.30, "tiny_px": 4,
                        "person_conf": 0.60, "person_iou": 0.50, "sam_iou": [0.50, 0.85]},
@@ -279,19 +314,32 @@ def main() -> int:
     repo_root = benchmark_root.parent
     parser.add_argument("--raw", type=Path, default=benchmark_root / "data/raw_combined")
     parser.add_argument("--out", type=Path, default=benchmark_root / "data/curation_module_ablation")
+    parser.add_argument(
+        "--test-dataset",
+        type=Path,
+        default=benchmark_root / "data/finding_nemo_human_reviewed_6cls",
+        help="Frozen human-reviewed dataset whose images/test and labels/test are used for evaluation",
+    )
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
 
     raw = args.raw.resolve()
+    reviewed_test = args.test_dataset.resolve()
+    validate_reviewed_test(reviewed_test)
     out_root = args.out.resolve()
     out_root.mkdir(parents=True, exist_ok=True)
     inputs = load_protocol_inputs(repo_root)
 
     raw_yaml = out_root / "m0_raw.yaml"
-    raw_yaml.write_text(yaml.safe_dump(dataset_yaml(raw), sort_keys=False), encoding="utf-8")
+    raw_yaml.write_text(
+        yaml.safe_dump(
+            dataset_yaml(raw, (reviewed_test / "images/test").as_posix()), sort_keys=False
+        ),
+        encoding="utf-8",
+    )
     summary = {"m0_raw": {"data_yaml": raw_yaml.as_posix(), "modules": []}}
     for name, stage in STAGES:
-        manifest = build_stage(raw, out_root / name, stage, inputs, args.force)
+        manifest = build_stage(raw, reviewed_test, out_root / name, stage, inputs, args.force)
         summary[name] = {
             "data_yaml": (out_root / name / "data.yaml").as_posix(),
             "modules": manifest["modules"],

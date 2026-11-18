@@ -9,11 +9,9 @@ __pycache__/
 .idea/
 .vscode/
 
-# Local deployment/runtime caches
-deployment/modal/.tools/
-deployment/modal/.venv/
-deployment/modal/__pycache__/
-deployment/modal/models/*.pt
+# Deployment code is kept outside this repo; only the empty folder is tracked
+deployment/*
+!deployment/.gitkeep
 
 # Secrets
 .env
@@ -49,7 +47,6 @@ dist/
 # Model weights
 weights/
 *.pt
-!deployment/modal/models/*.pt.source
 
 # Small, valuable records ARE committed: state/*.json, artifacts/freezes/*.json,
 # artifacts/manifests/*.csv, the review decisions CSV.
@@ -87,3 +84,8 @@ artifacts/v6p5_transfer/*.tar.gz
 *.jpg
 
 artifacts/camber_downloads/*
+
+# Local mirror of selected Camber model artifacts. Keep the inventory/docs/scripts,
+# but never commit downloaded checkpoints and generated reports.
+/camber/artifacts/
+/camber/inventory.csv

@@ -6,9 +6,9 @@ Combinations:
   m_234: Modules 2, 3, 4 (Excludes Module 1: Flip fix A, Missing adds B, Tiny drop F)
   m_1234: Modules 1, 2, 3, 4 (Full curation baseline - optional)
 
-The protocol is intentionally train-only. Validation (``val``) and held-out
-evaluation (``val_clean``, exposed as ``test``) are linked byte-for-byte for
-every stage.
+The protocol is intentionally train-only. Validation (``val`` and the retained
+``val_clean`` snapshot) is frozen for every stage. The canonical held-out test
+split is linked from ``data/finding_nemo_human_reviewed_6cls/test``.
 """
 from __future__ import annotations
 
@@ -202,7 +202,7 @@ def dataset_yaml(root: Path) -> dict:
         "path": root.resolve().as_posix(),
         "train": "images/train",
         "val": "images/val",
-        "test": "images/val_clean",
+        "test": "images/test",
         "names": NAMES,
     }
 
@@ -283,12 +283,32 @@ def materialize_val_clean(val_img_dir: Path, val_clean_json: Path, out_root: Pat
         write_labels(target_lbl, rows)
 
 
+def validate_reviewed_test(root: Path) -> None:
+    image_dir = root / "images/test"
+    label_dir = root / "labels/test"
+    images = [p for p in image_dir.iterdir() if p.is_file() and p.suffix != ".cache"]
+    labels = [p for p in label_dir.iterdir() if p.is_file() and p.suffix == ".txt"]
+    boxes = sum(
+        sum(1 for line in p.read_text(encoding="utf-8").splitlines() if line.strip())
+        for p in labels
+    )
+    paired = {p.stem for p in images} == {p.stem for p in labels}
+    if len(images) != 1931 or len(labels) != 1931 or boxes != 2850 or not paired:
+        raise ValueError(
+            "Expected the frozen human-reviewed test split to contain "
+            f"1,931 images, 1,931 labels and 2,850 boxes; found "
+            f"{len(images)} images, {len(labels)} labels and {boxes} boxes in {root}; "
+            f"image/label stems paired={paired}"
+        )
+
+
 def build_loo_stage(
     train_img_dir: Path,
     train_lbl_dir: Path,
     val_img_dir: Path,
     val_lbl_dir: Path,
     val_clean_json: Path | None,
+    reviewed_test: Path,
     out: Path,
     stage_name: str,
     modules: list[int],
@@ -313,7 +333,7 @@ def build_loo_stage(
         if src.is_file() and src.suffix == ".txt":
             link_file(src, out / "labels/val" / src.name)
 
-    # 2. Materialize val_clean (frozen test set)
+    # 2. Materialize the retained frozen val_clean validation snapshot.
     if val_clean_json is not None:
         materialize_val_clean(val_img_dir, val_clean_json, out)
     else:
@@ -325,7 +345,13 @@ def build_loo_stage(
                         if src.is_file() and src.suffix != ".cache":
                             link_file(src, out / kind / split / src.name)
 
-    # 3. Apply active curation modules on train images & labels
+    # 3. Link the single canonical held-out test split for every ablation arm.
+    for kind in ("images", "labels"):
+        for src in sorted((reviewed_test / kind / "test").iterdir()):
+            if src.is_file() and src.suffix != ".cache":
+                link_file(src, out / kind / "test" / src.name)
+
+    # 4. Apply active curation modules on train images & labels
     for image in sorted(p for p in train_img_dir.iterdir() if p.is_file() and p.suffix != ".cache"):
         before = stats.copy()
         lbl_file = train_lbl_dir / f"{image.stem}.txt"
@@ -347,8 +373,16 @@ def build_loo_stage(
         "source": train_img_dir.parent.resolve().as_posix(),
         "stage": stage_name,
         "modules": modules,
-        "protocol": "train-only; val and val_clean are byte-identical hard links to raw_combined",
-        "split_policy": {"train": "curated", "val": "frozen raw val", "test": "frozen raw val_clean"},
+        "protocol": (
+            "train-only curation; validation is frozen; test is the frozen "
+            "finding_nemo_human_reviewed_6cls split"
+        ),
+        "split_policy": {
+            "train": "curated",
+            "val": "frozen raw val",
+            "val_clean": "retained frozen validation snapshot",
+            "test": "frozen finding_nemo_human_reviewed_6cls test (1,931 images; 2,850 boxes)",
+        },
         "judge": {"model": "YOLO11n", "reported_mAP50": 0.7564},
         "thresholds": {
             "missing_conf": 0.60,
@@ -387,6 +421,12 @@ def main() -> int:
         help="Output directory for ablation datasets",
     )
     parser.add_argument(
+        "--test-dataset",
+        type=Path,
+        default=benchmark_root / "data/finding_nemo_human_reviewed_6cls",
+        help="Frozen human-reviewed dataset whose images/test and labels/test are used for evaluation",
+    )
+    parser.add_argument(
         "--stages",
         nargs="+",
         default=["m_124", "m_134", "m_234"],
@@ -399,6 +439,8 @@ def main() -> int:
     out_root = args.out.resolve()
     out_root.mkdir(parents=True, exist_ok=True)
     inputs = load_protocol_inputs(repo_root)
+    reviewed_test = args.test_dataset.resolve()
+    validate_reviewed_test(reviewed_test)
 
     train_img, train_lbl, val_img, val_lbl, val_clean_json = resolve_dataset_sources(
         args.raw.resolve(), benchmark_root
@@ -423,6 +465,7 @@ def main() -> int:
             val_img,
             val_lbl,
             val_clean_json,
+            reviewed_test,
             out_root / name,
             name,
             modules,

@@ -1,0 +1,5 @@
+stage,label,excluded,precision,recall,map50,map50_95,insulator_ap50,bird_nest_ap50,insulator_broken_ap50,insulator_flashover_ap50,broken_strand_ap50,foreign_object_ap50,insulator_ap50_95,bird_nest_ap50_95,insulator_broken_ap50_95,insulator_flashover_ap50_95,broken_strand_ap50_95,foreign_object_ap50_95
+m2_c_d,Baseline (M1+M2),none,0.832,0.791,0.835,0.453,0.961,0.934,0.846,0.823,0.784,0.663,0.650,0.562,0.439,0.329,0.359,0.380
+m_134,w/o Module 2,Module 2,0.816,0.792,0.829,0.456,0.965,0.930,0.840,0.826,0.766,0.649,0.671,0.565,0.431,0.354,0.351,0.361
+m_124,w/o Module 3,Module 3,0.813,0.786,0.824,0.449,0.965,0.925,0.839,0.798,0.768,0.646,0.667,0.559,0.428,0.333,0.338,0.369
+m_234,w/o Module 1,Module 1,0.803,0.790,0.805,0.435,0.964,0.916,0.843,0.810,0.725,0.575,0.670,0.545,0.435,0.327,0.328,0.303

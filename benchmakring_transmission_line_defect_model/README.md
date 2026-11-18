@@ -31,7 +31,11 @@ results_yolo_model/       original YOLO Raw/Curated results
 results_rtdetr_best/      original RT-DETR best-checkpoint results
 results_rtdetr_last/      original RT-DETR last-checkpoint results
 results_test_all/         combined historical test export
-results/finding_nemo/     current Finding Nemo logs, audits, and evaluations
+results_ablation/finding_nemo/
+                          Finding Nemo logs, selected-checkpoint evaluations, and test audits
+results_ablation/finding_destiny_test_audit_v5/
+                          historical exploratory v5 evaluation of curation-module checkpoints
+results_seed/             seed-replication evaluations (seed 36)
 FINDING_NEMO_TEST_AUDIT_V5.md
                            roles and provenance for the v5 audit bundle
 benchmark_pipeline.ipynb  historical interactive orchestration notebook
@@ -41,7 +45,7 @@ This local `src/` belongs specifically to the controlled benchmark. It is separa
 
 ## Original Raw-versus-Curated benchmark
 
-The original factorial experiment compares two training regimes across six architectures. The raw train has 18,334 image files and the curated train has 17,903. Validation has 2,272 images.
+The original factorial experiment compares two training regimes across six architectures. The raw train (`data/finding_nemo_raw`, 25,807 boxes) has 18,334 image files and the curated train (`data/curated_combined`, 23,204 boxes) has 17,903. Validation has 2,272 images; `val_clean` (2,271 images, 2,863 boxes) is the same validation images after rules A, C, G and H.
 
 The 431 removed training images are recorded in `data/curated_combined/changes.csv` when the dataset is materialized:
 
@@ -51,6 +55,14 @@ The 431 removed training images are recorded in `data/curated_combined/changes.c
 
 Historical result folders use several evaluation configurations. Do not infer independence from a YAML key named `test`: older configs mapped `test` to `images/val_clean`. Check the recorded dataset YAML and split path for every result before citing it.
 
+| Result folder | Evaluated on |
+|---|---|
+| `results_yolo_model/` | `val_clean` (via `configs/dataset_curated.yaml`) |
+| `results_rtdetr_best/`, `results_rtdetr_last/` | `val_clean` (`data_val_clean.yaml`) |
+| `results_test_all/` | V6.2E test export (`data/working/test/dataset.yaml`) |
+
+Seed-42 Raw → Curated mAP50 on `val_clean` (YOLO from `results_yolo_model`, RT-DETR last checkpoint from `results_rtdetr_last`): YOLO11n 0.7564 → 0.7911, YOLO11m 0.7977 → 0.8099, YOLO26n 0.7806 → 0.8119, YOLO26m 0.8090 → 0.8323, RT-DETR-R50 0.7823 → 0.8017, RT-DETR-R101 0.7875 → 0.8157.
+
 ## Finding Nemo
 
 Dataset and training artifacts:
@@ -58,6 +70,19 @@ Dataset and training artifacts:
 ```text
 stash://bunpmc/projects/finding_nemo/
 ```
+
+Training data: `data/finding_nemo_human_reviewed_6cls` (train 17,903 images / 25,811 boxes, val 2,271 / 3,204, test 1,931 / 2,850). It is built from `curated_combined` train, `val_clean` and `test_main_v1` by adding only human-accepted cross-label proposals (`../tools/roboflow_relabel/`); provenance and split hashes are in its `DATASET_STATUS.json`.
+
+Selected checkpoints on the primary independent test `test_main_v1` (`results_ablation/finding_nemo/selected_checkpoints_eval_test_main_v1/`):
+
+| Model | Checkpoint | Precision | Recall | F1 | mAP50 | mAP50:95 | MEAN_5 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| YOLO11n | last epoch | 0.7665 | 0.6611 | 0.7099 | 0.7072 | 0.3823 | 0.6988 |
+| YOLO11m | epoch 45 | 0.7753 | 0.7155 | 0.7442 | 0.7431 | 0.4039 | 0.7309 |
+| YOLO26n | epoch 45 | 0.7899 | 0.7234 | 0.7552 | 0.7435 | 0.4012 | 0.7392 |
+| YOLO26m | epoch 45 | 0.8274 | 0.7467 | 0.7850 | **0.7806** | **0.4296** | **0.7779** |
+| RT-DETR-R50 | epoch 15 | 0.8073 | 0.7489 | 0.7770 | 0.7499 | 0.3991 | 0.7472 |
+| RT-DETR-R101 | epoch 15 | **0.8346** | **0.7632** | **0.7973** | 0.7714 | 0.4198 | 0.7705 |
 
 Rows maximizing validation mAP50 in the current training CSVs:
 
@@ -76,7 +101,8 @@ For RT-DETR, the training CSV fields named Precision and Recall are actually COC
 
 | Dataset | Role |
 |---|---|
-| `test_main_v1` | Primary independent raw benchmark, 1,931 images |
+| `test_main_v1` | Primary independent raw benchmark, 1,931 images, 2,562 boxes |
+| human-reviewed test | `test_main_v1` plus human-accepted cross-label boxes, 2,850 boxes; report separately |
 | `test_operational_min8_v1` | Secondary UAV-operational subset using a fixed 8 px minimum-side image exclusion rule |
 | v2–v5 | Exploratory annotation studies using model-assisted proposals |
 
@@ -93,7 +119,7 @@ Latest v5 exploratory result (`test_operational_min8_v5_full_consensus_assisted`
 | YOLO11m | 0.8047 | 0.7365 | 0.7691 | 0.7874 | 0.4464 | 0.7505 |
 | YOLO11n | 0.7925 | 0.6838 | 0.7341 | 0.7550 | 0.4279 | 0.7141 |
 
-Canonical local table: [`results/finding_nemo/operational_min8_v5_all/benchmark_summary.csv`](results/finding_nemo/operational_min8_v5_all/benchmark_summary.csv).
+Canonical local table: [`results_ablation/finding_nemo/operational_min8_v5_all/benchmark_summary.csv`](results_ablation/finding_nemo/operational_min8_v5_all/benchmark_summary.csv).
 
 Portable bundle:
 
@@ -101,6 +127,15 @@ Portable bundle:
 stash://bunpmc/projects/finding_nemo/audits/finding_nemo_test_audit_v5_bundle.tar
 SHA-256: 5B9C59DEA1B5B7D0257A3CB938EB9F9A7A7AD9C304C8BB95B2E3B7A91D3CE51A
 ```
+
+## Curation-module ablation
+
+YOLO26m runs with subsets of curation Modules I–IV (I = A, B, F; II = C, D; III = E, G; IV = H), built by `scripts/build_curation_module_ablation.py` (cumulative) and `scripts/build_curation_loo_ablation.py` (leave-one-out).
+
+- Leave-one-out on `val_clean`: see `../docs/RESEARCH_REPORT_LOO_CURATION_ABLATION.md`. Dropping Module I gives the lowest mAP50 (0.805 vs 0.824–0.829 for the other LOO runs).
+- Canonical held-out ablation test: `data/finding_nemo_human_reviewed_6cls/images/test` with its paired `labels/test` (1,931 images, 2,850 boxes). Generated ablation YAML files expose this exact split as `test`.
+- `results_ablation/finding_destiny_test_audit_v5/summary.csv` is a historical exploratory evaluation on model-assisted v5 labels, not the canonical ablation test.
+- Add-one-in and leave-one-out checkpoints: `stash://bunpmc/projects/finding_ablation/`. They require matched re-evaluation on the canonical human-reviewed test before final test comparisons are reported.
 
 ## Restore and inspect
 

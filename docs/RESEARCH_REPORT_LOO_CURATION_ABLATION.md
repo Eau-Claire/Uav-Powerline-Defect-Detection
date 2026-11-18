@@ -2,7 +2,7 @@
 
 **Author / Engineering Team:** UAV Powerline Inspection AI Research Team  
 **Benchmark Target:** YOLO26m Architecture (21.78M parameters, 75.0 GFLOPs)  
-**Evaluation Standard:** Independent Ground-Truth Test Benchmark (`val_clean`: 2,271 images, 2,863 instances)  
+**Evaluation Standard:** Frozen validation benchmark (`val_clean`: 2,271 images, 2,863 instances)
 **Date:** November 2026  
 **Status:** Completed & Empirically Verified  
 
@@ -46,7 +46,7 @@ The curation framework is partitioned into four distinct operational modules:
   - *Quarantine (E):* Quarantines severely motion-blurred, overexposed, or corrupt camera frames.
   - *Non-Person/Non-Grid Drop (G):* Filters irrelevant background items (distant vehicles, vegetation clusters).
 - **Module 4 (Canonical Harmonization & Split Stabilization):**
-  - Canonical mapping into the 6 standardized defect classes and freezing the independent test benchmark `val_clean`.
+  - Canonical mapping into the 6 standardized defect classes and freezing the `val_clean` validation snapshot.
 
 ---
 
@@ -56,7 +56,7 @@ The curation framework is partitioned into four distinct operational modules:
 
 All variants were materialized from the identical root raw repository and partitioned into standardized YOLO directory structures with symlinked image caches:
 
-| Stage Variant | Active Modules | Excluded Component | Train Images | Val Images | Test Images (`val_clean`) |
+| Stage Variant | Active Modules | Excluded Component | Train Images | Val Images | `val_clean` Images |
 | :--- | :---: | :--- | :---: | :---: | :---: |
 | **`m2_c_d`** *(Baseline)* | Mod 1, 2 | None | 18,052 | 2,272 | 2,271 |
 | **`m3_e_g`** *(Full)* | Mod 1, 2, 3 | None | 17,960 | 2,272 | 2,271 |
@@ -79,7 +79,7 @@ To ensure scientific validity without confounding factors, all runs were execute
 
 ## 3. Quantitative Evaluation & Comparative Matrix
 
-All models were evaluated on the frozen benchmark **`val_clean`**, containing **2,271 high-resolution UAV inspection images** and **2,863 verified defect instances**.
+All results in this historical report were evaluated on the frozen validation benchmark **`val_clean`**, containing **2,271 high-resolution UAV inspection images** and **2,863 verified defect instances**. They are validation results, not the canonical held-out ablation test. Canonical test evaluation must use `finding_nemo_human_reviewed_6cls/images/test` with its paired labels (1,931 images, 2,850 boxes).
 
 ### 3.1 Global Performance Metrics
 
