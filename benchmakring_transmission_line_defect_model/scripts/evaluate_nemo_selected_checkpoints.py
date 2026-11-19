@@ -215,25 +215,67 @@ def load_huggingface_rtdetr(model_id: str, checkpoint_path: Path, device: torch.
                 checkpoint = checkpoint[key]
                 break
 
-    state_dict: Dict[str, torch.Tensor] = {}
-    for key, value in checkpoint.items():
-        curr = key
-        if curr.startswith(("class_embed.", "bbox_embed.")):
-            curr = f"model.decoder.{curr}"
-        curr = curr.replace("model.encoder.encoder.", "model.encoder.aifi.").replace(".self_attn.out_proj.", ".self_attn.o_proj.")
-        if curr.startswith(("model.encoder.aifi.", "model.decoder.layers.")):
-            curr = re.sub(r"(?<!\.mlp)\.fc1\.", ".mlp.fc1.", curr)
-            curr = re.sub(r"(?<!\.mlp)\.fc2\.", ".mlp.fc2.", curr)
-        if curr in state_dict:
-            continue
-        state_dict[curr] = value
-
     config = RTDetrConfig.from_pretrained(model_id)
     config.num_labels = len(CLASS_NAMES)
     config.id2label = CLASS_NAMES
     config.label2id = {name: idx for idx, name in CLASS_NAMES.items()}
     processor = RTDetrImageProcessor.from_pretrained(model_id)
     model = RTDetrForObjectDetection(config)
+
+    # RT-DETR parameter names changed across Transformers releases:
+    #   old: encoder.encoder / out_proj / fc1
+    #   new: encoder.aifi    / o_proj   / mlp.fc1
+    # Do not blindly rewrite old -> new: checkpoints trained with 4.47.1 and
+    # a 4.47.1 evaluator already match exactly. Build both namespaces and
+    # select the candidate that best matches the instantiated model.
+    raw_state: Dict[str, torch.Tensor] = {
+        (key[7:] if key.startswith("module.") else key): value
+        for key, value in checkpoint.items()
+    }
+
+    # Some training scripts save only the decoder path for the tied prediction
+    # heads, while Transformers 4.47 exposes the same tensors at both paths.
+    # Recreate only the missing alias using the exact same tensor.
+    for key, value in list(raw_state.items()):
+        for head in ("class_embed.", "bbox_embed."):
+            decoder_head = f"model.decoder.{head}"
+            if key.startswith(decoder_head):
+                raw_state.setdefault(key[len("model.decoder."):], value)
+            elif key.startswith(head):
+                raw_state.setdefault(f"model.decoder.{key}", value)
+
+    def remap(source: Dict[str, torch.Tensor], direction: str) -> Dict[str, torch.Tensor]:
+        mapped: Dict[str, torch.Tensor] = {}
+        for key, value in source.items():
+            curr = key
+            if direction == "new":
+                curr = curr.replace("model.encoder.encoder.", "model.encoder.aifi.")
+                curr = curr.replace(".self_attn.out_proj.", ".self_attn.o_proj.")
+                if curr.startswith(("model.encoder.aifi.", "model.decoder.layers.")):
+                    curr = re.sub(r"(?<!\.mlp)\.fc1\.", ".mlp.fc1.", curr)
+                    curr = re.sub(r"(?<!\.mlp)\.fc2\.", ".mlp.fc2.", curr)
+            elif direction == "old":
+                curr = curr.replace("model.encoder.aifi.", "model.encoder.encoder.")
+                curr = curr.replace(".self_attn.o_proj.", ".self_attn.out_proj.")
+                curr = curr.replace(".mlp.fc1.", ".fc1.").replace(".mlp.fc2.", ".fc2.")
+            mapped.setdefault(curr, value)
+        return mapped
+
+    candidates = {
+        "unchanged": raw_state,
+        "new_namespace": remap(raw_state, "new"),
+        "old_namespace": remap(raw_state, "old"),
+    }
+    target_keys = set(model.state_dict())
+    namespace, state_dict = min(
+        candidates.items(),
+        key=lambda item: (
+            len(target_keys - set(item[1])) + len(set(item[1]) - target_keys),
+            -len(target_keys & set(item[1])),
+        ),
+    )
+    print(f"  [RT-DETR] state_dict namespace={namespace}; "
+          f"matched={len(target_keys & set(state_dict))}/{len(target_keys)}", flush=True)
     model.load_state_dict(state_dict, strict=True)
     model.to(device).eval()
     del checkpoint, state_dict

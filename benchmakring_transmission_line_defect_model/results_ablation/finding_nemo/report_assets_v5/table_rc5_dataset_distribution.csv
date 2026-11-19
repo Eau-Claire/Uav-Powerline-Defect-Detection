@@ -1,0 +1,8 @@
+Class,Raw train Img,Raw train Box,Curated train Img,Curated train Box,Val Img,Val Box,Test V5 Img,Test V5 Box
+insulator,2993,8665,4970,9078,625,1087,817,1130
+insulator_broken,5125,6236,5150,6424,658,810,657,804
+insulator_flashover,1081,1249,1081,1253,140,163,109,124
+bird_nest,5469,6136,5448,6160,717,830,164,172
+foreign_object,1372,1491,916,961,49,62,103,111
+broken_strand,1929,2030,1844,1935,248,252,116,126
+TOTAL unique images,18334,25807,17903,25811,2271,3204,1871,2467

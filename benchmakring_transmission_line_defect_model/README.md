@@ -108,18 +108,25 @@ For RT-DETR, the training CSV fields named Precision and Recall are actually COC
 
 The v2–v5 sets are diagnostic. Because evaluated model families contributed proposals, these results cannot replace `test_main_v1` without complete independent human verification and a new frozen corrected-test version.
 
-Latest v5 exploratory result (`test_operational_min8_v5_full_consensus_assisted`):
+Matched Raw-versus-Curated evaluation on the latest V5 exploratory protocol
+(`test_operational_min8_v5_full_consensus_assisted`: 1,871 images, 2,467 boxes):
 
-| Model | Precision | Recall | F1 | mAP50 | mAP50:95 | MEAN_5 |
-|---|---:|---:|---:|---:|---:|---:|
-| YOLO26m | 0.8562 | 0.7689 | 0.8102 | **0.8284** | **0.4783** | **0.7999** |
-| RT-DETR-R101 | **0.8606** | **0.7800** | **0.8183** | 0.8102 | 0.4610 | 0.7817 |
-| RT-DETR-R50 | 0.8371 | 0.7657 | 0.7998 | 0.7955 | 0.4413 | 0.7684 |
-| YOLO26n | 0.8150 | 0.7468 | 0.7795 | 0.7916 | 0.4464 | 0.7586 |
-| YOLO11m | 0.8047 | 0.7365 | 0.7691 | 0.7874 | 0.4464 | 0.7505 |
-| YOLO11n | 0.7925 | 0.6838 | 0.7341 | 0.7550 | 0.4279 | 0.7141 |
+| Train | Model | Precision | Recall | F1 | mAP50 | mAP50:95 | MEAN_5 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Raw | YOLO11n | 0.8138 | 0.6601 | 0.7289 | 0.7234 | 0.3983 | 0.7104 |
+| Raw | YOLO11m | 0.8037 | 0.7283 | 0.7641 | 0.7715 | 0.4281 | 0.7678 |
+| Raw | YOLO26n | 0.8198 | 0.7132 | 0.7628 | 0.7704 | 0.4274 | 0.7667 |
+| Raw | YOLO26m | 0.8576 | 0.7357 | 0.7920 | 0.7943 | 0.4463 | 0.7935 |
+| Raw | RT-DETR-R50 | 0.8454 | 0.7316 | 0.7844 | 0.7403 | 0.4075 | 0.7359 |
+| Raw | RT-DETR-R101 | **0.9056** | 0.4686 | 0.6176 | 0.7433 | 0.3987 | 0.7441 |
+| Curated | YOLO11n | 0.7912 | 0.6844 | 0.7340 | 0.7551 | 0.4277 | 0.7141 |
+| Curated | YOLO11m | 0.8054 | 0.7364 | 0.7694 | 0.7875 | 0.4464 | 0.7506 |
+| Curated | YOLO26n | 0.8193 | 0.7443 | 0.7800 | 0.7915 | 0.4465 | 0.7585 |
+| Curated | YOLO26m | 0.8584 | 0.7673 | 0.8103 | **0.8284** | **0.4780** | **0.7999** |
+| Curated | RT-DETR-R50 | 0.8339 | 0.7699 | 0.8006 | 0.7972 | 0.4408 | 0.7702 |
+| Curated | RT-DETR-R101 | 0.8665 | **0.7766** | **0.8191** | 0.8079 | 0.4606 | 0.7790 |
 
-Canonical local table: [`results_ablation/finding_nemo/operational_min8_v5_all/benchmark_summary.csv`](results_ablation/finding_nemo/operational_min8_v5_all/benchmark_summary.csv).
+Canonical matched tables: [`benchmark_summary.csv`](results_ablation/finding_nemo/raw_curated_operational_min8_v5/benchmark_summary.csv) and [`per_class_summary.csv`](results_ablation/finding_nemo/raw_curated_operational_min8_v5/per_class_summary.csv). The accompanying per-class PNG/PDF is stored in the same directory.
 
 Portable bundle:
 
