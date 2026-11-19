@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK = ROOT / "benchmakring_transmission_line_defect_model" / "finding_nemo_evaluate_raw_curated_human_reviewed_test.ipynb"
+NOTEBOOK = ROOT / "benchmakring_transmission_line_defect_model" / "finding_nemo_evaluate_raw_curated_operational_min8_v5.ipynb"
 
 
 nb = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
