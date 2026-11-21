@@ -1,0 +1,5 @@
+{
+  "status": "quarantine_broken_no_local_proposal",
+  "boxes": null,
+  "note": "Source broken box uses full-insulator extent, inconsistent with curated-base local-damage convention; seed85 supplied no reliable local replacement. Exclude until manual relabel."
+}

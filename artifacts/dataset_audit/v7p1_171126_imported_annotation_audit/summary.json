@@ -1,0 +1,198 @@
+{
+  "dataset": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_human_reviewed_6cls_v2_171126",
+  "judge": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\weights\\v7p1_seed85_curated_yolo26m_best.pt",
+  "groups": {
+    "base": {
+      "images": 17885,
+      "empty_images": 1305,
+      "boxes": 25791,
+      "boxes_per_image": {
+        "min": 0,
+        "p01": 0,
+        "p05": 0,
+        "p25": 1,
+        "p50": 1,
+        "p75": 2,
+        "p95": 3,
+        "p99": 7,
+        "max": 18
+      },
+      "class_boxes": {
+        "insulator": 9077,
+        "insulator_broken": 6420,
+        "insulator_flashover": 1251,
+        "bird_nest": 6150,
+        "foreign_object": 958,
+        "broken_strand": 1935
+      },
+      "width_px": {
+        "min": 3.25008,
+        "p01": 8.0,
+        "p05": 14.58304,
+        "p25": 45.37984,
+        "p50": 103.05536000000001,
+        "p75": 219.00032,
+        "p95": 570.0,
+        "p99": 672.0,
+        "max": 1698.90816
+      },
+      "height_px": {
+        "min": 2.00016,
+        "p01": 11.250048,
+        "p05": 19.2,
+        "p25": 47.68032,
+        "p50": 92.0,
+        "p75": 202.56,
+        "p95": 474.0,
+        "p99": 705.0006450000001,
+        "max": 1059.179256
+      },
+      "area_norm": {
+        "min": 8.681250000000001e-06,
+        "p01": 0.00020833125000000003,
+        "p05": 0.0005208026040000001,
+        "p25": 0.0048090552100000005,
+        "p50": 0.017704969271,
+        "p75": 0.066888486037,
+        "p95": 0.6767938494789999,
+        "p99": 0.9307036,
+        "max": 1.0
+      },
+      "aspect_ratio": {
+        "min": 0.024455652173913045,
+        "p01": 0.06749738400837117,
+        "p05": 0.11077144615483628,
+        "p25": 0.5249958000335997,
+        "p50": 0.8520242046916443,
+        "p75": 1.2688790337631868,
+        "p95": 2.670458181818182,
+        "p99": 5.213730164933948,
+        "max": 16.656981421884144
+      },
+      "tiny_lt4px": 13,
+      "touch_border": 4005,
+      "huge_area_gt75pct": 979
+    },
+    "imported": {
+      "images": 3342,
+      "empty_images": 0,
+      "boxes": 8293,
+      "boxes_per_image": {
+        "min": 1,
+        "p01": 1,
+        "p05": 1,
+        "p25": 1,
+        "p50": 2,
+        "p75": 3,
+        "p95": 6,
+        "p99": 10,
+        "max": 20
+      },
+      "class_boxes": {
+        "insulator": 4281,
+        "insulator_broken": 402,
+        "insulator_flashover": 0,
+        "bird_nest": 469,
+        "foreign_object": 3141,
+        "broken_strand": 0
+      },
+      "width_px": {
+        "min": 1.5,
+        "p01": 4.5,
+        "p05": 8.5,
+        "p25": 23.0,
+        "p50": 43.0,
+        "p75": 78.0,
+        "p95": 220.0,
+        "p99": 391.0,
+        "max": 556.0
+      },
+      "height_px": {
+        "min": 2.0,
+        "p01": 5.5,
+        "p05": 11.0,
+        "p25": 30.691519999999997,
+        "p50": 54.5,
+        "p75": 90.0,
+        "p95": 229.5,
+        "p99": 440.0,
+        "max": 564.0
+      },
+      "area_norm": {
+        "min": 2.9296875e-05,
+        "p01": 0.00014648437500000002,
+        "p05": 0.0006640625,
+        "p25": 0.0030029296874999997,
+        "p50": 0.00890625,
+        "p75": 0.035048828125,
+        "p95": 0.1435546875,
+        "p99": 0.3014456148974965,
+        "max": 0.7092114257812501
+      },
+      "aspect_ratio": {
+        "min": 0.05248618784530386,
+        "p01": 0.09782608695652174,
+        "p05": 0.15217391304347827,
+        "p25": 0.4270850962418532,
+        "p50": 0.7999999999999999,
+        "p75": 1.5725867526415453,
+        "p95": 5.666666666666667,
+        "p99": 9.333333333333334,
+        "max": 18.1
+      },
+      "tiny_lt4px": 70,
+      "touch_border": 672,
+      "huge_area_gt75pct": 0
+    }
+  },
+  "sources": {
+    "Powerline Project 3.v2i.yolo26": {
+      "images": 1256,
+      "empty_images": 0,
+      "boxes": 4818,
+      "class_boxes": {
+        "insulator": 4281,
+        "insulator_broken": 402,
+        "insulator_flashover": 0,
+        "bird_nest": 0,
+        "foreign_object": 135,
+        "broken_strand": 0
+      },
+      "ambiguous_omitted": 2732,
+      "malformed_omitted": 0,
+      "tiny_lt4px": 68,
+      "touch_border": 386,
+      "box_area_p50": 0.004455871582031251
+    },
+    "power line inspection.v5-train-val-test.yolo26": {
+      "images": 2086,
+      "empty_images": 0,
+      "boxes": 3475,
+      "class_boxes": {
+        "insulator": 0,
+        "insulator_broken": 0,
+        "insulator_flashover": 0,
+        "bird_nest": 469,
+        "foreign_object": 3006,
+        "broken_strand": 0
+      },
+      "ambiguous_omitted": 88,
+      "malformed_omitted": 0,
+      "tiny_lt4px": 2,
+      "touch_border": 286,
+      "box_area_p50": 0.026318359375000003
+    }
+  },
+  "merge_report": {
+    "imports_expected": 3363,
+    "imports_present": 3342,
+    "imports_removed_before_audit": 21
+  },
+  "judge_audit": {
+    "gt_boxes": 8293,
+    "gt_covered_same_class_iou50_conf25": 504,
+    "predictions_conf25": 1419,
+    "potential_missing_predictions_conf60_iou_lt30": 171,
+    "high_conf_class_conflicts_iou50": 2
+  }
+}

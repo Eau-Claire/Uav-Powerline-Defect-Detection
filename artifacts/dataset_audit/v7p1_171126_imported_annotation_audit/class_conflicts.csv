@@ -1,0 +1,3 @@
+image,source,gt_class,pred_class,confidence,iou,gt_line
+pli5_train_nest1_269_jpg.rf.1da124911bc1fe22314e7de44f1ffdf7_2b4a608748.jpg,power line inspection.v5-train-val-test.yolo26,bird_nest,foreign_object,0.631751,0.522537,1
+pli5_train_nest2_148_jpg.rf.45a48ea6752ab38cb62f3843e2d77c15_64694d232c.jpg,power line inspection.v5-train-val-test.yolo26,bird_nest,foreign_object,0.643741,0.659939,1

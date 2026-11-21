@@ -1,0 +1,121 @@
+{
+  "dataset": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_6cls_v3_seed85_repaired_181126",
+  "recommended_name": "finding_nemo_curated_v2_plus_171126_train_only",
+  "splits": {
+    "train": {
+      "images": 21227,
+      "labels": 21227,
+      "empty_labels": 1313,
+      "duplicate_boxes_iou95": 1,
+      "boxes": {
+        "insulator": 12901,
+        "insulator_broken": 6936,
+        "insulator_flashover": 1248,
+        "bird_nest": 6622,
+        "foreign_object": 4122,
+        "broken_strand": 1941
+      },
+      "tiny_boxes_lt4px": {
+        "insulator": 0,
+        "insulator_broken": 0,
+        "insulator_flashover": 0,
+        "bird_nest": 0,
+        "foreign_object": 0,
+        "broken_strand": 0
+      },
+      "huge_boxes_area_gt75pct": {
+        "insulator": 976,
+        "insulator_broken": 1,
+        "insulator_flashover": 0,
+        "bird_nest": 0,
+        "foreign_object": 3,
+        "broken_strand": 1
+      }
+    },
+    "val": {
+      "images": 2271,
+      "labels": 2271,
+      "empty_labels": 174,
+      "duplicate_boxes_iou95": 1,
+      "boxes": {
+        "insulator": 1087,
+        "insulator_broken": 810,
+        "insulator_flashover": 163,
+        "bird_nest": 830,
+        "foreign_object": 62,
+        "broken_strand": 252
+      },
+      "tiny_boxes_lt4px": {
+        "insulator": 0,
+        "insulator_broken": 1,
+        "insulator_flashover": 0,
+        "bird_nest": 0,
+        "foreign_object": 0,
+        "broken_strand": 0
+      },
+      "huge_boxes_area_gt75pct": {
+        "insulator": 121,
+        "insulator_broken": 0,
+        "insulator_flashover": 0,
+        "bird_nest": 0,
+        "foreign_object": 0,
+        "broken_strand": 0
+      }
+    },
+    "test": {
+      "images": 1931,
+      "labels": 1931,
+      "empty_labels": 118,
+      "duplicate_boxes_iou95": 0,
+      "boxes": {
+        "insulator": 1478,
+        "insulator_broken": 823,
+        "insulator_flashover": 125,
+        "bird_nest": 177,
+        "foreign_object": 112,
+        "broken_strand": 134
+      },
+      "tiny_boxes_lt4px": {
+        "insulator": 0,
+        "insulator_broken": 0,
+        "insulator_flashover": 0,
+        "bird_nest": 0,
+        "foreign_object": 0,
+        "broken_strand": 0
+      },
+      "huge_boxes_area_gt75pct": {
+        "insulator": 121,
+        "insulator_broken": 0,
+        "insulator_flashover": 0,
+        "bird_nest": 0,
+        "foreign_object": 0,
+        "broken_strand": 0
+      }
+    }
+  },
+  "invalid_label_rows": 1,
+  "unreadable_images": 0,
+  "exact_duplicate_groups": 0,
+  "cross_split_exact_duplicate_groups": 0,
+  "same_dhash_groups": 1224,
+  "cross_split_same_dhash_groups": 4,
+  "imported_expected": 3363,
+  "imported_present": 3342,
+  "base_preservation": {
+    "train": {
+      "base_images_missing": 18,
+      "new_images_vs_base": 3342,
+      "base_labels_changed_or_missing": 37
+    },
+    "val": {
+      "base_images_missing": 0,
+      "new_images_vs_base": 0,
+      "base_labels_changed_or_missing": 0
+    },
+    "test": {
+      "base_images_missing": 0,
+      "new_images_vs_base": 0,
+      "base_labels_changed_or_missing": 0
+    }
+  }
+}

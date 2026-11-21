@@ -1,0 +1,7 @@
+{
+  "status": "auto_replaced_full_broken_with_seed85_damage",
+  "boxes": 1,
+  "replacements": 1,
+  "seed_candidates_removed_or_collapsed": 1,
+  "note": "Replaced inconsistent full-insulator broken GT with highest-confidence local seed85 damage box per containing object."
+}
