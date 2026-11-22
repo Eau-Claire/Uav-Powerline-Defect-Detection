@@ -1,0 +1,30 @@
+{
+  "dataset": "finding_nemo_human_reviewed_6cls",
+  "max_distance": 4,
+  "images": {
+    "train": 17903,
+    "val": 2271,
+    "test": 1931
+  },
+  "pairs": {
+    "train-val": {
+      "exact_pairs": 0,
+      "near_pairs": 97,
+      "images_b_affected": 80
+    },
+    "train-test": {
+      "exact_pairs": 0,
+      "near_pairs": 73,
+      "images_b_affected": 53,
+      "subset_images_affected": 53,
+      "subset_size": 1871
+    },
+    "val-test": {
+      "exact_pairs": 0,
+      "near_pairs": 6,
+      "images_b_affected": 6,
+      "subset_images_affected": 6,
+      "subset_size": 1871
+    }
+  }
+}
