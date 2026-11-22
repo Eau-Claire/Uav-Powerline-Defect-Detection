@@ -1,0 +1,235 @@
+{
+  "created_at": "2026-11-21 23:04:55",
+  "data": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_human_reviewed_6cls_v2_171126\\data_local.yaml",
+  "models": [
+    [
+      "seed85",
+      "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\weights\\v7p1_seed85_curated_yolo26m_best.pt"
+    ],
+    [
+      "v7p1",
+      "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\runs\\finding_v7p1_171126\\yolo26m_finetune_v2_reviewed_181126\\weights\\best.pt"
+    ]
+  ],
+  "summary": [
+    {
+      "model": "seed85",
+      "split": "val",
+      "precision": 0.8781216146476666,
+      "recall": 0.770925866958209,
+      "mAP50": 0.8405651734184126,
+      "mAP50_95": 0.4796952266311473
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "precision": 0.8605581193472419,
+      "recall": 0.7781054425610181,
+      "mAP50": 0.839600768796018,
+      "mAP50_95": 0.47076301583209956
+    }
+  ],
+  "per_class": [
+    {
+      "model": "seed85",
+      "split": "val",
+      "class": "insulator",
+      "precision": 0.887755083014165,
+      "recall": 0.9043238270469182,
+      "AP50": 0.9324322724080674,
+      "AP50_95": 0.6885251621047823
+    },
+    {
+      "model": "seed85",
+      "split": "val",
+      "class": "insulator_broken",
+      "precision": 0.9040139706427324,
+      "recall": 0.7092710419707322,
+      "AP50": 0.8335487525282966,
+      "AP50_95": 0.42612980445108695
+    },
+    {
+      "model": "seed85",
+      "split": "val",
+      "class": "insulator_flashover",
+      "precision": 0.8709530780590248,
+      "recall": 0.6871165644171779,
+      "AP50": 0.7961224372438511,
+      "AP50_95": 0.33697803094647305
+    },
+    {
+      "model": "seed85",
+      "split": "val",
+      "class": "bird_nest",
+      "precision": 0.9252983306729143,
+      "recall": 0.8879518072289156,
+      "AP50": 0.9344915886947485,
+      "AP50_95": 0.5704131979517931
+    },
+    {
+      "model": "seed85",
+      "split": "val",
+      "class": "foreign_object",
+      "precision": 0.8282327437041945,
+      "recall": 0.7741935483870968,
+      "AP50": 0.7799611786777029,
+      "AP50_95": 0.4845634447748444
+    },
+    {
+      "model": "seed85",
+      "split": "val",
+      "class": "broken_strand",
+      "precision": 0.8524764817929675,
+      "recall": 0.6626984126984127,
+      "AP50": 0.7668348109578089,
+      "AP50_95": 0.37156171955790385
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "class": "insulator",
+      "precision": 0.8901289596514473,
+      "recall": 0.9018319204651539,
+      "AP50": 0.9329471114980457,
+      "AP50_95": 0.6851585050156058
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "class": "insulator_broken",
+      "precision": 0.8984821909927567,
+      "recall": 0.7320774673003432,
+      "AP50": 0.834657649423701,
+      "AP50_95": 0.425868208073243
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "class": "insulator_flashover",
+      "precision": 0.8199763758700365,
+      "recall": 0.6932515337423313,
+      "AP50": 0.8043476857647833,
+      "AP50_95": 0.3329502845316593
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "class": "bird_nest",
+      "precision": 0.9246327826756812,
+      "recall": 0.8939759036144578,
+      "AP50": 0.9328164636167836,
+      "AP50_95": 0.569094667661179
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "class": "foreign_object",
+      "precision": 0.7490577952275271,
+      "recall": 0.7419354838709677,
+      "AP50": 0.7383171900679977,
+      "AP50_95": 0.43141479703409313
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "class": "broken_strand",
+      "precision": 0.8810706116660024,
+      "recall": 0.7055603463728555,
+      "AP50": 0.7945185124047969,
+      "AP50_95": 0.3800916326768171
+    }
+  ],
+  "fo_by_area": [
+    {
+      "model": "seed85",
+      "split": "val",
+      "area_bin": "small_lt1pct",
+      "fo_gt": 10,
+      "recall_at_conf": 0.9,
+      "as_insulator_broken": 0,
+      "as_other_class": 0,
+      "missed": 1
+    },
+    {
+      "model": "seed85",
+      "split": "val",
+      "area_bin": "medium_1to5pct",
+      "fo_gt": 12,
+      "recall_at_conf": 0.5833,
+      "as_insulator_broken": 0,
+      "as_other_class": 0,
+      "missed": 5
+    },
+    {
+      "model": "seed85",
+      "split": "val",
+      "area_bin": "large_ge5pct",
+      "fo_gt": 40,
+      "recall_at_conf": 0.825,
+      "as_insulator_broken": 0,
+      "as_other_class": 0,
+      "missed": 7
+    },
+    {
+      "model": "seed85",
+      "split": "val",
+      "area_bin": "all",
+      "fo_gt": 62,
+      "recall_at_conf": 0.7903,
+      "as_insulator_broken": 0,
+      "as_other_class": 0,
+      "missed": 13
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "area_bin": "small_lt1pct",
+      "fo_gt": 10,
+      "recall_at_conf": 0.7,
+      "as_insulator_broken": 0,
+      "as_other_class": 0,
+      "missed": 3
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "area_bin": "medium_1to5pct",
+      "fo_gt": 12,
+      "recall_at_conf": 0.5,
+      "as_insulator_broken": 0,
+      "as_other_class": 0,
+      "missed": 6
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "area_bin": "large_ge5pct",
+      "fo_gt": 40,
+      "recall_at_conf": 0.825,
+      "as_insulator_broken": 0,
+      "as_other_class": 0,
+      "missed": 7
+    },
+    {
+      "model": "v7p1",
+      "split": "val",
+      "area_bin": "all",
+      "fo_gt": 62,
+      "recall_at_conf": 0.7419,
+      "as_insulator_broken": 0,
+      "as_other_class": 0,
+      "missed": 16
+    }
+  ],
+  "gate": [
+    {
+      "model": "v7p1",
+      "baseline": "seed85",
+      "d_mAP50": -0.001,
+      "d_mAP50_95": -0.0089,
+      "d_FO_AP50_95": -0.0531,
+      "classes_improved": "broken_strand",
+      "gate": "FAIL"
+    }
+  ]
+}
