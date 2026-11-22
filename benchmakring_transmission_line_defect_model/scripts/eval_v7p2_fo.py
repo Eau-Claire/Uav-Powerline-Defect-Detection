@@ -5,6 +5,7 @@ For every model and split it writes:
   confusion_<model>_<split>.csv      GT class x predicted class (IoU >= --match-iou, one-to-one), plus missed / FP
   fo_outcomes_<model>_<split>.csv    one row per FO GT box: area bin, outcome, matched class, confidence, IoU
   fo_by_area.csv                     FO recall / FO->insulator_broken rate per area bin
+  recall_by_size.csv                 recall per class and GT size (short side in a 640 reference)
   gallery/<model>_<split>/           images of FO GT boxes predicted as another class or missed
   gate.csv                           pass/fail against the baseline (only on val)
 
@@ -37,20 +38,22 @@ FO, IB = 4, 1
 AREA_BINS = ((0.0, 0.01, "small_lt1pct"), (0.01, 0.05, "medium_1to5pct"), (0.05, 1.01, "large_ge5pct"))
 
 
-def parse_args():
+def parse_args(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--data", type=Path, required=True)
     p.add_argument("--model", action="append", required=True, help="name=path; the first one is the baseline")
     p.add_argument("--split", nargs="+", default=["val"], choices=["val", "test"])
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--imgsz", type=int, default=640)
+    p.add_argument("--imgsz-for", action="append", default=[],
+                   help="name=size: evaluate one model at another image size (e.g. seed85_i960=960)")
     p.add_argument("--batch", type=int, default=8)
     p.add_argument("--device", default="0")
     p.add_argument("--conf", type=float, default=0.25, help="confidence for the confusion analysis")
     p.add_argument("--match-iou", type=float, default=0.5)
     p.add_argument("--gallery", type=int, default=60, help="max FO error images per model/split")
     p.add_argument("--fo-tolerance", type=float, default=0.0, help="allowed FO AP50-95 drop on val for the gate")
-    return p.parse_args()
+    return p.parse_args(argv)
 
 
 def area_bin(area):
@@ -118,19 +121,30 @@ def draw(image_path: Path, gt_box, pred, label, dst: Path):
         im.save(dst, quality=88)
 
 
-def analyze(model, name, split, images_dir, labels_dir, a, out):
+SIZE_BINS = ((0, 16, "<16px"), (16, 32, "16-32px"), (32, 64, "32-64px"), (64, 1e9, ">=64px"))
+
+
+def size_bin(short_side_640):
+    return next(name for lo, hi, name in SIZE_BINS if lo <= short_side_640 < hi)
+
+
+def analyze(model, name, split, images_dir, labels_dir, a, out, imgsz):
     images = sorted(p for p in images_dir.iterdir() if p.suffix.lower() in IMAGE_EXTS)
     conf_mat = defaultdict(Counter)  # gt class -> predicted class / "missed"
     fp = Counter()
     fo_rows = []
+    size_hits = defaultdict(lambda: [0, 0])  # (class, size bin) -> [matched with right class, total]
     gallery = out / "gallery" / f"{name}_{split}"
     gallery.mkdir(parents=True, exist_ok=True)
     saved = 0
     for start in range(0, len(images), a.batch):
         chunk = images[start:start + a.batch]
-        results = model.predict([str(p) for p in chunk], conf=a.conf, imgsz=a.imgsz, device=a.device, verbose=False)
+        # rect=False: square letterbox, as in training and in the deployed endpoint.
+        results = model.predict([str(p) for p in chunk], conf=a.conf, imgsz=imgsz, rect=False,
+                                device=a.device, verbose=False)
         for img, r in zip(chunk, results):
             gt = read_gt(labels_dir / f"{img.stem}.txt")
+            H, W = r.orig_shape
             b = r.boxes
             preds = [(int(c), *xy, float(s)) for c, xy, s in
                      zip(b.cls.tolist(), b.xyxyn.tolist(), b.conf.tolist())]
@@ -146,6 +160,11 @@ def analyze(model, name, split, images_dir, labels_dir, a, out):
                 else:
                     pc, pconf, v, pbox = "missed", "", "", None
                 conf_mat[NAMES[g[0]]][pc] += 1
+                # Size in a fixed 640 reference so every model bins the same GT box identically.
+                side = min((g[3] - g[1]) * W, (g[4] - g[2]) * H) * 640 / max(W, H)
+                hit = size_hits[(NAMES[g[0]], size_bin(side))]
+                hit[0] += pc == NAMES[g[0]]
+                hit[1] += 1
                 if g[0] != FO:
                     continue
                 area = (g[3] - g[1]) * (g[4] - g[2])
@@ -179,52 +198,70 @@ def analyze(model, name, split, images_dir, labels_dir, a, out):
     ib_as_fo = conf_mat["insulator_broken"]["foreign_object"]
     print(f"  [{name}/{split}] FO->IB={conf_mat['foreign_object']['insulator_broken']} "
           f"IB->FO={ib_as_fo} FO missed={conf_mat['foreign_object']['missed']} FO FP={fp['foreign_object']}")
-    return by_bin
+    size_rows = [{"model": name, "split": split, "class": c, "size_bin_640": b, "gt": n,
+                  "recall_at_conf": round(t / n, 4)}
+                 for c in NAMES for *_, b in SIZE_BINS for t, n in [size_hits.get((c, b), (0, 0))] if n]
+    return by_bin, size_rows
 
 
-def main():
-    a = parse_args()
+def main(argv=None):
+    a = parse_args(argv)
     models = []
     for spec in a.model:
         name, _, path = spec.partition("=")
         if not path or not Path(path).is_file():
             raise FileNotFoundError(f"--model must be name=existing_path, got {spec}")
         models.append((name, Path(path)))
+    imgsz_for = {}
+    for spec in a.imgsz_for:
+        name, _, size = spec.partition("=")
+        if name not in {n for n, _ in models} or not size.isdigit():
+            raise ValueError(f"--imgsz-for must be model_name=size for a given --model, got {spec}")
+        imgsz_for[name] = int(size)
     a.out.mkdir(parents=True, exist_ok=True)
-    summary, per_class, fo_bins = [], [], []
+    summary, per_class, fo_bins, size_rows = [], [], [], []
 
     for name, ckpt in models:
         model = YOLO(str(ckpt))
+        imgsz = imgsz_for.get(name, a.imgsz)
         for split in a.split:
-            print(f"\n===== {name} / {split} =====")
-            m = model.val(data=str(a.data), split=split, imgsz=a.imgsz, batch=a.batch, device=a.device,
+            print(f"\n===== {name} / {split} (imgsz {imgsz}) =====")
+            m = model.val(data=str(a.data), split=split, imgsz=imgsz, batch=a.batch, device=a.device,
                           project=str(a.out / "runs"), name=f"{name}_{split}", exist_ok=True,
                           plots=True, save_json=False, verbose=False)
-            summary.append({"model": name, "split": split, "precision": float(m.box.mp), "recall": float(m.box.mr),
+            summary.append({"model": name, "split": split, "imgsz": imgsz, "precision": float(m.box.mp), "recall": float(m.box.mr),
                             "mAP50": float(m.box.map50), "mAP50_95": float(m.box.map)})
             for i, c in enumerate(m.box.ap_class_index.astype(int).tolist()):
                 per_class.append({"model": name, "split": split, "class": m.names[c],
                                   "precision": float(m.box.p[i]), "recall": float(m.box.r[i]),
                                   "AP50": float(m.box.ap50[i]), "AP50_95": float(m.box.ap[i])})
             images_dir, labels_dir = resolve_split(a.data, split)
-            fo_bins += analyze(model, name, split, images_dir, labels_dir, a, a.out)
+            bins, sizes = analyze(model, name, split, images_dir, labels_dir, a, a.out, imgsz)
+            fo_bins += bins
+            size_rows += sizes
 
     def write(rows, fname):
+        if not rows:
+            return
         with (a.out / fname).open("w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(rows[0]))
             w.writeheader(); w.writerows(rows)
     write(summary, "summary.csv"); write(per_class, "per_class.csv"); write(fo_bins, "fo_by_area.csv")
+    write(size_rows, "recall_by_size.csv")
 
     gate = []
     base = models[0][0]
     if "val" in a.split:
         S = {(r["model"], r["split"]): r for r in summary}
-        P = {(r["model"], r["split"], r["class"]): r for r in per_class}
+        P = {(r["model"], r["split"], r["class"]): r["AP50_95"] for r in per_class}
         for name, _ in models[1:]:
             d_map = S[name, "val"]["mAP50_95"] - S[base, "val"]["mAP50_95"]
             d_m50 = S[name, "val"]["mAP50"] - S[base, "val"]["mAP50"]
-            d_fo = (P[name, "val", "foreign_object"]["AP50_95"] - P[base, "val", "foreign_object"]["AP50_95"])
-            better = [c for c in NAMES if P[name, "val", c]["AP50_95"] > P[base, "val", c]["AP50_95"]]
+            # A class without GT in the split has no AP for any model: nothing to compare.
+            present = [c for c in NAMES if (name, "val", c) in P and (base, "val", c) in P]
+            d_fo = (P[name, "val", "foreign_object"] - P[base, "val", "foreign_object"]
+                    if "foreign_object" in present else 0.0)
+            better = [c for c in present if P[name, "val", c] > P[base, "val", c]]
             ok = d_map >= 0 and d_fo >= -a.fo_tolerance
             gate.append({"model": name, "baseline": base, "d_mAP50": round(d_m50, 4), "d_mAP50_95": round(d_map, 4),
                          "d_FO_AP50_95": round(d_fo, 4), "classes_improved": "|".join(better),
@@ -237,8 +274,14 @@ def main():
                       f"dFO={g['d_FO_AP50_95']:+.4f} improved={g['classes_improved']}")
     (a.out / "eval_results.json").write_text(json.dumps({
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"), "data": str(a.data), "models": [list(map(str, m)) for m in models],
-        "summary": summary, "per_class": per_class, "fo_by_area": fo_bins, "gate": gate}, indent=2), encoding="utf-8")
+        "imgsz_for": imgsz_for, "summary": summary, "per_class": per_class, "fo_by_area": fo_bins,
+        "recall_by_size": size_rows, "gate": gate}, indent=2), encoding="utf-8")
     print("\nSaved:", a.out)
+
+
+def evaluate(*argv):
+    """Notebook entry point: evaluate("--data", path, "--model", "a=b.pt", ...)."""
+    main([str(x) for x in argv])
 
 
 if __name__ == "__main__":
