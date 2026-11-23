@@ -124,10 +124,7 @@ CHECKPOINT_CONFIGS: Dict[str, Dict[str, Any]] = {
 DATASET_PRESETS: Dict[str, Path] = {
     "test_main_v1": BENCHMARK_ROOT / "data" / "test_main_v1" / "dataset.yaml",
     "test_operational_min8_v1": BENCHMARK_ROOT / "data" / "test_operational_min8_v1" / "dataset.yaml",
-    "test_main_v2_model_assisted_exploratory": BENCHMARK_ROOT / "data" / "test_main_v2_model_assisted_exploratory" / "dataset.yaml",
     "test_main_v3_model_aligned_exploratory": BENCHMARK_ROOT / "data" / "test_main_v3_model_aligned_exploratory" / "dataset.yaml",
-    "test_operational_min8_v3_model_aligned": BENCHMARK_ROOT / "data" / "test_operational_min8_v3_model_aligned" / "dataset.yaml",
-    "test_operational_min8_v4_consensus_assisted": BENCHMARK_ROOT / "data" / "test_operational_min8_v4_consensus_assisted" / "dataset.yaml",
     "test_operational_min8_v5_full_consensus_assisted": BENCHMARK_ROOT / "data" / "test_operational_min8_v5_full_consensus_assisted" / "dataset.yaml",
     "v6p2e_frozen_test": BENCHMARK_ROOT / "data" / "v6p2e_frozen_test" / "dataset.yaml",
     "finding_nemo": BENCHMARK_ROOT / "data" / "finding_nemo_human_reviewed_6cls" / "data.yaml",

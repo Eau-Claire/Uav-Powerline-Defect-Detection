@@ -64,7 +64,7 @@ stash://bunpmc/projects/finding_nemo/
 ```
 
 The canonical record for the newest test audit is
-[`FINDING_NEMO_TEST_AUDIT_V5.md`](benchmakring_transmission_line_defect_model/FINDING_NEMO_TEST_AUDIT_V5.md).
+[`docs/finding_nemo/`](docs/finding_nemo/README.md).
 The validation table below is selected independently from each model's training CSV by maximum
 `metrics/mAP50(B)`; the later v5 table is the newest audited test result.
 
@@ -98,7 +98,7 @@ The latest exploratory set, `test_operational_min8_v5_full_consensus_assisted`, 
 | YOLO11m | 0.8047 | 0.7365 | 0.7691 | 0.7874 | 0.4464 | 0.7505 |
 | YOLO11n | 0.7925 | 0.6838 | 0.7341 | 0.7550 | 0.4279 | 0.7141 |
 
-Source: [`operational_min8_v5_all`](benchmakring_transmission_line_defect_model/results/finding_nemo/operational_min8_v5_all/). Canonical protocol, provenance, and caveats: [`FINDING_NEMO_TEST_AUDIT_V5.md`](benchmakring_transmission_line_defect_model/FINDING_NEMO_TEST_AUDIT_V5.md).
+Source: [`operational_min8_v5_all`](benchmakring_transmission_line_defect_model/results_ablation/finding_nemo/operational_min8_v5_all/). Canonical protocol, provenance, and caveats: [`docs/finding_nemo/`](docs/finding_nemo/README.md).
 
 Portable audit bundle:
 

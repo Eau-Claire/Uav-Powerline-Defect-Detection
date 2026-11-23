@@ -32,8 +32,7 @@ results_rtdetr_best/      original RT-DETR best-checkpoint results
 results_rtdetr_last/      original RT-DETR last-checkpoint results
 results_test_all/         combined historical test export
 results/finding_nemo/     current Finding Nemo logs, audits, and evaluations
-FINDING_NEMO_TEST_AUDIT_V5.md
-                           roles and provenance for the v5 audit bundle
+results_ablation/finding_nemo/  Finding Nemo evaluations (v1, cross-labelled test, operational V5)
 benchmark_pipeline.ipynb  historical interactive orchestration notebook
 ```
 
@@ -143,4 +142,4 @@ python benchmakring_transmission_line_defect_model/scripts/prepare_datasets.py -
 python benchmakring_transmission_line_defect_model/scripts/evaluate_nemo_selected_checkpoints.py --help
 ```
 
-See [`FINDING_NEMO_TEST_AUDIT_V5.md`](FINDING_NEMO_TEST_AUDIT_V5.md) and [`../docs/NHAT_KY_2026-11-03.md`](../docs/NHAT_KY_2026-11-03.md) for the latest audit record.
+See [`docs/finding_nemo/`](../docs/finding_nemo/README.md) and [`../docs/NHAT_KY_2026-11-03.md`](../docs/NHAT_KY_2026-11-03.md) for the latest audit record.
