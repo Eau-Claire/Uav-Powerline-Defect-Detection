@@ -22,7 +22,7 @@ Thư mục gốc: `benchmakring_transmission_line_defect_model/data/`.
 | Test v1 | `test_main_v1` | 1.931 | | 1.962 ảnh duy nhất, bỏ 31 ảnh khoanh người thành FO; không sửa nhãn | Phụ lục |
 | Test cross-labelled | `finding_nemo_human_reviewed_6cls/test` | 1.931 | 2.850 | v1 + box cross-label được người accept | **Số MF04 / Report 5** |
 | Test v3 | `test_main_v3_model_aligned_exploratory` | 1.931 | | v1 + sửa broken_strand (30 thay, 8 xóa), người duyệt từng ảnh | Cha của V5 |
-| **Test V5** | `test_main_v5_full_consensus_assisted` | 1.931 | 2.769 | v3 (broken_strand đã duyệt) + 215 box `insulator` do 4/4 YOLO đồng thuận, **không người duyệt** | **Test chính của paper** |
+| **Test V5** | `test_main_v5_full_consensus_assisted` | 1.931 | 2.769 | v3 (broken_strand đã duyệt) + 215 box `insulator` do 4/4 YOLO đồng thuận (không duyệt từng box; đã kiểm chứng ảnh hưởng, xem mục 2) | **Test chính của paper** |
 | Operational V5 | `test_operational_min8_v5_full_consensus_assisted` | 1.871 | | V5, bỏ 60 ảnh có box < 8 px | Phân tích phụ |
 
 Phân bố V5: insulator 1.422 · insulator_broken 809 · flashover 124 · bird_nest 177 · foreign_object 111 ·
@@ -40,7 +40,7 @@ cùng ảnh nhưng khác nhãn, số liệu không so sánh trực tiếp đư�
 | val → val_clean | `data/label_audit/review_decisions.csv` (86 quyết định, split `val_clean`) |
 | val_clean / test cross-label | `tools/roboflow_relabel/apply_eval_review.py` chỉ thêm box `accept`; `assemble_finding_nemo_dataset.py` dừng nếu split nào chưa `human_review_applied`; `DATASET_STATUS.json` có hash trạng thái cả 3 split. File quyết định (số reject) chỉ còn trên máy Windows, không có trên git/stash |
 | Sửa broken_strand của V5 (v3) | `results_ablation/finding_nemo/targeted_audit_test_main_v1_nms50/review_progress.csv`: 75/75 ảnh lỗi broken_strand đã duyệt (71 box GT sai, 3 lỗi model, 1 sai lớp); **29/29 ảnh bị sửa trong v3 đều nằm trong số đã duyệt** |
-| 215 box insulator của V5 | Cùng file log: insulator **0/100** ảnh được duyệt; 0/214 ảnh đề xuất có quyết định. **Không được người duyệt.** Chỉ ảnh hưởng `insulator` và mAP tổng, **không ảnh hưởng MEAN_5** |
+| 215 box insulator của V5 | Không duyệt từng box (insulator lành; log: insulator 0/100). Kiểm chứng ảnh hưởng (operational v3 → V5, kết quả v3 lấy từ git `84d4ea7^`): AP50 insulator +0,149…+0,176 ở cả 6 model, **RT-DETR không đề xuất box cũng tăng tương đương** (+0,173 / +0,166) → box là insulator thật, không thiên vị model đề xuất; mAP50 +0,025…+0,029, thứ hạng không đổi, MEAN_5 không đổi |
 
 ## 3. Leakage
 
