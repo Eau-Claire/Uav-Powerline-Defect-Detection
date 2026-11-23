@@ -63,10 +63,11 @@ Current training artifacts are mirrored under:
 stash://bunpmc/projects/finding_nemo/
 ```
 
-The canonical record for the newest test audit is
-[`docs/finding_nemo/`](docs/finding_nemo/README.md).
+Everything about Finding Nemo (dataset versions, human-review evidence, leakage, result folders,
+corrections) is collected in [`docs/finding_nemo/`](docs/finding_nemo/README.md). Facts for the report and
+paper: [`docs/finding_nemo/REPORT_PAPER_FACTS.md`](docs/finding_nemo/REPORT_PAPER_FACTS.md).
 The validation table below is selected independently from each model's training CSV by maximum
-`metrics/mAP50(B)`; the later v5 table is the newest audited test result.
+`metrics/mAP50(B)` (seed 42, curated).
 
 The following rows maximize `metrics/mAP50(B)` in each current training CSV:
 
@@ -81,13 +82,21 @@ The following rows maximize `metrics/mAP50(B)` in each current training CSV:
 
 The RT-DETR CSV uses an Ultralytics-shaped schema, but its fields named `metrics/precision(B)` and `metrics/recall(B)` contain COCO AP@[.50:.95] and AR@100. They are not Precision and Recall, and an F1 derived from them is invalid. Use the unified evaluator for comparable RT-DETR P/R/F1.
 
-### Evaluation roles
+### Evaluation roles (decided 2026-11-23)
 
-- `test_main_v1`: primary independent raw benchmark, 1,931 images.
-- `test_operational_min8_v1`: secondary operational subset; excludes an image when any GT box has a minimum side below 8 px at 640 scale.
-- v2–v5: exploratory model-assisted annotation studies. They diagnose missing or inconsistent ground truth but must not replace the independent benchmark without full human verification.
+All test sets use the same 1,931 images; they differ only in labels.
 
-The latest exploratory set, `test_operational_min8_v5_full_consensus_assisted`, adds 215 missing healthy-insulator boxes proposed by all four YOLO checkpoints at mean confidence ≥ 0.50.
+| Test set | Boxes | Role |
+|---|---:|---|
+| **Finding Nemo V5** (`test_main_v5_full_consensus_assisted`) | 2,769 | **Primary test for the paper.** v1 + reviewed `broken_strand` convention (v3) + 215 `insulator` boxes proposed by 4/4 YOLO checkpoints, not re-verified by a person. These only affect `insulator` and overall mAP; defect conclusions use **MEAN_5** and per-class defect AP |
+| Finding Nemo cross-labelled (`finding_nemo_human_reviewed_6cls/test`) | 2,850 | Labels used by the deployed MF04 model and Report 5 (cross-label proposals added only after human acceptance) |
+| `test_main_v1` | — | Unmodified labels; reported in the appendix as a robustness check |
+| `test_operational_min8_v5_*` | 1,871 images | Secondary subset: V5 without images that have a box below 8 px at 640 |
+| `v6p2e_frozen_test` | 2,012 rows | Original split with 50 duplicate rows; **not used** for reporting |
+
+v2 and v4 exploratory sets and operational v3/v4 were removed (superseded by V5; generators kept in `benchmakring_transmission_line_defect_model/scripts/`). v3 is kept as the parent of V5.
+
+Operational V5 (1,871 images), seed 42 curated checkpoints:
 
 | Model | Precision | Recall | F1 | mAP50 | mAP50:95 | MEAN_5 |
 |---|---:|---:|---:|---:|---:|---:|
@@ -199,6 +208,7 @@ Deployment code is optional and separated from the reusable research package.
 
 - [`deployment/pi3/`](deployment/pi3/README.md): Raspberry Pi ONNX runtime, alert delivery, packaging, and device setup.
 - [`deployment/modal/`](deployment/modal/README.md): working Modal inference API, upload UI, and local iPhone/IP-camera MJPEG bridge.
+- **UAV-PMS (MF04) production model:** YOLO26m `seed85_curated_yolo26m` on Modal (Tesla T4) behind the RabbitMQ `ai-bridge`; code, tests and results live in the separate `uavpms-server` repository (checked out under `deployment/modal/uavpms-server/`).
 
 The Modal runtime exposes `POST /detect` and `GET /health`. Its local bridge samples frames from a LAN camera and sends individual images to Modal; it does not upload the full video stream.
 
@@ -233,8 +243,9 @@ node --test test_stream.cjs
 ## Data and reporting policy
 
 - Never use TEST for training, threshold selection, checkpoint selection, or iterative tuning.
-- Keep `test_main_v1` as the primary independent benchmark.
-- Report model-assisted v2–v5 results as exploratory until independently human-verified and frozen under a new version.
+- Report the paper on Finding Nemo V5 with its provenance disclosed; base defect claims on MEAN_5 and per-class defect AP; give `test_main_v1` results in the appendix.
+- Name the label version with every number: V5 (2,769 boxes), cross-labelled (2,850), v1. Never mix them in one table.
+- Name the validation version too: `val_clean` 2,863 boxes (benchmark/ablation) or Finding Nemo 3,204 boxes (deployed model).
 - Store provenance, correction logs, split manifests, hashes, and near-duplicate decisions with published datasets.
 - State the exact evaluator and checkpoint-selection metric. Do not relabel COCO AP/AR fields as Precision/Recall.
 
@@ -242,7 +253,9 @@ node --test test_stream.cjs
 
 - Dataset sources and citations: [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md)
 - Versioning: [`docs/VERSIONING.md`](docs/VERSIONING.md)
+- **Finding Nemo hub:** [`docs/finding_nemo/`](docs/finding_nemo/README.md) (versions, review evidence, results, corrections) and [`REPORT_PAPER_FACTS.md`](docs/finding_nemo/REPORT_PAPER_FACTS.md)
 - Finding Nemo journal: [`docs/NHAT_KY_2026-11-03.md`](docs/NHAT_KY_2026-11-03.md)
+- V5 rebuild / freeze / multi-seed benchmark scripts: [`tools/fn_v5_review/`](tools/fn_v5_review/README.md)
 - Paper evidence: [`artifacts/paper_evidence_20261026/`](artifacts/paper_evidence_20261026/README.md)
 - Benchmark details: [`benchmakring_transmission_line_defect_model/README.md`](benchmakring_transmission_line_defect_model/README.md)
 
@@ -252,11 +265,11 @@ node --test test_stream.cjs
 - **RT-DETR:** Zhao et al., “DETRs Beat YOLOs on Real-time Object Detection,” CVPR 2024. [arXiv:2304.08069](https://arxiv.org/abs/2304.08069).
 - **SAM 2:** Ravi et al., “SAM 2: Segment Anything in Images and Videos,” 2024. [arXiv:2408.00714](https://arxiv.org/abs/2408.00714).
 
-## Status — 2026-11-04
+## Status — 2026-11-23
 
-- Finding Nemo training logs and checkpoints are mirrored on Camber.
-- `test_main_v1` remains the independent benchmark.
-- operational min-8 v5 is the latest exploratory audit result and still requires independent human verification.
-- YOLO26m leads the v5 exploratory evaluation in mAP50, mAP50:95, and MEAN_5.
-- deployment runtimes are isolated under `deployment/`; standalone demo apps have been removed.
+- Finding Nemo V5 is the primary test for the paper (provenance disclosed, MEAN_5 as defect metric); `test_main_v1` goes to the appendix.
+- Deployed MF04 model: `seed85_curated_yolo26m`, evaluated on the Finding Nemo cross-labelled test (F1 0.855, macro-F1 0.796).
+- Experiments V7.1/V7.2 (extra foreign_object data) and imgsz 960 did not pass the validation gate; seed85 @640 stays deployed.
+- Multi-seed benchmark (seeds 42/36/85, six architectures, raw/curated) on V5 and v1 is pending: RT-DETR-R101 seeds 36/85 are being retrained in FP32 with a 2,000-step warm-up (`legacy/seeds/seed{36,85}-r101-warmup.ipynb`).
+- Open: confirm the dataset name FOTL/EFOD_Drone vs FOLT-Drone against Gao et al. 2025 (this README and the paper disagree).
 - `legacy/` remains preserved as research history.

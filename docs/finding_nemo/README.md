@@ -72,6 +72,7 @@ notebook `legacy/seeds/seed{36,85}-r101-warmup.ipynb`).
 | File | Nội dung |
 |---|---|
 | [test_audit_v5.md](test_audit_v5.md) | Audit tập test V5, vai trò các phiên bản, bảng operational V5 |
+| [REPORT_PAPER_FACTS.md](REPORT_PAPER_FACTS.md) | **Số liệu và đoạn văn sẵn để viết report / paper** |
 | [curation_ablation_report.md](curation_ablation_report.md) | Ablation leave-one-out 4 module curation (YOLO26m, `val_clean` 2.863 box, 1 seed) |
 
 Liên quan: [../NHAT_KY_2026-11-03.md](../NHAT_KY_2026-11-03.md) (nhật ký audit),
