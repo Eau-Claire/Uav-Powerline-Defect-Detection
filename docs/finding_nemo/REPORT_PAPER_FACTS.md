@@ -18,13 +18,13 @@ Chi tiết nguồn gốc: [README.md](README.md). Đoạn tiếng Anh trong khun
 | `val_clean` (benchmark) | 2.271 | 2.863 | Val gốc 2.272 / 2.903 + review 86 box foreign_object (57 giữ, 27 bỏ, 1 ảnh bỏ, 1 thêm) |
 | Val Finding Nemo | 2.271 | 3.204 | `val_clean` + 341 box cross-label được người accept (309 insulator, 19 broken, 9 bird_nest, 4 FO) |
 | Test cross-labelled | 1.931 | 2.850 | v1 + box cross-label được người accept |
-| **Test V5** | 1.931 | 2.769 | v1 + sửa quy ước broken_strand (30 thay, 8 xóa) + 215 box insulator do 4/4 YOLO đề xuất |
+| **Test V5** | 1.931 | 2.769 | v1 + sửa broken_strand (30 thay, 8 xóa; **người duyệt**, 29/29 ảnh có log) + 215 box insulator do 4/4 YOLO đề xuất (**chưa người duyệt**) |
 | Operational V5 | 1.871 | | V5, bỏ 60 ảnh có box < 8 px ở 640 |
 
 Phân bố V5: insulator 1.422 · insulator_broken 809 · flashover 124 · bird_nest 177 · foreign_object 111 · broken_strand 126 · 124 ảnh nền.
 Test gốc (`v6p2e_frozen_test`) có 2.012 dòng nhưng chỉ 1.962 ảnh duy nhất → không dùng.
 
-> The primary test set, Finding Nemo V5 (1,931 images, 2,769 boxes), is derived from the original held-out split by removing 50 duplicate rows and 31 images in which a person was annotated as a foreign object. Its labels add a reviewed change to the `broken_strand` convention (30 boxes replaced, 8 removed) and 215 `insulator` boxes proposed by the consensus of four YOLO checkpoints (4/4 agreement, mean confidence ≥ 0.50). These proposals came from evaluated models and were not individually re-verified. They can favour those models on `insulator` and on overall mAP, but they do not affect the five defect classes. Defect-detection conclusions therefore rely on MEAN\_5 and per-class defect AP. Results on the unmodified labels (v1) are given in Appendix X.
+> The primary test set, Finding Nemo V5 (1,931 images, 2,769 boxes), is derived from the original held-out split by removing 50 duplicate rows and 31 images in which a person was annotated as a foreign object. Its labels add two changes. First, `broken_strand` corrections (30 boxes replaced, 8 removed): a targeted audit selected 100 `broken_strand` images, and every corrected image was confirmed by a human reviewer as an incorrect ground-truth box. Second, 215 `insulator` boxes proposed by the consensus of four YOLO checkpoints (4/4 agreement, mean confidence ≥ 0.50). The same audit also selected 100 `insulator` images, but none were reviewed, so these 215 boxes were not verified by a person. They can favour those models on `insulator` and on overall mAP, but they do not affect the five defect classes. Defect-detection conclusions therefore rely on MEAN\_5 and per-class defect AP. Results on the unmodified labels (v1) are given in Appendix X.
 
 > Two annotation versions of the validation set (2,271 images) are used. The ablation uses the curated-benchmark labels (2,863 boxes). The deployed model was selected on the Finding Nemo version (3,204 boxes), which adds 341 boxes proposed by cross-labelling (curated YOLO26m, seed 42, and a Roboflow model) and added only after explicit human acceptance; no boxes were removed. Results from the two versions are reported separately.
 
@@ -85,7 +85,7 @@ YOLO26m, 1 seed (42), RTX 4050, đánh giá trên `val_clean` 2.863 box. mAP50: 
 
 ## 7. Threats to validity
 
-1. 215 box `insulator` của V5 do model đề xuất, chưa người duyệt lại (ảnh hưởng `insulator` và mAP tổng, không ảnh hưởng MEAN_5).
+1. 215 box `insulator` của V5 do model đề xuất, **không được người duyệt** (log: insulator 0/100 ảnh đã duyệt), ảnh hưởng `insulator` và mAP tổng, không ảnh hưởng MEAN_5. Phần broken_strand của V5 thì đã được duyệt.
 2. Near-duplicate train–test (53 ảnh) và train–val (80 ảnh).
 3. Hai phiên bản validation; ablation đo trên chính tập dùng chọn checkpoint.
 4. Ablation 1 seed, phần cứng khác benchmark.

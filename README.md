@@ -88,7 +88,7 @@ All test sets use the same 1,931 images; they differ only in labels.
 
 | Test set | Boxes | Role |
 |---|---:|---|
-| **Finding Nemo V5** (`test_main_v5_full_consensus_assisted`) | 2,769 | **Primary test for the paper.** v1 + reviewed `broken_strand` convention (v3) + 215 `insulator` boxes proposed by 4/4 YOLO checkpoints, not re-verified by a person. These only affect `insulator` and overall mAP; defect conclusions use **MEAN_5** and per-class defect AP |
+| **Finding Nemo V5** (`test_main_v5_full_consensus_assisted`) | 2,769 | **Primary test for the paper.** v1 + human-reviewed `broken_strand` corrections (v3) + 215 `insulator` boxes proposed by 4/4 YOLO checkpoints and **not reviewed by a person** (review log: 0/100 insulator images reviewed). These only affect `insulator` and overall mAP; defect conclusions use **MEAN_5** and per-class defect AP |
 | Finding Nemo cross-labelled (`finding_nemo_human_reviewed_6cls/test`) | 2,850 | Labels used by the deployed MF04 model and Report 5 (cross-label proposals added only after human acceptance) |
 | `test_main_v1` | — | Unmodified labels; reported in the appendix as a robustness check |
 | `test_operational_min8_v5_*` | 1,871 images | Secondary subset: V5 without images that have a box below 8 px at 640 |
