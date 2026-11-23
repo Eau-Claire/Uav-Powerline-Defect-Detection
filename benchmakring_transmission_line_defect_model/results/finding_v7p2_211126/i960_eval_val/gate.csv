@@ -1,0 +1,3 @@
+model,baseline,d_mAP50,d_mAP50_95,d_FO_AP50_95,classes_improved,gate
+seed85_i960,seed85,-0.0499,-0.0599,-0.0659,bird_nest,FAIL
+i960,seed85,-0.0119,-0.01,0.0091,bird_nest|foreign_object,FAIL
