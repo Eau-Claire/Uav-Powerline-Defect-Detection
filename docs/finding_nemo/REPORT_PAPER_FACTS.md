@@ -38,7 +38,7 @@ Trùng chính xác 0; gần trùng với train (dHash ≤ 4): 53 ảnh test, 80 
 
 - YOLO11n/m, YOLO26n/m: Ultralytics 8.4.172, 50 epoch, 640 px, AdamW lr0 1e-3, cosine → 0,01, warmup 3 epoch, weight decay 5e-4, close_mosaic 10, AMP; batch 16 (n) / 8 (m).
 - RT-DETR-R50/R101: PekingU, 50 epoch, 640 px, AdamW (backbone 1e-4, head 1e-3), effective batch 16. Seed 36/85 dùng transformers 5.20.2, DDP 2× T4; **R101 seed 36/85: FP32 + warmup tuyến tính 2.000 bước** (FP16 tràn gradient từ bước đầu ở cả hai seed). R50: AMP, không warmup.
-- Phần cứng: seed 42 trên RTX 4060 (benchmark gốc); seed 36/85 trên Kaggle 2× T4; ablation trên RTX 4050 Laptop. Ghi đúng phiên bản Python/PyTorch thực tế (**không** ghi "PyTorch 2.1.4 / CUDA 12.6", phiên bản này không tồn tại).
+- Môi trường (từ log Ultralytics): seed 42 / Finding Nemo curated: RTX 4060 Laptop, Python 3.12.2, **PyTorch 2.14.1+cu126** ("2.1.4" trong paper là gõ nhầm); seed 36/85: Kaggle 2× T4, PyTorch 2.11.0+cu130; ablation: m3eg RTX 4060 (2.14.1+cu126), m124/m134/m234 RTX 4050 (2.6.0+cu124). Chi tiết: [VERIFICATION_2026-11-23.md](VERIFICATION_2026-11-23.md) §2.
 - Chọn checkpoint chỉ trên validation. YOLO: fitness của Ultralytics; RT-DETR: val loss thấp nhất (`best.pt`). **[cần xác nhận]** nếu paper giữ câu "chọn theo mAP50-95 cho mọi model".
 - Evaluator: `benchmakring_transmission_line_defect_model/src/evaluator.py` (bản hiện tại, có ánh xạ khóa checkpoint RT-DETR của transformers 5.x).
 
@@ -57,6 +57,8 @@ Trùng chính xác 0; gần trùng với train (dHash ≤ 4): 53 ảnh test, 80 
 | YOLO11m | 0,805 | 0,737 | 0,769 | 0,787 | 0,446 | 0,751 |
 | YOLO11n | 0,793 | 0,684 | 0,734 | 0,755 | 0,428 | 0,714 |
 
+**Raw vs Curated, 12 checkpoint cố định, operational V5 (1.871 ảnh / 2.467 box)** — Table RC-9a, Figure RC-3, Table RC-11 (branch `finding_nemo_v5_results`). Checkpoint, SHA-256, evaluator và hai điểm cần công khai (curated không phải `best.pt`; 4 YOLO curated là model đề xuất box V5): [VERIFICATION_2026-11-23.md](VERIFICATION_2026-11-23.md) §3–4.
+
 **Model deploy `seed85_curated_yolo26m`**:
 - Val Finding Nemo (640): P 0,878 · R 0,771 · mAP50 0,841 · mAP50-95 0,480.
 - Endpoint (IoU 0,5, sau hậu xử lý): val P 0,891 / R 0,841 / F1 0,865 / macro-F1 0,824; **test cross-labelled** P 0,892 / R 0,821 / F1 0,855 / macro-F1 0,796.
@@ -72,7 +74,7 @@ Trùng chính xác 0; gần trùng với train (dHash ≤ 4): 53 ảnh test, 80 
 
 ## 5. Ablation (đã có, cần viết lại phần kết luận)
 
-YOLO26m, 1 seed (42), RTX 4050, đánh giá trên `val_clean` 2.863 box. mAP50: Reference (M1+M2) 0,835; bỏ Module II 0,829; bỏ Module III 0,824; bỏ Module I 0,805.
+YOLO26m, 1 seed (42), chọn checkpoint trên `val` (2.272 ảnh / 2.903 box), báo cáo trên `val_clean` (2.271 / 2.863, gần như cùng ảnh → **không độc lập**); RTX 4050 và RTX 4060 lẫn nhau. mAP50: Reference (M1+M2) 0,835; bỏ Module II 0,829; bỏ Module III 0,824; bỏ Module I 0,805.
 
 > Among the leave-one-out runs, excluding Module I is associated with the lowest mAP$_{50}$ (0.805), mainly on thin and small classes (`foreign_object` 0.575 vs 0.646–0.649, n = 58; `broken_strand` 0.725 vs 0.766–0.768). These results come from a single seed, are measured on the validation split that is also used for checkpoint selection, and differ by amounts comparable to seed-to-seed variation (about one point). They indicate tendencies rather than established module effects. No run includes all four modules or omits only Module IV, so the effect of SAM 2.1 refinement is not estimated.
 
