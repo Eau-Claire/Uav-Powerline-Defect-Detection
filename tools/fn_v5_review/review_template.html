@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finding Nemo V5 box audit</title>
+<style>
+  :root { --bg:#f7f7f5; --fg:#1d1d1b; --muted:#6b6b66; --card:#fff; --line:#ddd;
+          --acc:#16a34a; --rej:#dc2626; --adj:#d97706; --uns:#6b7280; }
+  body { margin:0; font:15px/1.4 system-ui, sans-serif; background:var(--bg); color:var(--fg); }
+  header { display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:10px 16px;
+           background:var(--card); border-bottom:1px solid var(--line); position:sticky; top:0; }
+  header b { font-size:16px; }
+  input, textarea, button { font:inherit; }
+  #img { display:block; max-width:100%; margin:12px auto; border:1px solid var(--line); background:#fff; }
+  main { max-width:1400px; margin:0 auto; padding:0 16px 40px; }
+  .bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  button { padding:8px 14px; border:1px solid var(--line); border-radius:6px; background:var(--card); cursor:pointer; }
+  button.on { color:#fff; border-color:transparent; }
+  button[data-d=accept].on { background:var(--acc); } button[data-d=reject].on { background:var(--rej); }
+  button[data-d=adjust].on { background:var(--adj); } button[data-d=unsure].on { background:var(--uns); }
+  textarea { width:100%; min-height:44px; margin-top:8px; padding:6px; border:1px solid var(--line); border-radius:6px; }
+  .muted { color:var(--muted); font-size:13px; }
+  .guide { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:12px; }
+  progress { width:180px; }
+</style>
+</head>
+<body>
+<header>
+  <b>Finding Nemo V5 — proposed insulator audit</b>
+  <label>Reviewer <input id="reviewer" size="12" placeholder="name"></label>
+  <span id="pos"></span>
+  <progress id="prog" max="1" value="0"></progress>
+  <span id="done" class="muted"></span>
+  <button id="export">Export review.csv</button>
+</header>
+<main>
+  <div class="bar" style="margin-top:10px">
+    <button id="prev">◀ Prev (←)</button>
+    <button data-d="accept">Accept (A)</button>
+    <button data-d="reject">Reject (R)</button>
+    <button data-d="adjust">Adjust (J)</button>
+    <button data-d="unsure">Unsure (U)</button>
+    <button id="next">Next (→)</button>
+    <button id="nextOpen">Next undecided (N)</button>
+    <span id="meta" class="muted"></span>
+  </div>
+  <textarea id="notes" placeholder="Notes (required for Reject / Adjust / Unsure)"></textarea>
+  <label class="muted">Adjusted box for <b>Adjust</b>, in pixels of the original image: <input id="adj" size="24" placeholder="x1,y1,x2,y2"></label>
+  <img id="img" alt="proposal">
+  <div class="guide">
+    <b>Decision rules</b> (magenta = proposed box; other colours = existing labels)
+    <ul>
+      <li><b>Accept</b> — a real, healthy <code>insulator</code> string that is not already labelled, and the box fits it tightly (within ~10% on each side).</li>
+      <li><b>Reject</b> — not an insulator, already covered by an existing box, a defect that should be another class, or too occluded/blurred to label by the dataset convention.</li>
+      <li><b>Adjust</b> — a real unlabelled insulator but the box is clearly too loose/tight or covers two strings; describe the fix in Notes.</li>
+      <li><b>Unsure</b> — cannot decide; explain why. Unsure items are excluded from the frozen set unless resolved.</li>
+    </ul>
+    <span class="muted">Decisions are saved in this browser only. Export review.csv when finished (and from time to time as a backup).</span>
+  </div>
+</main>
+<script>
+const ITEMS = __ITEMS__, FIELDS = __FIELDS__, ROWS = __ROWS__;
+const KEY = 'fn_v5_review_v1';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
+let i = 0;
+const $ = id => document.getElementById(id);
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+function show() {
+  const it = ITEMS[i], s = state[it.box_id] || {};
+  $('img').src = 'crops/' + it.box_id + '.jpg';
+  $('pos').textContent = `${it.box_id}  (${i + 1}/${ITEMS.length})`;
+  $('meta').textContent = `existing insulator boxes: ${it.existing_insulator_boxes} · max IoU with existing label: ${it.max_iou_existing_gt} ${it.max_iou_class}`;
+  $('notes').value = s.notes || '';
+  $('adj').value = s.adjusted_xyxy_px || '';
+  $('meta').textContent += ` · image ${it.img_w}×${it.img_h}, proposal px ${it.x1_px},${it.y1_px},${it.x2_px},${it.y2_px}`;
+  document.querySelectorAll('button[data-d]').forEach(b => b.classList.toggle('on', b.dataset.d === s.decision));
+  const n = ITEMS.filter(x => (state[x.box_id] || {}).decision).length;
+  $('prog').value = n / ITEMS.length; $('done').textContent = `${n} decided`;
+}
+function decide(d) {
+  const it = ITEMS[i];
+  state[it.box_id] = { ...(state[it.box_id] || {}), decision: d, notes: $('notes').value,
+                       adjusted_xyxy_px: $('adj').value.trim(), reviewer: $('reviewer').value };
+  save();
+  if (d === 'accept' || $('notes').value.trim()) { if (i < ITEMS.length - 1) i++; }
+  else $('notes').focus();
+  show();
+}
+$('adj').addEventListener('input', () => {
+  const it = ITEMS[i]; state[it.box_id] = { ...(state[it.box_id] || {}), adjusted_xyxy_px: $('adj').value.trim() }; save();
+});
+$('notes').addEventListener('input', () => {
+  const it = ITEMS[i]; state[it.box_id] = { ...(state[it.box_id] || {}), notes: $('notes').value }; save();
+});
+$('reviewer').value = (() => { try { return localStorage.getItem(KEY + '_reviewer') || ''; } catch (e) { return ''; } })();
+$('reviewer').addEventListener('input', () => { try { localStorage.setItem(KEY + '_reviewer', $('reviewer').value); } catch (e) {} });
+document.querySelectorAll('button[data-d]').forEach(b => b.onclick = () => decide(b.dataset.d));
+$('prev').onclick = () => { if (i > 0) i--; show(); };
+$('next').onclick = () => { if (i < ITEMS.length - 1) i++; show(); };
+$('nextOpen').onclick = () => {
+  const j = ITEMS.findIndex((x, k) => k > i && !(state[x.box_id] || {}).decision);
+  const k = j >= 0 ? j : ITEMS.findIndex(x => !(state[x.box_id] || {}).decision);
+  if (k >= 0) i = k; show();
+};
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') { if (e.key === 'Escape') e.target.blur(); return; }
+  const m = { a: 'accept', r: 'reject', j: 'adjust', u: 'unsure' }[e.key.toLowerCase()];
+  if (m) decide(m);
+  else if (e.key === 'ArrowLeft') $('prev').click();
+  else if (e.key === 'ArrowRight') $('next').click();
+  else if (e.key.toLowerCase() === 'n') $('nextOpen').click();
+});
+$('export').onclick = () => {
+  const esc = v => { v = String(v ?? ''); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const lines = [FIELDS.join(',')];
+  for (const r of ROWS) {
+    const s = state[r.box_id] || {};
+    const row = { ...r, decision: s.decision || '', adjusted_xyxy_px: s.adjusted_xyxy_px || '',
+                  reviewer: s.reviewer || $('reviewer').value, notes: s.notes || '' };
+    lines.push(FIELDS.map(f => esc(row[f])).join(','));
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([lines.join('\n') + '\n'], { type: 'text/csv' }));
+  a.download = 'review.csv'; a.click();
+};
+show();
+</script>
+</body>
+</html>
