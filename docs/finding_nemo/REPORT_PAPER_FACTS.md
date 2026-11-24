@@ -35,19 +35,27 @@ Test gốc (`v6p2e_frozen_test`) có 2.012 dòng nhưng chỉ 1.962 ảnh duy nh
 
 ## 2. Leakage
 
-Trùng chính xác 0; gần trùng với train (dHash ≤ 4): 53 ảnh test, 80 ảnh val.
+Trùng chính xác 0; gần trùng với train (dHash ≤ 4): 53 ảnh test, 80 ảnh val. **Cả 53 ảnh test đều nằm trong V5 operational**
+(0 ảnh thuộc 60 ảnh bị loại; kiểm 24/11/2026 bằng `manifest.csv` của operational V5).
 
-> Exact-hash checks found no duplicates across splits. A perceptual-hash audit (dHash, Hamming distance ≤ 4) flagged 53 test and 80 validation images as near-duplicates of training images. Removing the 53 test images changes the overall F1 from 0.855 to 0.853 and the `foreign_object` F1 from 0.765 to 0.719. The removed images contain about 19 of the 111 `foreign_object` instances and are detected almost perfectly, so the drop cannot be attributed to leakage alone. We report it as a sensitivity analysis.
+**Phiên bản của sensitivity analysis:** F1 0,855 → 0,853 đo bằng **model deploy seed85** (endpoint, hậu xử lý, IoU 0,5)
+trên **nhãn cross-labelled, 1.931 ảnh** (`uavpms-server/modal/perf/results/2026-11-22_1424/SUMMARY.md` §3), không phải
+12 checkpoint RC-9a trên V5 operational. Khi viết phải ghi rõ như vậy.
+
+> Exact-hash checks found no duplicates across splits. A perceptual-hash audit (dHash, Hamming distance ≤ 4) flagged 53 test and 80 validation images as near-duplicates of training images; all 53 test images belong to the Finding Nemo V5 test. For the deployed model (seed 85, evaluated through the service endpoint on the 1,931-image cross-labelled annotation version), removing the 53 images changes the overall F1 from 0.855 to 0.853 and the `foreign_object` F1 from 0.765 to 0.719. The removed images contain about 19 of the 111 `foreign_object` instances and are detected almost perfectly, so the drop cannot be attributed to leakage alone. We report it as a sensitivity analysis.
 
 ## 3. Huấn luyện và đánh giá
 
 - YOLO11n/m, YOLO26n/m: Ultralytics 8.4.172, 50 epoch, 640 px, AdamW lr0 1e-3, cosine → 0,01, warmup 3 epoch, weight decay 5e-4, close_mosaic 10, AMP; batch 16 (n) / 8 (m).
 - RT-DETR-R50/R101: PekingU, 50 epoch, 640 px, AdamW (backbone 1e-4, head 1e-3), effective batch 16. Seed 36/85 dùng transformers 5.20.2, DDP 2× T4; **R101 seed 36/85: FP32 + warmup tuyến tính 2.000 bước** (FP16 tràn gradient từ bước đầu ở cả hai seed). R50: AMP, không warmup.
 - Môi trường (từ log Ultralytics): seed 42 / Finding Nemo curated: RTX 4060 Laptop, Python 3.12.2, **PyTorch 2.14.1+cu126** ("2.1.4" trong paper là gõ nhầm); seed 36/85: Kaggle 2× T4, PyTorch 2.11.0+cu130; ablation: m3eg RTX 4060 (2.14.1+cu126), m124/m134/m234 RTX 4050 (2.6.0+cu124). Chi tiết: [VERIFICATION_2026-11-23.md](VERIFICATION_2026-11-23.md) §2.
-- Chọn checkpoint chỉ trên validation. YOLO: fitness của Ultralytics; RT-DETR: val loss thấp nhất (`best.pt`). **[cần xác nhận]** nếu paper giữ câu "chọn theo mAP50-95 cho mọi model".
+- **Chọn checkpoint (đính chính 23/11/2026, dùng thông tin này):** Raw dùng `best.pt` của benchmark gốc. Curated (RC-9a) chọn
+  thủ công: yolo11n `last`, yolo11m/26n/26m `epoch45`, RT-DETR-R50/R101 `epoch15`; 4/6 không trùng epoch tốt nhất trên val; không có
+  bản ghi tiêu chí; lần đánh giá test (02/11 16:39) chạy trước lần đánh giá val (17:18). Chi tiết và đoạn tiếng Anh:
+  [VERIFICATION_2026-11-23.md](VERIFICATION_2026-11-23.md) §3. **Không** dùng câu "selected on the validation set only" cho RC-9a.
 - Evaluator: `benchmakring_transmission_line_defect_model/src/evaluator.py` (bản hiện tại, có ánh xạ khóa checkpoint RT-DETR của transformers 5.x).
 
-> MEAN\_5 is the mean AP$_{50}$ over the five defect classes (`insulator_broken`, `insulator_flashover`, `bird_nest`, `foreign_object`, `broken_strand`), excluding the healthy `insulator` class. Checkpoints were selected on the validation set only; the test set was evaluated once per final checkpoint and was not used for selection or tuning.
+> MEAN\_5 is the mean AP$_{50}$ over the five defect classes (`insulator_broken`, `insulator_flashover`, `bird_nest`, `foreign_object`, `broken_strand`), excluding the healthy `insulator` class.
 
 ## 4. Kết quả đã có
 
