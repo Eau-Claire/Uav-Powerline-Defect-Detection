@@ -117,7 +117,7 @@ checkpoint deploy `8682baa0…`. Stash: `stash://bunpmc/projects/finding_nemo/`,
 | R101 seed 36/85 (FP32 + warmup) | Đang train lại |
 | Xác nhận checkpoint seed 42 | Chưa |
 | Benchmark 3 seed trên V5 + v1 | Chờ 2 việc trên |
-| Tên dataset: README ghi **"FOTL / EFOD_Drone"**, paper ghi **"FOLT-Drone"** | Đối chiếu với bài gốc Gao et al. 2025 rồi thống nhất |
+| Tên dataset foreign-object | **Đã chốt 24/11/2026: "FOTL_Drone"** (Wang et al., Drones 8(8):361, 2024; 1.495 ảnh), dùng bản mở rộng 5.980 ảnh của Gao et al. 2025 (Electronics 14(18):3577). "FOLT-Drone" là gõ nhầm; "EFOD_Drone" chưa kiểm chứng, không dùng |
 | `file.bib` | Không có trong repo |
 | Số box bị reject khi duyệt val/test cross-label | Chỉ có trên máy Windows (`HUMAN_REVIEW_STATUS.json`); không bắt buộc |
 | "Report 3/4" cũ dùng test 2.012 ảnh | Đổi sang V5 hoặc ghi rõ là số cũ |
