@@ -5,6 +5,11 @@ Chi tiết nguồn gốc: [README.md](README.md). Đoạn tiếng Anh trong khun
 
 ## 0. Quy tắc khi ghi số
 
+**Đã chốt (24/11/2026), không đổi nữa:** test cuối của report/paper là **Finding Nemo V5 operational
+(1.871 ảnh, 2.467 box)**, tập của Table RC-9a, RC-11 và hình per-class. Gọi trong bài là "Finding Nemo V5 test".
+Không đánh giá lại trên tập khác. Table RC-13 (ablation) giữ số trên V5 đầy đủ (1.931 ảnh) nhưng phải ghi rõ
+tên tập và "exploratory". Test gốc 2.012, cross-labelled 2.850 và v1 chỉ nhắc khi giải thích nguồn gốc hoặc ở phụ lục.
+
 - Mỗi con số phải kèm **phiên bản nhãn**: V5 (2.769 box), cross-labelled (2.850 box), v1. Không trộn trong một bảng.
 - Validation cũng có 2 phiên bản: `val_clean` 2.863 box (benchmark, ablation) và Finding Nemo 3.204 box (model deploy).
 - Kết luận về **phát hiện lỗi** dùng MEAN_5 và AP từng lớp lỗi (không bị 215 box của V5 ảnh hưởng).
