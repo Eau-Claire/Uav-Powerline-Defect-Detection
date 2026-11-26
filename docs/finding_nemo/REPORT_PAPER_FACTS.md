@@ -93,6 +93,8 @@ trên **nhãn cross-labelled, 1.931 ảnh** (`uavpms-server/modal/perf/results/2
 
 ## 5. Ablation (đã có, cần viết lại phần kết luận)
 
+**Dòng đủ 4 module (pipeline đầy đủ)** = model Curated YOLO26m seed 42 chính (epoch45, như RC-9a), chấm 26/11/2026 trên V5 đầy đủ (1.931 ảnh / 2.769 box, cùng tập RC-13): P 0,8555 · R 0,7605 · mAP50 0,8230 · mAP50-95 0,4658 · MEAN_5 0,7972 ([full_pipeline_v5full_eval.json](full_pipeline_v5full_eval.json)). Lưu ý: train trên Finding Nemo Curated (thêm cross-label 2.607 box người duyệt), các run ablation không có cross-label; checkpoint này là 1 trong 4 model đề xuất 215 box insulator.
+
 YOLO26m, 1 seed (42), chọn checkpoint trên `val` (2.272 ảnh / 2.903 box), báo cáo trên `val_clean` (2.271 / 2.863, gần như cùng ảnh → **không độc lập**); RTX 4050 và RTX 4060 lẫn nhau. mAP50: Reference (M1+M2) 0,835; bỏ Module II 0,829; bỏ Module III 0,824; bỏ Module I 0,805.
 
 > Among the leave-one-out runs, excluding Module I is associated with the lowest mAP$_{50}$ (0.805), mainly on thin and small classes (`foreign_object` 0.575 vs 0.646–0.649, n = 58; `broken_strand` 0.725 vs 0.766–0.768). These results come from a single seed, are measured on the validation split that is also used for checkpoint selection, and differ by amounts comparable to seed-to-seed variation (about one point). They indicate tendencies rather than established module effects. No run includes all four modules or omits only Module IV, so the effect of SAM 2.1 refinement is not estimated.
