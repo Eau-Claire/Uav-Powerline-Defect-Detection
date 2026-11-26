@@ -1,0 +1,146 @@
+[
+  {
+    "ablation": "dori_m1_abf",
+    "weight": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\weights\\finding_dori\\yolo26m_m1_a_b_f\\weights\\best.pt",
+    "weight_sha256": "45a0848f875aa9e706c0a26169c0f1054bbfb78b03e188c62cae6d32e5caca04",
+    "test_images": 1931,
+    "precision": 0.845561328870049,
+    "recall": 0.7371709633723486,
+    "map50": 0.7898402248440305,
+    "map50_95": 0.43325173028518477,
+    "speed_ms": {
+      "preprocess": 0.581866286910818,
+      "inference": 9.370737234587105,
+      "loss": 0.0009098912433468882,
+      "postprocess": 0.9751530295322421
+    },
+    "per_class_map50_95": {
+      "insulator": 0.582289778839987,
+      "insulator_broken": 0.4316528599842185,
+      "insulator_flashover": 0.2579466412425726,
+      "bird_nest": 0.480506397277017,
+      "foreign_object": 0.488068182926924,
+      "broken_strand": 0.3590465214403892
+    }
+  },
+  {
+    "ablation": "dori_m2_cd",
+    "weight": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\weights\\finding_dori\\yolo26m_m2_c_d\\weights\\best.pt",
+    "weight_sha256": "2fea6881115cc70cb0519d1b4bf3f1fb2afb24706383940372fc872153e0ddee",
+    "test_images": 1931,
+    "precision": 0.8441039597575747,
+    "recall": 0.7343603714106343,
+    "map50": 0.7925629958911743,
+    "map50_95": 0.4320850009591758,
+    "speed_ms": {
+      "preprocess": 0.5869769549560913,
+      "inference": 9.383527964799779,
+      "loss": 0.0009386846115935646,
+      "postprocess": 0.9775359399281458
+    },
+    "per_class_map50_95": {
+      "insulator": 0.5784045187436192,
+      "insulator_broken": 0.43215100158544645,
+      "insulator_flashover": 0.25768289480741535,
+      "bird_nest": 0.47278063873326504,
+      "foreign_object": 0.5015016554397149,
+      "broken_strand": 0.3499892964455943
+    }
+  },
+  {
+    "ablation": "dori_m3_eg",
+    "weight": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\weights\\finding_dori\\yolo26m_m3_e_g\\weights\\best.pt",
+    "weight_sha256": "4a7c51ab52b74c36913fa35f204a20e06e331da24aeb0e458da69fbd570821da",
+    "test_images": 1931,
+    "precision": 0.8424985809309561,
+    "recall": 0.745057606873655,
+    "map50": 0.791351555165333,
+    "map50_95": 0.43118045925234166,
+    "speed_ms": {
+      "preprocess": 0.7048981356782564,
+      "inference": 9.47823200414345,
+      "loss": 0.001192439151585998,
+      "postprocess": 1.279297928532739
+    },
+    "per_class_map50_95": {
+      "insulator": 0.5864782931245403,
+      "insulator_broken": 0.4295848526761354,
+      "insulator_flashover": 0.27262825007027686,
+      "bird_nest": 0.4834685550984461,
+      "foreign_object": 0.4634695350599195,
+      "broken_strand": 0.3514532694847317
+    }
+  },
+  {
+    "ablation": "destiny_m134",
+    "weight": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\weights\\finding_destiny\\yolo26m_m_134\\weights\\best.pt",
+    "weight_sha256": "d25b44f293b47a9b849a9d46266bee451f2eb75290517c0bfc7728bbb3375614",
+    "test_images": 1931,
+    "precision": 0.8509733525876806,
+    "recall": 0.7356880549021647,
+    "map50": 0.7935268258146165,
+    "map50_95": 0.4230716209862696,
+    "speed_ms": {
+      "preprocess": 0.7064775763855908,
+      "inference": 9.608472812002056,
+      "loss": 0.001073278090217238,
+      "postprocess": 1.1825456240104746
+    },
+    "per_class_map50_95": {
+      "insulator": 0.5903259436403306,
+      "insulator_broken": 0.42890972148294304,
+      "insulator_flashover": 0.2739550571714636,
+      "bird_nest": 0.45977278693676826,
+      "foreign_object": 0.4230348336752135,
+      "broken_strand": 0.3624313830108983
+    }
+  },
+  {
+    "ablation": "destiny_m124",
+    "weight": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\weights\\finding_destiny\\yolo26m_m_124\\weights\\best.pt",
+    "weight_sha256": "bdd75596053602422fedb5b455a35d47f02c03a2a54f199ad8c37a8703d64594",
+    "test_images": 1931,
+    "precision": 0.8656051879952938,
+    "recall": 0.7168591915053323,
+    "map50": 0.7967488642521613,
+    "map50_95": 0.4140510896576482,
+    "speed_ms": {
+      "preprocess": 0.6506607975047797,
+      "inference": 9.483630295165947,
+      "loss": 0.0009180217378794257,
+      "postprocess": 1.0004078197983546
+    },
+    "per_class_map50_95": {
+      "insulator": 0.5813232949447349,
+      "insulator_broken": 0.42456089406233677,
+      "insulator_flashover": 0.2475723692944864,
+      "bird_nest": 0.46235312101203874,
+      "foreign_object": 0.4241372016660915,
+      "broken_strand": 0.3443596569662011
+    }
+  },
+  {
+    "ablation": "destiny_m234",
+    "weight": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\weights\\finding_destiny\\yolo26m_m_234\\weights\\best.pt",
+    "weight_sha256": "e4cc0ba4e9a253cce480077168ced679546bc529eef828dd1e8685fd08ecbad2",
+    "test_images": 1931,
+    "precision": 0.8546482676263883,
+    "recall": 0.7161441179324052,
+    "map50": 0.7895909582338927,
+    "map50_95": 0.4104873701735794,
+    "speed_ms": {
+      "preprocess": 0.6409770067230061,
+      "inference": 9.537136664941805,
+      "loss": 0.0010398239304144213,
+      "postprocess": 1.1142515277237928
+    },
+    "per_class_map50_95": {
+      "insulator": 0.574856100021396,
+      "insulator_broken": 0.4279970970395987,
+      "insulator_flashover": 0.26494719174419556,
+      "bird_nest": 0.475872033311616,
+      "foreign_object": 0.38734483554770593,
+      "broken_strand": 0.33190696337696396
+    }
+  }
+]

@@ -1,0 +1,512 @@
+
+===== session 2026-11-12 20:24:38 on GPU [0, 1] =====
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794515087.594234     971 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1794515087.594236     970 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+Could not load the custom kernel for multi-scale deformable attention: Error building extension 'MultiScaleDeformableAttention': [1/2] /usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+FAILED: [code=2] ms_deform_attn_cuda.cuda.o 
+/usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(69): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(140): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+2 errors detected in the compilation of "/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu".
+ninja: build stopped: subcommand failed.
+
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r101vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r101vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[raw_rtdetr100] START seed=36 | 2 GPU x batch 2 x accum 4 = 16 ảnh / bước optimizer
+  [SKIP] epoch 1 step 4: bỏ 1 bước optimizer (batch tốt 8, batch NaN 0, scale 32768)
+  [SKIP] epoch 1 step 8: bỏ 1 bước optimizer (batch tốt 8, batch NaN 0, scale 16384)
+  [SKIP] epoch 1 step 12: bỏ 1 bước optimizer (batch tốt 8, batch NaN 0, scale 8192)
+  [SKIP] epoch 1 step 16: bỏ 1 bước optimizer (batch tốt 8, batch NaN 0, scale 4096)
+  [SKIP] epoch 1 step 20: bỏ 1 bước optimizer (batch tốt 8, batch NaN 0, scale 2048)
+  [SKIP] epoch 1 step 24: bỏ 1 bước optimizer (batch tốt 8, batch NaN 0, scale 1024)
+  [SKIP] epoch 1 step 32: bỏ 1 bước optimizer (batch tốt 8, batch NaN 0, scale 512)
+  epoch 1 step 200/4584 loss 102.4309 lr_head 2.50e-05 fp32_retry 0 nan_skip 0 (2 min)
+  epoch 1 step 400/4584 loss 64.6190 lr_head 5.00e-05 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 1 step 600/4584 loss 50.2201 lr_head 7.50e-05 fp32_retry 0 nan_skip 0 (5 min)
+  epoch 1 step 800/4584 loss 42.1891 lr_head 1.00e-04 fp32_retry 0 nan_skip 0 (7 min)
+  epoch 1 step 1000/4584 loss 37.0236 lr_head 1.25e-04 fp32_retry 0 nan_skip 0 (8 min)
+  epoch 1 step 1200/4584 loss 33.4234 lr_head 1.50e-04 fp32_retry 0 nan_skip 0 (10 min)
+  epoch 1 step 1400/4584 loss 30.8019 lr_head 1.75e-04 fp32_retry 0 nan_skip 0 (11 min)
+  epoch 1 step 1600/4584 loss 28.7499 lr_head 2.00e-04 fp32_retry 0 nan_skip 0 (13 min)
+  epoch 1 step 1800/4584 loss 27.2032 lr_head 2.25e-04 fp32_retry 0 nan_skip 0 (15 min)
+  epoch 1 step 2000/4584 loss 25.9092 lr_head 2.50e-04 fp32_retry 0 nan_skip 0 (16 min)
+  epoch 1 step 2200/4584 loss 24.8631 lr_head 2.75e-04 fp32_retry 0 nan_skip 0 (18 min)
+  epoch 1 step 2400/4584 loss 24.0312 lr_head 3.00e-04 fp32_retry 0 nan_skip 0 (19 min)
+  epoch 1 step 2600/4584 loss 23.2843 lr_head 3.25e-04 fp32_retry 0 nan_skip 0 (21 min)
+  epoch 1 step 2800/4584 loss 22.6411 lr_head 3.50e-04 fp32_retry 0 nan_skip 0 (23 min)
+  epoch 1 step 3000/4584 loss 22.1387 lr_head 3.75e-04 fp32_retry 0 nan_skip 0 (24 min)
+  epoch 1 step 3200/4584 loss 21.6900 lr_head 4.00e-04 fp32_retry 0 nan_skip 0 (26 min)
+  epoch 1 step 3400/4584 loss 21.3196 lr_head 4.25e-04 fp32_retry 0 nan_skip 0 (28 min)
+  epoch 1 step 3600/4584 loss 20.9732 lr_head 4.50e-04 fp32_retry 0 nan_skip 0 (29 min)
+  epoch 1 step 3800/4584 loss 20.6788 lr_head 4.75e-04 fp32_retry 0 nan_skip 0 (31 min)
+  epoch 1 step 4000/4584 loss 20.4260 lr_head 5.00e-04 fp32_retry 0 nan_skip 0 (32 min)
+  epoch 1 step 4200/4584 loss 20.1740 lr_head 5.25e-04 fp32_retry 0 nan_skip 0 (34 min)
+  epoch 1 step 4400/4584 loss 19.9684 lr_head 5.50e-04 fp32_retry 0 nan_skip 0 (36 min)
+[raw_rtdetr100] epoch 1/50 train 19.7981 val 11.9881 *best* (38.5 min) | fp32_retry 0 nan_skip 0 opt_skip 7 val_nan 0 gpu_drift 0.0e+00
+[PAUSE] raw_rtdetr100: saved epoch 1, next epoch would exceed the session budget
+
+===== session 2026-11-15 04:26:48 on GPU [0, 1] =====
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794716817.809755     392 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794716817.829515     393 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+Could not load the custom kernel for multi-scale deformable attention: Error building extension 'MultiScaleDeformableAttention': [1/2] /usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+FAILED: [code=2] ms_deform_attn_cuda.cuda.o 
+/usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(69): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(140): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+2 errors detected in the compilation of "/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu".
+ninja: build stopped: subcommand failed.
+
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r101vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r101vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[raw_rtdetr100] RESUME from epoch 2 | 2 GPU x batch 4 x accum 2 = 16 ảnh / bước optimizer
+  epoch 2 step 200/2292 loss 15.4615 lr_head 6.22e-04 fp32_retry 0 nan_skip 0 (2 min)
+  epoch 2 step 400/2292 loss 15.4618 lr_head 6.72e-04 fp32_retry 0 nan_skip 0 (4 min)
+  epoch 2 step 600/2292 loss 15.6103 lr_head 7.22e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 2 step 800/2292 loss 15.8234 lr_head 7.72e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 2 step 1000/2292 loss 15.9493 lr_head 8.22e-04 fp32_retry 0 nan_skip 0 (11 min)
+  epoch 2 step 1200/2292 loss 15.9625 lr_head 8.72e-04 fp32_retry 0 nan_skip 0 (13 min)
+  epoch 2 step 1400/2292 loss 16.1375 lr_head 9.22e-04 fp32_retry 0 nan_skip 0 (15 min)
+  epoch 2 step 1600/2292 loss 16.2803 lr_head 9.72e-04 fp32_retry 0 nan_skip 0 (17 min)
+  epoch 2 step 1800/2292 loss 16.3679 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (19 min)
+  epoch 2 step 2000/2292 loss 16.4839 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (21 min)
+  [SKIP] epoch 2 step 2156: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 512)
+  epoch 2 step 2200/2292 loss 16.5444 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (23 min)
+[raw_rtdetr100] epoch 2/50 train 16.5918 val 14.4693 (25.3 min) | fp32_retry 0 nan_skip 0 opt_skip 1 val_nan 0 gpu_drift 0.0e+00
+  epoch 3 step 200/2292 loss 17.8266 lr_head 9.96e-04 fp32_retry 94 nan_skip 0 (3 min)
+  epoch 3 step 400/2292 loss 17.3026 lr_head 9.96e-04 fp32_retry 94 nan_skip 0 (5 min)
+  epoch 3 step 600/2292 loss 17.1138 lr_head 9.96e-04 fp32_retry 163 nan_skip 0 (8 min)
+  epoch 3 step 800/2292 loss 17.2037 lr_head 9.96e-04 fp32_retry 563 nan_skip 0 (13 min)
+  epoch 3 step 1000/2292 loss 17.2030 lr_head 9.96e-04 fp32_retry 963 nan_skip 0 (18 min)
+  epoch 3 step 1200/2292 loss 17.1659 lr_head 9.96e-04 fp32_retry 1363 nan_skip 0 (23 min)
+  epoch 3 step 1400/2292 loss 17.0910 lr_head 9.96e-04 fp32_retry 1763 nan_skip 0 (29 min)
+  epoch 3 step 1600/2292 loss 17.3150 lr_head 9.96e-04 fp32_retry 2163 nan_skip 0 (34 min)
+  epoch 3 step 1800/2292 loss 17.4150 lr_head 9.96e-04 fp32_retry 2563 nan_skip 0 (39 min)
+  epoch 3 step 2000/2292 loss 17.8823 lr_head 9.96e-04 fp32_retry 2963 nan_skip 0 (44 min)
+  epoch 3 step 2200/2292 loss 18.4895 lr_head 9.96e-04 fp32_retry 3363 nan_skip 0 (50 min)
+[raw_rtdetr100] epoch 3/50 train 18.5556 val 14.1101 (55.4 min) | fp32_retry 3547 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 4 step 200/2292 loss 19.0986 lr_head 9.91e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 4 step 400/2292 loss 20.0286 lr_head 9.91e-04 fp32_retry 800 nan_skip 0 (11 min)
+  epoch 4 step 600/2292 loss 20.9114 lr_head 9.91e-04 fp32_retry 1200 nan_skip 0 (16 min)
+  epoch 4 step 800/2292 loss 21.5525 lr_head 9.91e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 4 step 1000/2292 loss 21.9926 lr_head 9.91e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 4 step 1200/2292 loss 22.0133 lr_head 9.91e-04 fp32_retry 2400 nan_skip 0 (32 min)
+  epoch 4 step 1400/2292 loss 21.9350 lr_head 9.91e-04 fp32_retry 2800 nan_skip 0 (37 min)
+  epoch 4 step 1600/2292 loss 21.6567 lr_head 9.91e-04 fp32_retry 3200 nan_skip 0 (42 min)
+  epoch 4 step 1800/2292 loss 21.3439 lr_head 9.91e-04 fp32_retry 3600 nan_skip 0 (47 min)
+  epoch 4 step 2000/2292 loss 21.0730 lr_head 9.91e-04 fp32_retry 4000 nan_skip 0 (53 min)
+  epoch 4 step 2200/2292 loss 20.8045 lr_head 9.91e-04 fp32_retry 4400 nan_skip 0 (58 min)
+[raw_rtdetr100] epoch 4/50 train 20.7061 val 13.6830 (63.5 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 5 step 200/2292 loss 17.8311 lr_head 9.84e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 5 step 400/2292 loss 17.7767 lr_head 9.84e-04 fp32_retry 800 nan_skip 0 (11 min)
+  epoch 5 step 600/2292 loss 17.8959 lr_head 9.84e-04 fp32_retry 1200 nan_skip 0 (16 min)
+  epoch 5 step 800/2292 loss 17.8847 lr_head 9.84e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 5 step 1000/2292 loss 17.7811 lr_head 9.84e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 5 step 1200/2292 loss 17.6160 lr_head 9.84e-04 fp32_retry 2400 nan_skip 0 (32 min)
+  epoch 5 step 1400/2292 loss 17.5228 lr_head 9.84e-04 fp32_retry 2800 nan_skip 0 (37 min)
+  epoch 5 step 1600/2292 loss 17.4693 lr_head 9.84e-04 fp32_retry 3200 nan_skip 0 (42 min)
+  epoch 5 step 1800/2292 loss 17.4131 lr_head 9.84e-04 fp32_retry 3600 nan_skip 0 (47 min)
+  epoch 5 step 2000/2292 loss 17.3887 lr_head 9.84e-04 fp32_retry 4000 nan_skip 0 (52 min)
+  epoch 5 step 2200/2292 loss 17.3437 lr_head 9.84e-04 fp32_retry 4400 nan_skip 0 (58 min)
+[raw_rtdetr100] epoch 5/50 train 17.3165 val 12.9909 (63.5 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 6 step 200/2292 loss 16.6636 lr_head 9.76e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 6 step 400/2292 loss 16.8170 lr_head 9.76e-04 fp32_retry 800 nan_skip 0 (11 min)
+  epoch 6 step 600/2292 loss 16.9337 lr_head 9.76e-04 fp32_retry 1200 nan_skip 0 (16 min)
+  epoch 6 step 800/2292 loss 16.9056 lr_head 9.76e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 6 step 1000/2292 loss 16.9442 lr_head 9.76e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 6 step 1200/2292 loss 17.1441 lr_head 9.76e-04 fp32_retry 2400 nan_skip 0 (32 min)
+  epoch 6 step 1400/2292 loss 17.3066 lr_head 9.76e-04 fp32_retry 2800 nan_skip 0 (37 min)
+  epoch 6 step 1600/2292 loss 17.6052 lr_head 9.76e-04 fp32_retry 3200 nan_skip 0 (42 min)
+  epoch 6 step 1800/2292 loss 17.7372 lr_head 9.76e-04 fp32_retry 3600 nan_skip 0 (47 min)
+  epoch 6 step 2000/2292 loss 17.7630 lr_head 9.76e-04 fp32_retry 4000 nan_skip 0 (52 min)
+  epoch 6 step 2200/2292 loss 17.6881 lr_head 9.76e-04 fp32_retry 4400 nan_skip 0 (58 min)
+[raw_rtdetr100] epoch 6/50 train 17.6690 val 13.0471 (63.4 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 7 step 200/2292 loss 17.3212 lr_head 9.65e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 7 step 400/2292 loss 17.4952 lr_head 9.65e-04 fp32_retry 800 nan_skip 0 (11 min)
+  epoch 7 step 600/2292 loss 18.0431 lr_head 9.65e-04 fp32_retry 1200 nan_skip 0 (16 min)
+  epoch 7 step 800/2292 loss 20.5824 lr_head 9.65e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 7 step 1000/2292 loss 22.8425 lr_head 9.65e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 7 step 1200/2292 loss 24.2837 lr_head 9.65e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 7 step 1400/2292 loss 25.2608 lr_head 9.65e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 7 step 1600/2292 loss 26.0818 lr_head 9.65e-04 fp32_retry 3200 nan_skip 0 (42 min)
+  epoch 7 step 1800/2292 loss 26.5031 lr_head 9.65e-04 fp32_retry 3600 nan_skip 0 (47 min)
+  epoch 7 step 2000/2292 loss 26.7695 lr_head 9.65e-04 fp32_retry 4000 nan_skip 0 (52 min)
+  epoch 7 step 2200/2292 loss 26.9352 lr_head 9.65e-04 fp32_retry 4400 nan_skip 0 (57 min)
+[raw_rtdetr100] epoch 7/50 train 26.9600 val 15.0101 (62.9 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 8 step 200/2292 loss 27.1142 lr_head 9.53e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 8 step 400/2292 loss 27.0814 lr_head 9.53e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 8 step 600/2292 loss 27.1574 lr_head 9.53e-04 fp32_retry 1200 nan_skip 0 (16 min)
+  epoch 8 step 800/2292 loss 26.9141 lr_head 9.53e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 8 step 1000/2292 loss 26.7337 lr_head 9.53e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 8 step 1200/2292 loss 26.5048 lr_head 9.53e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 8 step 1400/2292 loss 26.3532 lr_head 9.53e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 8 step 1600/2292 loss 26.1361 lr_head 9.53e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 8 step 1800/2292 loss 25.9733 lr_head 9.53e-04 fp32_retry 3600 nan_skip 0 (47 min)
+  epoch 8 step 2000/2292 loss 25.7774 lr_head 9.53e-04 fp32_retry 4000 nan_skip 0 (52 min)
+  epoch 8 step 2200/2292 loss 25.6133 lr_head 9.53e-04 fp32_retry 4400 nan_skip 0 (57 min)
+[raw_rtdetr100] epoch 8/50 train 25.5384 val 13.1354 (62.7 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 9 step 200/2292 loss 23.6399 lr_head 9.39e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 9 step 400/2292 loss 23.4829 lr_head 9.39e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 9 step 600/2292 loss 23.4040 lr_head 9.39e-04 fp32_retry 1200 nan_skip 0 (16 min)
+  epoch 9 step 800/2292 loss 23.1902 lr_head 9.39e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 9 step 1000/2292 loss 23.0087 lr_head 9.39e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 9 step 1200/2292 loss 22.8188 lr_head 9.39e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 9 step 1400/2292 loss 22.6388 lr_head 9.39e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 9 step 1600/2292 loss 22.4715 lr_head 9.39e-04 fp32_retry 3200 nan_skip 0 (42 min)
+  epoch 9 step 1800/2292 loss 22.3480 lr_head 9.39e-04 fp32_retry 3600 nan_skip 0 (47 min)
+  epoch 9 step 2000/2292 loss 22.2865 lr_head 9.39e-04 fp32_retry 4000 nan_skip 0 (52 min)
+  epoch 9 step 2200/2292 loss 22.2320 lr_head 9.39e-04 fp32_retry 4400 nan_skip 0 (57 min)
+[raw_rtdetr100] epoch 9/50 train 22.2202 val 12.5471 (62.8 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 10 step 200/2292 loss 20.7508 lr_head 9.23e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 10 step 400/2292 loss 20.5954 lr_head 9.23e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 10 step 600/2292 loss 20.5563 lr_head 9.23e-04 fp32_retry 1200 nan_skip 0 (16 min)
+  epoch 10 step 800/2292 loss 20.4552 lr_head 9.23e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 10 step 1000/2292 loss 20.4309 lr_head 9.23e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 10 step 1200/2292 loss 20.4569 lr_head 9.23e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 10 step 1400/2292 loss 20.4529 lr_head 9.23e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 10 step 1600/2292 loss 20.3638 lr_head 9.23e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 10 step 1800/2292 loss 20.3297 lr_head 9.23e-04 fp32_retry 3600 nan_skip 0 (47 min)
+  epoch 10 step 2000/2292 loss 20.2794 lr_head 9.23e-04 fp32_retry 4000 nan_skip 0 (52 min)
+  epoch 10 step 2200/2292 loss 20.1670 lr_head 9.23e-04 fp32_retry 4400 nan_skip 0 (57 min)
+[raw_rtdetr100] epoch 10/50 train 20.1532 val 11.9858 *best* (62.5 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 11 step 200/2292 loss 19.3940 lr_head 9.05e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 11 step 400/2292 loss 19.3166 lr_head 9.05e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 11 step 600/2292 loss 19.3339 lr_head 9.05e-04 fp32_retry 1200 nan_skip 0 (16 min)
+  epoch 11 step 800/2292 loss 19.4589 lr_head 9.05e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 11 step 1000/2292 loss 19.4841 lr_head 9.05e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 11 step 1200/2292 loss 19.4828 lr_head 9.05e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 11 step 1400/2292 loss 19.6073 lr_head 9.05e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 11 step 1600/2292 loss 19.5715 lr_head 9.05e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 11 step 1800/2292 loss 19.4709 lr_head 9.05e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 11 step 2000/2292 loss 19.3899 lr_head 9.05e-04 fp32_retry 4000 nan_skip 0 (52 min)
+  epoch 11 step 2200/2292 loss 19.3459 lr_head 9.05e-04 fp32_retry 4400 nan_skip 0 (57 min)
+[raw_rtdetr100] epoch 11/50 train 19.3709 val 12.8861 (62.4 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[PAUSE] raw_rtdetr100: saved epoch 11, next epoch would exceed the session budget
+
+===== session 2026-11-16 02:44:19 on GPU [0, 1] =====
+The cache for model files in Transformers v4.22.0 has been updated. Migrating your old cache. This is a one-time only operation. You can interrupt this and resume the migration later on by calling `transformers.utils.move_cache()`.
+The cache for model files in Transformers v4.22.0 has been updated. Migrating your old cache. This is a one-time only operation. You can interrupt this and resume the migration later on by calling `transformers.utils.move_cache()`.
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794797091.452179     270 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1794797091.452179     269 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+Could not load the custom kernel for multi-scale deformable attention: Error building extension 'MultiScaleDeformableAttention': [1/4] c++ -MMD -MF ms_deform_attn_cpu.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -fPIC -std=c++17 -DWITH_CUDA=1 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cpu/ms_deform_attn_cpu.cpp -o ms_deform_attn_cpu.o 
+[2/4] /usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+FAILED: [code=2] ms_deform_attn_cuda.cuda.o 
+/usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(69): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(140): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+2 errors detected in the compilation of "/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu".
+[3/4] c++ -MMD -MF vision.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -fPIC -std=c++17 -DWITH_CUDA=1 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/vision.cpp -o vision.o 
+In file included from /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/vision.cpp:11:
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h: In function ‘at::Tensor ms_deform_attn_forward(const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, int)’:
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h:29:19: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   29 |     if (value.type().is_cuda())
+      |         ~~~~~~~~~~^~
+In file included from /usr/local/lib/python3.13/dist-packages/torch/include/ATen/core/Tensor.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/ATen/Tensor.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/autograd/function_hook.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/autograd/cpp_hook.h:3,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/autograd/variable.h:7,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/autograd/autograd.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include/torch/autograd.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/extension.h:6,
+                 from /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cpu/ms_deform_attn_cpu.h:12,
+                 from /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h:13:
+/usr/local/lib/python3.13/dist-packages/torch/include/ATen/core/TensorBody.h:231:30: note: declared here
+  231 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h: In function ‘std::vector<at::Tensor> ms_deform_attn_backward(const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, int)’:
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h:51:19: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   51 |     if (value.type().is_cuda())
+      |         ~~~~~~~~~~^~
+/usr/local/lib/python3.13/dist-packages/torch/include/ATen/core/TensorBody.h:231:30: note: declared here
+  231 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+ninja: build stopped: subcommand failed.
+
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r101vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r101vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[raw_rtdetr100] RESUME from epoch 12 | 2 GPU x batch 4 x accum 2 = 16 ảnh / bước optimizer
+/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py:1856: UserWarning: Specified kernel cache directory could not be created! This disables kernel caching. Specified directory is /root/.cache/torch/kernels. This warning will appear only once per process. (Triggered internally at /pytorch/aten/src/ATen/native/cuda/jit_utils.cpp:1505.)
+  level_start_index = torch.cat((spatial_shapes.new_zeros((1,)), spatial_shapes.prod(1).cumsum(0)[:-1]))
+  epoch 12 step 200/2292 loss 18.9585 lr_head 8.86e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 12 step 400/2292 loss 18.7121 lr_head 8.86e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 12 step 600/2292 loss 18.6334 lr_head 8.86e-04 fp32_retry 1200 nan_skip 0 (16 min)
+  epoch 12 step 800/2292 loss 18.5970 lr_head 8.86e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 12 step 1000/2292 loss 18.5560 lr_head 8.86e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 12 step 1200/2292 loss 18.6127 lr_head 8.86e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 12 step 1400/2292 loss 18.6319 lr_head 8.86e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 12 step 1600/2292 loss 18.7725 lr_head 8.86e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 12 step 1800/2292 loss 18.8250 lr_head 8.86e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 12 step 2000/2292 loss 18.7982 lr_head 8.86e-04 fp32_retry 4000 nan_skip 0 (51 min)
+  epoch 12 step 2200/2292 loss 18.7606 lr_head 8.86e-04 fp32_retry 4400 nan_skip 0 (56 min)
+[raw_rtdetr100] epoch 12/50 train 18.7626 val 11.9041 *best* (62.1 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 13 step 200/2292 loss 17.9794 lr_head 8.66e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 13 step 400/2292 loss 17.9769 lr_head 8.66e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 13 step 600/2292 loss 17.8607 lr_head 8.66e-04 fp32_retry 1200 nan_skip 0 (15 min)
+  epoch 13 step 800/2292 loss 17.8664 lr_head 8.66e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 13 step 1000/2292 loss 18.0415 lr_head 8.66e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 13 step 1200/2292 loss 18.2360 lr_head 8.66e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 13 step 1400/2292 loss 18.2424 lr_head 8.66e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 13 step 1600/2292 loss 18.3151 lr_head 8.66e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 13 step 1800/2292 loss 18.3821 lr_head 8.66e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 13 step 2000/2292 loss 18.3527 lr_head 8.66e-04 fp32_retry 4000 nan_skip 0 (51 min)
+  epoch 13 step 2200/2292 loss 18.3820 lr_head 8.66e-04 fp32_retry 4400 nan_skip 0 (57 min)
+[raw_rtdetr100] epoch 13/50 train 18.4314 val 11.9129 (62.2 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 14 step 200/2292 loss 18.2375 lr_head 8.44e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 14 step 400/2292 loss 18.4130 lr_head 8.44e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 14 step 600/2292 loss 18.4130 lr_head 8.44e-04 fp32_retry 1200 nan_skip 0 (15 min)
+  epoch 14 step 800/2292 loss 18.3561 lr_head 8.44e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 14 step 1000/2292 loss 18.2819 lr_head 8.44e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 14 step 1200/2292 loss 18.3231 lr_head 8.44e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 14 step 1400/2292 loss 18.3154 lr_head 8.44e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 14 step 1600/2292 loss 18.2211 lr_head 8.44e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 14 step 1800/2292 loss 18.1142 lr_head 8.44e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 14 step 2000/2292 loss 18.0699 lr_head 8.44e-04 fp32_retry 4000 nan_skip 0 (51 min)
+  epoch 14 step 2200/2292 loss 18.0107 lr_head 8.44e-04 fp32_retry 4400 nan_skip 0 (57 min)
+[raw_rtdetr100] epoch 14/50 train 17.9949 val 11.8520 *best* (62.2 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 15 step 200/2292 loss 17.3618 lr_head 8.21e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 15 step 400/2292 loss 17.3491 lr_head 8.21e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 15 step 600/2292 loss 17.2201 lr_head 8.21e-04 fp32_retry 1200 nan_skip 0 (15 min)
+  epoch 15 step 800/2292 loss 17.0599 lr_head 8.21e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 15 step 1000/2292 loss 16.9512 lr_head 8.21e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 15 step 1200/2292 loss 16.9241 lr_head 8.21e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 15 step 1400/2292 loss 16.9835 lr_head 8.21e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 15 step 1600/2292 loss 16.9985 lr_head 8.21e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 15 step 1800/2292 loss 16.9753 lr_head 8.21e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 15 step 2000/2292 loss 16.9915 lr_head 8.21e-04 fp32_retry 4000 nan_skip 0 (51 min)
+  epoch 15 step 2200/2292 loss 16.9150 lr_head 8.21e-04 fp32_retry 4400 nan_skip 0 (57 min)
+[raw_rtdetr100] epoch 15/50 train 16.8887 val 12.5615 (62.1 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 16 step 200/2292 loss 16.4487 lr_head 7.96e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 16 step 400/2292 loss 16.4115 lr_head 7.96e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 16 step 600/2292 loss 16.5872 lr_head 7.96e-04 fp32_retry 1200 nan_skip 0 (15 min)
+  epoch 16 step 800/2292 loss 16.8394 lr_head 7.96e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 16 step 1000/2292 loss 16.7531 lr_head 7.96e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 16 step 1200/2292 loss 16.8757 lr_head 7.96e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 16 step 1400/2292 loss 16.8516 lr_head 7.96e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 16 step 1600/2292 loss 16.8205 lr_head 7.96e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 16 step 1800/2292 loss 16.9051 lr_head 7.96e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 16 step 2000/2292 loss 16.8960 lr_head 7.96e-04 fp32_retry 4000 nan_skip 0 (51 min)
+  epoch 16 step 2200/2292 loss 16.8362 lr_head 7.96e-04 fp32_retry 4400 nan_skip 0 (56 min)
+[raw_rtdetr100] epoch 16/50 train 16.8188 val 12.0380 (62.1 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 17 step 200/2292 loss 15.9842 lr_head 7.70e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 17 step 400/2292 loss 16.2281 lr_head 7.70e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 17 step 600/2292 loss 16.3332 lr_head 7.70e-04 fp32_retry 1200 nan_skip 0 (15 min)
+  epoch 17 step 800/2292 loss 16.3975 lr_head 7.70e-04 fp32_retry 1600 nan_skip 0 (21 min)
+  epoch 17 step 1000/2292 loss 16.6211 lr_head 7.70e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 17 step 1200/2292 loss 16.6897 lr_head 7.70e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 17 step 1400/2292 loss 16.7302 lr_head 7.70e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 17 step 1600/2292 loss 16.8140 lr_head 7.70e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 17 step 1800/2292 loss 16.8386 lr_head 7.70e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 17 step 2000/2292 loss 16.7785 lr_head 7.70e-04 fp32_retry 4000 nan_skip 0 (51 min)
+  epoch 17 step 2200/2292 loss 16.7331 lr_head 7.70e-04 fp32_retry 4400 nan_skip 0 (56 min)
+[raw_rtdetr100] epoch 17/50 train 16.7335 val 11.3232 *best* (61.9 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 18 step 200/2292 loss 15.9236 lr_head 7.43e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 18 step 400/2292 loss 16.1194 lr_head 7.43e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 18 step 600/2292 loss 16.2924 lr_head 7.43e-04 fp32_retry 1200 nan_skip 0 (15 min)
+  epoch 18 step 800/2292 loss 16.2612 lr_head 7.43e-04 fp32_retry 1600 nan_skip 0 (20 min)
+  epoch 18 step 1000/2292 loss 16.2590 lr_head 7.43e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 18 step 1200/2292 loss 16.2746 lr_head 7.43e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 18 step 1400/2292 loss 16.3794 lr_head 7.43e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 18 step 1600/2292 loss 16.3372 lr_head 7.43e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 18 step 1800/2292 loss 16.3175 lr_head 7.43e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 18 step 2000/2292 loss 16.3363 lr_head 7.43e-04 fp32_retry 4000 nan_skip 0 (51 min)
+  epoch 18 step 2200/2292 loss 16.3069 lr_head 7.43e-04 fp32_retry 4400 nan_skip 0 (56 min)
+[raw_rtdetr100] epoch 18/50 train 16.2958 val 12.0593 (61.9 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 19 step 200/2292 loss 16.3125 lr_head 7.16e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 19 step 400/2292 loss 16.7224 lr_head 7.16e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 19 step 600/2292 loss 16.7136 lr_head 7.16e-04 fp32_retry 1200 nan_skip 0 (15 min)
+  epoch 19 step 800/2292 loss 16.6123 lr_head 7.16e-04 fp32_retry 1600 nan_skip 0 (20 min)
+  epoch 19 step 1000/2292 loss 16.6098 lr_head 7.16e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 19 step 1200/2292 loss 16.4986 lr_head 7.16e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 19 step 1400/2292 loss 16.3750 lr_head 7.16e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 19 step 1600/2292 loss 16.3134 lr_head 7.16e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 19 step 1800/2292 loss 16.3301 lr_head 7.16e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 19 step 2000/2292 loss 16.3307 lr_head 7.16e-04 fp32_retry 4000 nan_skip 0 (51 min)
+  epoch 19 step 2200/2292 loss 16.3429 lr_head 7.16e-04 fp32_retry 4400 nan_skip 0 (56 min)
+[raw_rtdetr100] epoch 19/50 train 16.3311 val 11.2242 *best* (61.9 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  epoch 20 step 200/2292 loss 15.6933 lr_head 6.87e-04 fp32_retry 400 nan_skip 0 (5 min)
+  epoch 20 step 400/2292 loss 15.5636 lr_head 6.87e-04 fp32_retry 800 nan_skip 0 (10 min)
+  epoch 20 step 600/2292 loss 15.6806 lr_head 6.87e-04 fp32_retry 1200 nan_skip 0 (15 min)
+  epoch 20 step 800/2292 loss 15.7755 lr_head 6.87e-04 fp32_retry 1600 nan_skip 0 (20 min)
+  epoch 20 step 1000/2292 loss 15.7195 lr_head 6.87e-04 fp32_retry 2000 nan_skip 0 (26 min)
+  epoch 20 step 1200/2292 loss 15.7469 lr_head 6.87e-04 fp32_retry 2400 nan_skip 0 (31 min)
+  epoch 20 step 1400/2292 loss 15.8220 lr_head 6.87e-04 fp32_retry 2800 nan_skip 0 (36 min)
+  epoch 20 step 1600/2292 loss 15.8330 lr_head 6.87e-04 fp32_retry 3200 nan_skip 0 (41 min)
+  epoch 20 step 1800/2292 loss 15.8442 lr_head 6.87e-04 fp32_retry 3600 nan_skip 0 (46 min)
+  epoch 20 step 2000/2292 loss 15.9145 lr_head 6.87e-04 fp32_retry 4000 nan_skip 0 (51 min)
+  epoch 20 step 2200/2292 loss 16.0142 lr_head 6.87e-04 fp32_retry 4400 nan_skip 0 (56 min)
+[raw_rtdetr100] epoch 20/50 train 16.0088 val 11.6803 (61.9 min) | fp32_retry 4584 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[PAUSE] raw_rtdetr100: saved epoch 20, next epoch would exceed the session budget

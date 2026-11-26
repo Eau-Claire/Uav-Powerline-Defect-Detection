@@ -44,9 +44,25 @@ Hash đầy đủ: VERIFICATION §3. Checkpoint curated được **chọn thủ 
 | `results_rtdetr_best/`, `results_test_all/` | thư mục benchmark | Không khớp số trong report (RC-8a dùng `results_rtdetr_last`) |
 | `legacy/notebooks/v6p1`–`v6p5` (trừ v6p5-27/28), `notebooks/00–08` | mọi branch | Giai đoạn dựng dữ liệu cũ, không sinh số trong report |
 
+## Log tải từ Camber: [camber_logs](camber_logs)
+
+Bản sao **các file nhỏ** (log, CSV, JSON, YAML; không có weights hay ảnh) của `stash://bunpmc/projects/finding_dori/`,
+`finding_destiny/` và `finding_seed/`, giữ nguyên đường dẫn trên stash (`camber_logs/<project>/<run>/…`). Tải ngày 26/11/2026.
+Các `train.log` > 1 MB được nén thành `train.log.gz` (đọc bằng `zcat`).
+
+| Thư mục | Nội dung |
+|---|---|
+| `finding_dori/yolo26m_m1_a_b_f`, `yolo26m_m2_c_d`, `yolo26m_m3_e_g` | Ablation M1, M1+M2, M3: `args.yaml`, `data.yaml`, `dataset_manifest.json`, `results.csv` |
+| `finding_destiny/yolo26m_m_124`, `_134`, `_234` | Ablation leave-one-out: `args.yaml`, `results.csv` |
+| `finding_destiny/test_audit_v5_results` | Kết quả RC-13 trên V5 đầy đủ (giống `05_ablation_rc13/results/`) |
+| `finding_seed/seed36`, `seed85` | 8 run YOLO mỗi seed: `train.log`, `results.csv`, `done.json` (epoch tốt nhất trên val); `seed85/curated_yolo26m` là model deploy |
+| `finding_seed/seed<36\|85>_rtdetr_officialfix` | RT-DETR: **R50 raw/curated hoàn tất**; R101 hỏng (NaN / BatchNorm không finite) |
+| `finding_seed/seed<36\|85>_rtdetr101_warmup` | R101 FP32 + warmup, đang chạy: seed 85 raw 30/50, curated 3/50; seed 36 raw dừng ở epoch 11, curated hỏng (NaN) |
+| `finding_seed/seed36_rtdetr_ddpfix`, `_dnfix`, `seed36/*rtdetr100` | Lần thử RT-DETR cũ, đã bị thay; giữ để đối chiếu |
+
 ## Còn thiếu
 
-- Notebook train `m1_abf` và `m2_cd` có trong `v6p7-01` (chạy theo stage) nhưng **không có log chạy** cho hai stage này.
-- Log môi trường của RT-DETR curated và checkpoint raw: không tìm thấy (VERIFICATION §2).
-- Notebook `seed85.ipynb` không lưu output trong git; log train nằm trên Camber (`finding_seed/seed85/`).
+- `m1_abf` và `m2_cd`: đã có cấu hình và `results.csv` (YOLO26m, seed 42, 50 epoch, batch 8, AdamW 1e-3, AMP, deterministic;
+  chọn trên `val` raw, test = `val_clean`), nhưng **không có `train.log`**, nên không biết GPU và phiên bản PyTorch.
+- Log môi trường của RT-DETR curated seed 42 và của các checkpoint raw: không tìm thấy (VERIFICATION §2).
 - Benchmark 3 seed (42/36/85) trên V5: chờ R101 seed 36/85 train xong.

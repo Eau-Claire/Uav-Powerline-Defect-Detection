@@ -1,0 +1,9 @@
+{
+  "run_key": "raw_yolo11m",
+  "seed": 85,
+  "epochs": 50,
+  "best_epoch": 49,
+  "best_val_mAP50": 0.79658,
+  "best_val_mAP50_95": 0.43757,
+  "completed_at": "2026-11-15 09:29:12"
+}

@@ -1,0 +1,158 @@
+
+===== session 2026-11-23 13:42:19 on GPU [0, 1] =====
+[ENV VERIFIED] transformers=5.20.2
+[DNFIX] transformers đã có bản sửa chính thức cho denoising queries
+Loading weights:   0%|          | 0/1019 [00:00<?, ?it/s]Loading weights:  29%|██▊       | 292/1019 [00:00<00:00, 2890.35it/s]Loading weights:   0%|          | 0/1019 [00:00<?, ?it/s]Loading weights:  57%|█████▋    | 582/1019 [00:00<00:00, 2554.99it/s]Loading weights:  31%|███       | 312/1019 [00:00<00:00, 3080.19it/s]Loading weights:  82%|████████▏ | 840/1019 [00:00<00:00, 2491.65it/s]Loading weights:  61%|██████    | 621/1019 [00:00<00:00, 2696.08it/s]Loading weights: 100%|██████████| 1019/1019 [00:00<00:00, 2628.56it/s]
+Loading weights:  88%|████████▊ | 894/1019 [00:00<00:00, 2706.78it/s][transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r101vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+Loading weights: 100%|██████████| 1019/1019 [00:00<00:00, 2743.68it/s]
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r101vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[curated_rtdetr100] START seed=85 | 2 GPU x batch 4 x accum 2 = 16 ảnh / bước optimizer
+[curated_rtdetr100] warmup=2000 bước optimizer | AMP=True | VAL_AMP=True
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [SKIP] epoch 1 step 2: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 32768)
+  [SKIP] epoch 1 step 4: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 16384)
+  [SKIP] epoch 1 step 6: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 8192)
+  [SKIP] epoch 1 step 8: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 4096)
+  [SKIP] epoch 1 step 10: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 2048)
+  [SKIP] epoch 1 step 12: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 1024)
+  [SKIP] epoch 1 step 14: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 512)
+  [SKIP] epoch 1 step 16: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 256)
+  [SKIP] epoch 1 step 18: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 128)
+  [SKIP] epoch 1 step 34: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 64)
+  [SKIP] epoch 1 step 36: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 32)
+  epoch 1 step 200/2238 loss 138.9278 lr_head 5.00e-05 fp32_retry 0 nan_skip 0 (2 min)
+  epoch 1 step 400/2238 loss 83.9019 lr_head 1.00e-04 fp32_retry 0 nan_skip 0 (5 min)
+  epoch 1 step 600/2238 loss 63.6004 lr_head 1.50e-04 fp32_retry 0 nan_skip 0 (7 min)
+  epoch 1 step 800/2238 loss 53.0511 lr_head 2.00e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 1 step 1000/2238 loss 46.5563 lr_head 2.50e-04 fp32_retry 0 nan_skip 0 (12 min)
+  epoch 1 step 1200/2238 loss 42.1867 lr_head 3.00e-04 fp32_retry 0 nan_skip 0 (14 min)
+  epoch 1 step 1400/2238 loss 38.9601 lr_head 3.50e-04 fp32_retry 0 nan_skip 0 (16 min)
+  epoch 1 step 1600/2238 loss 36.6959 lr_head 4.00e-04 fp32_retry 0 nan_skip 0 (19 min)
+  epoch 1 step 1800/2238 loss 35.0340 lr_head 4.50e-04 fp32_retry 0 nan_skip 0 (21 min)
+  epoch 1 step 2000/2238 loss 33.7673 lr_head 5.00e-04 fp32_retry 0 nan_skip 0 (23 min)
+  epoch 1 step 2200/2238 loss 32.6949 lr_head 5.50e-04 fp32_retry 0 nan_skip 0 (26 min)
+[curated_rtdetr100] epoch 1 VAL mAP50 0.4801 mAP50-95 0.2274 MEAN_5 0.4462 P 0.6152 R 0.4327 *best mAP*
+[curated_rtdetr100] epoch 1/50 train 32.5034 val 13.0776 *best* (27.1 min) | fp32_retry 0 nan_skip 0 opt_skip 11 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 1 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr101_warmup/curated_rtdetr100 (6 file, 11s)
+  epoch 2 step 200/2238 loss 21.5924 lr_head 6.09e-04 fp32_retry 0 nan_skip 0 (2 min)
+  epoch 2 step 400/2238 loss 21.6891 lr_head 6.59e-04 fp32_retry 0 nan_skip 0 (5 min)
+  epoch 2 step 600/2238 loss 22.1076 lr_head 7.09e-04 fp32_retry 0 nan_skip 0 (7 min)
+  epoch 2 step 800/2238 loss 22.4307 lr_head 7.59e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 2 step 1000/2238 loss 22.6183 lr_head 8.09e-04 fp32_retry 0 nan_skip 0 (12 min)
+  epoch 2 step 1200/2238 loss 22.8308 lr_head 8.59e-04 fp32_retry 0 nan_skip 0 (14 min)
+  epoch 2 step 1400/2238 loss 23.0176 lr_head 9.09e-04 fp32_retry 0 nan_skip 0 (16 min)
+  epoch 2 step 1600/2238 loss 23.2118 lr_head 9.59e-04 fp32_retry 0 nan_skip 0 (19 min)
+  epoch 2 step 1800/2238 loss 23.3908 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (21 min)
+  epoch 2 step 2000/2238 loss 23.4992 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (23 min)
+  epoch 2 step 2200/2238 loss 23.5810 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (26 min)
+[curated_rtdetr100] epoch 2 VAL mAP50 0.3197 mAP50-95 0.1494 MEAN_5 0.3119 P 0.3662 R 0.3423
+[curated_rtdetr100] epoch 2/50 train 23.5844 val 15.0900 (27.1 min) | fp32_retry 0 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[PAUSE] curated_rtdetr100: saved epoch 2, next epoch would exceed the session budget
+  [STASH] chờ upload epoch cuối xong trước khi thoát...
+  [STASH] epoch 2 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr101_warmup/curated_rtdetr100 (4 file, 7s)
+
+===== session 2026-11-24 17:52:40 on GPU [0, 1] =====
+[ENV VERIFIED] transformers=5.20.2
+[DNFIX] transformers đã có bản sửa chính thức cho denoising queries
+Loading weights:   0%|          | 0/1019 [00:00<?, ?it/s]Loading weights:   0%|          | 0/1019 [00:00<?, ?it/s]Loading weights:  26%|██▌       | 267/1019 [00:00<00:00, 2624.20it/s]Loading weights:  27%|██▋       | 278/1019 [00:00<00:00, 2779.01it/s]Loading weights:  52%|█████▏    | 530/1019 [00:00<00:00, 2531.86it/s]Loading weights:  55%|█████▍    | 556/1019 [00:00<00:00, 2447.52it/s]Loading weights:  77%|███████▋  | 784/1019 [00:00<00:00, 2292.74it/s]Loading weights:  79%|███████▉  | 804/1019 [00:00<00:00, 2241.96it/s]Loading weights: 100%|██████████| 1019/1019 [00:00<00:00, 2383.94it/s]
+Loading weights: 100%|██████████| 1019/1019 [00:00<00:00, 2418.38it/s]
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r101vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r101vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[curated_rtdetr100] RESUME from epoch 3 | 2 GPU x batch 4 x accum 2 = 16 ảnh / bước optimizer
+[curated_rtdetr100] warmup=2000 bước optimizer | AMP=False | VAL_AMP=False
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  epoch 3 step 200/2238 loss 23.5948 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (5 min)
+  epoch 3 step 400/2238 loss 23.9710 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (10 min)
+  epoch 3 step 600/2238 loss 24.2474 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (15 min)
+  epoch 3 step 800/2238 loss 24.1150 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (20 min)
+  epoch 3 step 1000/2238 loss 24.0801 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (25 min)
+  epoch 3 step 1200/2238 loss 24.0279 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (30 min)
+  epoch 3 step 1400/2238 loss 23.9203 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (35 min)
+
+===== session 2026-11-26 01:04:57 on GPU [0, 1] =====
+[ENV VERIFIED] transformers=5.20.2
+[DNFIX] transformers đã có bản sửa chính thức cho denoising queries
+Loading weights:   0%|          | 0/1019 [00:00<?, ?it/s]Loading weights:   0%|          | 0/1019 [00:00<?, ?it/s]Loading weights:  28%|██▊       | 282/1019 [00:00<00:00, 2811.52it/s]Loading weights:  28%|██▊       | 284/1019 [00:00<00:00, 2798.36it/s]Loading weights:  55%|█████▌    | 564/1019 [00:00<00:00, 2552.50it/s]Loading weights:  55%|█████▌    | 564/1019 [00:00<00:00, 2602.03it/s]Loading weights:  81%|████████  | 821/1019 [00:00<00:00, 2378.24it/s]Loading weights:  81%|████████  | 826/1019 [00:00<00:00, 2481.72it/s]Loading weights: 100%|██████████| 1019/1019 [00:00<00:00, 2497.90it/s]
+Loading weights: 100%|██████████| 1019/1019 [00:00<00:00, 2584.15it/s]
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r101vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r101vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[curated_rtdetr100] RESUME from epoch 3 | 2 GPU x batch 4 x accum 2 = 16 ảnh / bước optimizer
+[curated_rtdetr100] warmup=2000 bước optimizer | AMP=False | VAL_AMP=False
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  epoch 3 step 200/2238 loss 23.5197 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (5 min)
+  epoch 3 step 400/2238 loss 23.2924 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 3 step 600/2238 loss 23.1368 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (13 min)
+  epoch 3 step 800/2238 loss 23.1684 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (18 min)
+  epoch 3 step 1000/2238 loss 23.2166 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (22 min)
+  epoch 3 step 1200/2238 loss 23.3220 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (27 min)
+  epoch 3 step 1400/2238 loss 23.5387 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (31 min)
+  epoch 3 step 1600/2238 loss 23.6695 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (36 min)
+  epoch 3 step 1800/2238 loss 23.7794 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (40 min)
+  epoch 3 step 2000/2238 loss 23.8753 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (45 min)
+  epoch 3 step 2200/2238 loss 23.9648 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (49 min)
+[curated_rtdetr100] epoch 3 VAL mAP50 0.2280 mAP50-95 0.1070 MEAN_5 0.1981 P 0.3227 R 0.2590
+[curated_rtdetr100] epoch 3/50 train 23.9876 val 15.6806 (52.2 min) | fp32_retry 0 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[PAUSE] curated_rtdetr100: saved epoch 3, next epoch would exceed the session budget
+  [STASH] chờ upload epoch cuối xong trước khi thoát...
+  [STASH] epoch 3 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr101_warmup/curated_rtdetr100 (4 file, 8s)

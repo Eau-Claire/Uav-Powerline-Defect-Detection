@@ -1,0 +1,13 @@
+run,enabled,status,epochs,best_epoch,val_mAP50,val_mAP50_95,val_loss
+raw_yolo11n,False,completed,50/50,49,0.7569,0.4065,
+curated_yolo11n,False,completed,50/50,49,0.7804,0.4266,
+raw_yolo26n,False,completed,50/50,46,0.7885,0.4243,
+curated_yolo26n,False,completed,50/50,48,0.8078,0.4468,
+raw_rtdetr50,True,completed,50/50,26,,,10.7886
+curated_rtdetr50,False,completed,50/50,21,,,11.3176
+raw_yolo11m,False,completed,50/50,50,0.7698,0.4145,
+curated_yolo11m,False,completed,50/50,37,0.8127,0.4552,
+raw_yolo26m,False,completed,50/50,49,0.8166,0.4549,
+curated_yolo26m,False,completed,50/50,36,0.8322,0.468,
+raw_rtdetr100,True,in progress,20/50,19,,,11.2242
+curated_rtdetr100,False,in progress,10/50,6,,,12.279

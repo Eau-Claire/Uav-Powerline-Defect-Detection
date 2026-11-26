@@ -101,8 +101,12 @@ dữ liệu train `data/curation_module_ablation`; evaluator: Ultralytics `model
 
 | Run | Module dùng | Phần cứng / PyTorch | Chọn checkpoint trên | Báo cáo trên | Kết quả V5 (SHA-256 checkpoint) |
 |---|---|---|---|---|---|
-| `m2_cd` (reference) | I, II (theo báo cáo ablation) | không có log | `val` 2.272 ảnh / 2.903 box (theo báo cáo ablation, chưa có notebook) | `val_clean` 2.271 / 2.863 | `dori_m2_cd` `2fea6881…` |
-| `m1_abf` | I | không có log | không có log | không có log | `dori_m1_abf` `45a0848f…` |
+| `m2_cd` (reference) | I, II (`dataset_manifest.json`: modules [1, 2]) | không có log | `val` 2.272 / 2.903 (`data.yaml`) | `val_clean` 2.271 / 2.863 | `dori_m2_cd` `2fea6881…` |
+| `m1_abf` | I (`dataset_manifest.json`: modules [1]) | không có log | `val` 2.272 / 2.903 (`data.yaml`) | `val_clean` | `dori_m1_abf` `45a0848f…` |
+
+Cập nhật 26/11/2026: cấu hình của `m1_abf` / `m2_cd` lấy từ `stash://bunpmc/projects/finding_dori/` (bản sao ở
+`defense/camber_logs/finding_dori/`), khớp với các run khác (seed 42, deterministic, batch 8, AdamW 1e-3, AMP, 50 epoch).
+Không có `train.log`, nên phần cứng và PyTorch của hai run này vẫn chưa rõ.
 | `m3eg` | III | RTX 4060, 2.14.1+cu126 | `val` 2.272 / 2.903 | `val_clean` | `dori_m3_eg` `4a7c51ab…` |
 | `m134` (bỏ II) | I, III, IV | RTX 4050, 2.6.0+cu124 | `val` 2.272 / 2.903 | `val_clean` | `destiny_m134` `d25b44f2…` |
 | `m124` (bỏ III) | I, II, IV | RTX 4050, 2.6.0+cu124 | `val` 2.272 / 2.903 | `val_clean` | `destiny_m124` `bdd75596…` |

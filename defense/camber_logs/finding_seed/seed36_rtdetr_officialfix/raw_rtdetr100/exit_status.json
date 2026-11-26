@@ -1,0 +1,1 @@
+{"status": "failed", "rank": 0, "time": "2026-11-22 14:37:49", "error": "RuntimeError: Qu\u00e1 nhi\u1ec1u batch NaN k\u1ec3 c\u1ea3 sau khi th\u1eed l\u1ea1i fp32 (0/40), model \u0111\u00e3 ph\u00e2n k\u1ef3"}

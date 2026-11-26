@@ -1,0 +1,1 @@
+{"status": "failed", "rank": 1, "time": "2026-11-22 12:51:29", "error": "RuntimeError: Model/BatchNorm state kh\u00f4ng finite tr\u01b0\u1edbc validation epoch 2; kh\u00f4ng l\u01b0u epoch n\u00e0y, resume s\u1ebd quay l\u1ea1i checkpoint epoch tr\u01b0\u1edbc"}

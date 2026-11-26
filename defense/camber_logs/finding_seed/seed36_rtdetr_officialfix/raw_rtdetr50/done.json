@@ -1,0 +1,12 @@
+{
+  "run_key": "raw_rtdetr50",
+  "seed": 36,
+  "epochs": 50,
+  "best_epoch": 25,
+  "best_val_loss": 9.792260744202306,
+  "best_map_epoch": 38,
+  "best_val_mAP50": 0.779,
+  "best_val_mAP50_95": 0.4165,
+  "best_val_MEAN_5": 0.7492,
+  "completed_at": "2026-11-22 14:36:56"
+}

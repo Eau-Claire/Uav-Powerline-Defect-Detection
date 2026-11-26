@@ -1,0 +1,41 @@
+{
+  "source": "D:/Data-Centric-UAV-Powerline-Defect-Detection/Uav-Powerline-Defect-Detection/benchmakring_transmission_line_defect_model/data/raw_combined",
+  "stage": 3,
+  "modules": [
+    1,
+    2,
+    3
+  ],
+  "protocol": "train-only; val and val_clean are byte-identical hard links to raw_combined",
+  "split_policy": {
+    "train": "curated",
+    "val": "frozen raw val",
+    "test": "frozen raw val_clean"
+  },
+  "judge": {
+    "model": "YOLO11n",
+    "reported_mAP50": 0.7564
+  },
+  "thresholds": {
+    "missing_conf": 0.6,
+    "missing_max_iou": 0.3,
+    "tiny_px": 4,
+    "person_conf": 0.6,
+    "person_iou": 0.5,
+    "sam_iou": [
+      0.5,
+      0.85
+    ]
+  },
+  "unreviewed_missing_candidates": 597,
+  "stats": {
+    "A_images": 182,
+    "C_boxes_removed": 40,
+    "D_images_removed": 282,
+    "E_images_quarantined": 92,
+    "F_boxes_removed": 77,
+    "G_boxes_removed": 37,
+    "train_images": 17960
+  },
+  "labels_sha256": "49bd612197a36264043d61cb29e98273175d1d4f14d90320940f0c6fd54b76bc"
+}

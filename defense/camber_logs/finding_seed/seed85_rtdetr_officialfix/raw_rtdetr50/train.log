@@ -1,0 +1,571 @@
+
+===== session 2026-11-18 15:00:31 on GPU [0, 1] =====
+[ENV VERIFIED] transformers=5.20.2
+[DNFIX] transformers đã có bản sửa chính thức cho denoising queries
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/764 [00:00<?, ?it/s]Loading weights:   0%|          | 0/764 [00:00<?, ?it/s]Loading weights:  36%|███▌      | 272/764 [00:00<00:00, 2719.04it/s]Loading weights:  36%|███▋      | 277/764 [00:00<00:00, 2761.80it/s]Loading weights:  71%|███████   | 544/764 [00:00<00:00, 2394.37it/s]Loading weights:  73%|███████▎  | 554/764 [00:00<00:00, 2325.09it/s]Loading weights: 100%|██████████| 764/764 [00:00<00:00, 2645.05it/s]
+Loading weights: 100%|██████████| 764/764 [00:00<00:00, 2578.42it/s]
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r50vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r50vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[raw_rtdetr50] START seed=85 | 2 GPU x batch 8 x accum 1 = 16 ảnh / bước optimizer
+/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py:1641: UserWarning: Specified kernel cache directory could not be created! This disables kernel caching. Specified directory is /root/.cache/torch/kernels. This warning will appear only once per process. (Triggered internally at /pytorch/aten/src/ATen/native/cuda/jit_utils.cpp:1505.)
+  level_start_index = torch.cat((spatial_shapes.new_zeros((1,)), spatial_shapes.prod(1).cumsum(0)[:-1]))
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [SKIP] epoch 1 step 1: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 32768)
+  [SKIP] epoch 1 step 2: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 16384)
+  [SKIP] epoch 1 step 3: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 8192)
+  [SKIP] epoch 1 step 4: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 4096)
+  [SKIP] epoch 1 step 5: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 2048)
+  [SKIP] epoch 1 step 6: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 1024)
+  [SKIP] epoch 1 step 7: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 512)
+  [SKIP] epoch 1 step 8: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 256)
+  epoch 1 step 200/1146 loss 47.5328 lr_head 1.00e-03 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 1 step 400/1146 loss 36.2257 lr_head 1.00e-03 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 1 step 600/1146 loss 32.2640 lr_head 1.00e-03 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 1 step 800/1146 loss 30.0048 lr_head 1.00e-03 fp32_retry 0 nan_skip 0 (12 min)
+  epoch 1 step 1000/1146 loss 28.4789 lr_head 1.00e-03 fp32_retry 0 nan_skip 0 (15 min)
+[raw_rtdetr50] epoch 1 VAL mAP50 0.4367 mAP50-95 0.2151 MEAN_5 0.3816 P 0.4710 R 0.4700 *best mAP*
+[raw_rtdetr50] epoch 1/50 train 27.7154 val 12.9603 *best* (17.8 min) | fp32_retry 0 nan_skip 0 opt_skip 8 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 1 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (6 file, 10s)
+  epoch 2 step 200/1146 loss 21.5811 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 2 step 400/1146 loss 21.5987 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 2 step 600/1146 loss 21.4371 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 2 step 800/1146 loss 21.3420 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (12 min)
+  [SKIP] epoch 2 step 920: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 256)
+  epoch 2 step 1000/1146 loss 21.2272 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (15 min)
+[raw_rtdetr50] epoch 2 VAL mAP50 0.5043 mAP50-95 0.2559 MEAN_5 0.4470 P 0.5595 R 0.5012 *best mAP*
+[raw_rtdetr50] epoch 2/50 train 21.1089 val 12.9018 *best* (17.6 min) | fp32_retry 0 nan_skip 0 opt_skip 1 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 2 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (6 file, 9s)
+  epoch 3 step 200/1146 loss 20.2450 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (3 min)
+  [SKIP] epoch 3 step 329: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 128)
+  epoch 3 step 400/1146 loss 20.2621 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 3 step 600/1146 loss 19.9718 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 3 step 800/1146 loss 19.8736 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (12 min)
+  epoch 3 step 1000/1146 loss 19.7311 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (15 min)
+[raw_rtdetr50] epoch 3 VAL mAP50 0.5670 mAP50-95 0.2775 MEAN_5 0.5199 P 0.6604 R 0.5489 *best mAP*
+[raw_rtdetr50] epoch 3/50 train 19.6916 val 11.4557 *best* (17.5 min) | fp32_retry 0 nan_skip 0 opt_skip 1 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 3 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (6 file, 9s)
+  epoch 4 step 200/1146 loss 18.8846 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 4 step 400/1146 loss 18.8711 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 4 step 600/1146 loss 18.8904 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 4 step 800/1146 loss 18.9052 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (12 min)
+  epoch 4 step 1000/1146 loss 18.8924 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (15 min)
+[raw_rtdetr50] epoch 4 VAL mAP50 0.5885 mAP50-95 0.2874 MEAN_5 0.5481 P 0.6718 R 0.5676 *best mAP*
+[raw_rtdetr50] epoch 4/50 train 18.8788 val 11.6540 (17.5 min) | fp32_retry 0 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 4 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (5 file, 11s)
+  epoch 5 step 200/1146 loss 18.1831 lr_head 9.84e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 5 step 400/1146 loss 18.2156 lr_head 9.84e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 5 step 600/1146 loss 18.1981 lr_head 9.84e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 5 step 800/1146 loss 18.1291 lr_head 9.84e-04 fp32_retry 0 nan_skip 0 (12 min)
+  epoch 5 step 1000/1146 loss 18.0761 lr_head 9.84e-04 fp32_retry 0 nan_skip 0 (15 min)
+[raw_rtdetr50] epoch 5 VAL mAP50 0.6440 mAP50-95 0.3152 MEAN_5 0.5950 P 0.6989 R 0.6293 *best mAP*
+[raw_rtdetr50] epoch 5/50 train 18.0314 val 10.8898 *best* (17.5 min) | fp32_retry 0 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 5 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (6 file, 9s)
+  epoch 6 step 200/1146 loss 17.1429 lr_head 9.76e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 6 step 400/1146 loss 17.3063 lr_head 9.76e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 6 step 600/1146 loss 17.2766 lr_head 9.76e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 6 step 800/1146 loss 17.2221 lr_head 9.76e-04 fp32_retry 0 nan_skip 0 (12 min)
+  [SKIP] epoch 6 step 912: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 256)
+  epoch 6 step 1000/1146 loss 17.3058 lr_head 9.76e-04 fp32_retry 0 nan_skip 0 (15 min)
+[raw_rtdetr50] epoch 6 VAL mAP50 0.6559 mAP50-95 0.3215 MEAN_5 0.6080 P 0.7166 R 0.6283 *best mAP*
+[raw_rtdetr50] epoch 6/50 train 17.2987 val 10.9621 (17.5 min) | fp32_retry 0 nan_skip 0 opt_skip 1 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 6 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (5 file, 7s)
+  epoch 7 step 200/1146 loss 16.6298 lr_head 9.65e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 7 step 400/1146 loss 16.5365 lr_head 9.65e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 7 step 600/1146 loss 16.5309 lr_head 9.65e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 7 step 800/1146 loss 16.5170 lr_head 9.65e-04 fp32_retry 0 nan_skip 0 (12 min)
+  epoch 7 step 1000/1146 loss 16.5673 lr_head 9.65e-04 fp32_retry 0 nan_skip 0 (15 min)
+[raw_rtdetr50] epoch 7 VAL mAP50 0.6804 mAP50-95 0.3337 MEAN_5 0.6401 P 0.7058 R 0.6517 *best mAP*
+[raw_rtdetr50] epoch 7/50 train 16.5864 val 10.8224 *best* (17.6 min) | fp32_retry 0 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 7 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (6 file, 9s)
+  epoch 8 step 200/1146 loss 15.8597 lr_head 9.52e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 8 step 400/1146 loss 15.9967 lr_head 9.52e-04 fp32_retry 0 nan_skip 0 (6 min)
+  [SKIP] epoch 8 step 572: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 128)
+  epoch 8 step 600/1146 loss 16.0586 lr_head 9.52e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 8 step 800/1146 loss 16.0556 lr_head 9.52e-04 fp32_retry 0 nan_skip 0 (12 min)
+  epoch 8 step 1000/1146 loss 16.0301 lr_head 9.52e-04 fp32_retry 0 nan_skip 0 (15 min)
+[raw_rtdetr50] epoch 8 VAL mAP50 0.7018 mAP50-95 0.3591 MEAN_5 0.6644 P 0.7461 R 0.6784 *best mAP*
+[raw_rtdetr50] epoch 8/50 train 16.0143 val 10.4630 *best* (17.7 min) | fp32_retry 0 nan_skip 0 opt_skip 1 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 8 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (6 file, 11s)
+  epoch 9 step 200/1146 loss 15.4234 lr_head 9.38e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 9 step 400/1146 loss 15.3929 lr_head 9.38e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 9 step 600/1146 loss 15.4661 lr_head 9.38e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 9 step 800/1146 loss 15.5748 lr_head 9.38e-04 fp32_retry 216 nan_skip 0 (14 min)
+  epoch 9 step 1000/1146 loss 15.5408 lr_head 9.38e-04 fp32_retry 616 nan_skip 0 (20 min)
+[raw_rtdetr50] epoch 9 VAL mAP50 0.6947 mAP50-95 0.3465 MEAN_5 0.6622 P 0.7753 R 0.6561
+[raw_rtdetr50] epoch 9/50 train 15.4911 val 10.2853 *best* (26.9 min) | fp32_retry 908 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 9 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (5 file, 8s)
+  epoch 10 step 200/1146 loss 14.6662 lr_head 9.22e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 10 step 400/1146 loss 14.6995 lr_head 9.22e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 10 step 600/1146 loss 14.7647 lr_head 9.22e-04 fp32_retry 1200 nan_skip 0 (20 min)
+  epoch 10 step 800/1146 loss 14.7543 lr_head 9.22e-04 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 10 step 1000/1146 loss 14.7907 lr_head 9.22e-04 fp32_retry 2000 nan_skip 0 (33 min)
+[raw_rtdetr50] epoch 10 VAL mAP50 0.7103 mAP50-95 0.3531 MEAN_5 0.6728 P 0.7627 R 0.7058 *best mAP*
+[raw_rtdetr50] epoch 10/50 train 14.8421 val 10.5576 (39.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 10 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (5 file, 7s)
+  epoch 11 step 200/1146 loss 14.2955 lr_head 9.05e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 11 step 400/1146 loss 14.4780 lr_head 9.05e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 11 step 600/1146 loss 14.5991 lr_head 9.05e-04 fp32_retry 1200 nan_skip 0 (20 min)
+  epoch 11 step 800/1146 loss 14.7184 lr_head 9.05e-04 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 11 step 1000/1146 loss 14.6886 lr_head 9.05e-04 fp32_retry 2000 nan_skip 0 (33 min)
+[raw_rtdetr50] epoch 11 VAL mAP50 0.6896 mAP50-95 0.3542 MEAN_5 0.6453 P 0.7578 R 0.6710
+[raw_rtdetr50] epoch 11/50 train 14.7038 val 10.5137 (39.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 11 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 12 step 200/1146 loss 14.0132 lr_head 8.85e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 12 step 400/1146 loss 14.0981 lr_head 8.85e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 12 step 600/1146 loss 14.1096 lr_head 8.85e-04 fp32_retry 1200 nan_skip 0 (20 min)
+  epoch 12 step 800/1146 loss 14.1484 lr_head 8.85e-04 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 12 step 1000/1146 loss 14.1453 lr_head 8.85e-04 fp32_retry 2000 nan_skip 0 (33 min)
+[raw_rtdetr50] epoch 12 VAL mAP50 0.7459 mAP50-95 0.3836 MEAN_5 0.7128 P 0.8022 R 0.7361 *best mAP*
+[raw_rtdetr50] epoch 12/50 train 14.1088 val 10.2562 *best* (39.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 12 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (6 file, 9s)
+  epoch 13 step 200/1146 loss 13.5384 lr_head 8.65e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 13 step 400/1146 loss 13.6989 lr_head 8.65e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 13 step 600/1146 loss 13.7232 lr_head 8.65e-04 fp32_retry 1200 nan_skip 0 (20 min)
+  epoch 13 step 800/1146 loss 13.7285 lr_head 8.65e-04 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 13 step 1000/1146 loss 13.7100 lr_head 8.65e-04 fp32_retry 2000 nan_skip 0 (33 min)
+[raw_rtdetr50] epoch 13 VAL mAP50 0.7238 mAP50-95 0.3614 MEAN_5 0.6922 P 0.7935 R 0.7046
+[raw_rtdetr50] epoch 13/50 train 13.7511 val 10.5057 (39.4 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 13 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 14 step 200/1146 loss 13.1487 lr_head 8.42e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 14 step 400/1146 loss 13.2697 lr_head 8.42e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 14 step 600/1146 loss 13.2384 lr_head 8.42e-04 fp32_retry 1198 nan_skip 0 (20 min)
+  epoch 14 step 800/1146 loss 13.2007 lr_head 8.42e-04 fp32_retry 1598 nan_skip 0 (26 min)
+  epoch 14 step 1000/1146 loss 13.1485 lr_head 8.42e-04 fp32_retry 1998 nan_skip 0 (33 min)
+[raw_rtdetr50] epoch 14 VAL mAP50 0.7542 mAP50-95 0.3869 MEAN_5 0.7254 P 0.7935 R 0.7335 *best mAP*
+[raw_rtdetr50] epoch 14/50 train 13.1679 val 10.2795 (39.4 min) | fp32_retry 2290 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 14 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (5 file, 10s)
+  epoch 15 step 200/1146 loss 12.6875 lr_head 8.19e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 15 step 400/1146 loss 12.7275 lr_head 8.19e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 15 step 600/1146 loss 12.7165 lr_head 8.19e-04 fp32_retry 1200 nan_skip 0 (20 min)
+  epoch 15 step 800/1146 loss 12.6658 lr_head 8.19e-04 fp32_retry 1600 nan_skip 0 (26 min)
+  [SKIP] epoch 15 step 979: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 1024)
+  epoch 15 step 1000/1146 loss 12.7207 lr_head 8.19e-04 fp32_retry 1980 nan_skip 0 (33 min)
+[raw_rtdetr50] epoch 15 VAL mAP50 0.7480 mAP50-95 0.3928 MEAN_5 0.7168 P 0.8360 R 0.7139
+[raw_rtdetr50] epoch 15/50 train 12.7649 val 10.2702 (39.2 min) | fp32_retry 2272 nan_skip 0 opt_skip 1 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 15 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 16 step 200/1146 loss 12.0335 lr_head 7.94e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 16 step 400/1146 loss 12.2715 lr_head 7.94e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 16 step 600/1146 loss 12.2483 lr_head 7.94e-04 fp32_retry 1200 nan_skip 0 (20 min)
+  epoch 16 step 800/1146 loss 12.4115 lr_head 7.94e-04 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 16 step 1000/1146 loss 12.4131 lr_head 7.94e-04 fp32_retry 2000 nan_skip 0 (33 min)
+[raw_rtdetr50] epoch 16 VAL mAP50 0.7585 mAP50-95 0.3921 MEAN_5 0.7264 P 0.8257 R 0.7213 *best mAP*
+[raw_rtdetr50] epoch 16/50 train 12.4538 val 9.8119 *best* (39.4 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 16 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (6 file, 9s)
+  epoch 17 step 200/1146 loss 11.8736 lr_head 7.68e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 17 step 400/1146 loss 11.9242 lr_head 7.68e-04 fp32_retry 799 nan_skip 0 (13 min)
+  [SKIP] epoch 17 step 417: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 512)
+  [SKIP] epoch 17 step 444: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 256)
+  [SKIP] epoch 17 step 559: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 128)
+  epoch 17 step 600/1146 loss 12.0242 lr_head 7.68e-04 fp32_retry 901 nan_skip 0 (17 min)
+  epoch 17 step 800/1146 loss 12.0881 lr_head 7.68e-04 fp32_retry 1301 nan_skip 0 (24 min)
+  epoch 17 step 1000/1146 loss 12.0879 lr_head 7.68e-04 fp32_retry 1701 nan_skip 0 (30 min)
+[raw_rtdetr50] epoch 17 VAL mAP50 0.7454 mAP50-95 0.3926 MEAN_5 0.7106 P 0.7892 R 0.7284
+[raw_rtdetr50] epoch 17/50 train 12.1350 val 10.1279 (36.8 min) | fp32_retry 1993 nan_skip 0 opt_skip 3 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 17 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 18 step 200/1146 loss 11.4665 lr_head 7.41e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 18 step 400/1146 loss 11.5152 lr_head 7.41e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 18 step 600/1146 loss 11.6030 lr_head 7.41e-04 fp32_retry 1200 nan_skip 0 (20 min)
+  epoch 18 step 800/1146 loss 11.6015 lr_head 7.41e-04 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 18 step 1000/1146 loss 11.5946 lr_head 7.41e-04 fp32_retry 2000 nan_skip 0 (33 min)
+[raw_rtdetr50] epoch 18 VAL mAP50 0.7708 mAP50-95 0.4096 MEAN_5 0.7402 P 0.8172 R 0.7511 *best mAP*
+[raw_rtdetr50] epoch 18/50 train 11.6356 val 9.8946 (39.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 18 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (5 file, 8s)
+  epoch 19 step 200/1146 loss 11.0011 lr_head 7.13e-04 fp32_retry 400 nan_skip 0 (7 min)
+  epoch 19 step 400/1146 loss 11.0639 lr_head 7.13e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 19 step 600/1146 loss 11.1431 lr_head 7.13e-04 fp32_retry 1200 nan_skip 0 (20 min)
+  epoch 19 step 800/1146 loss 11.1315 lr_head 7.13e-04 fp32_retry 1594 nan_skip 0 (26 min)
+  epoch 19 step 1000/1146 loss 11.1562 lr_head 7.13e-04 fp32_retry 1994 nan_skip 0 (33 min)
+[raw_rtdetr50] epoch 19 VAL mAP50 0.7361 mAP50-95 0.3863 MEAN_5 0.6995 P 0.7994 R 0.7230
+[raw_rtdetr50] epoch 19/50 train 11.1971 val 10.0403 (39.3 min) | fp32_retry 2286 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[PAUSE] raw_rtdetr50: saved epoch 19, next epoch would exceed the session budget
+  [STASH] chờ upload epoch cuối xong trước khi thoát...
+  [STASH] epoch 19 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+
+===== session 2026-11-21 15:06:25 on GPU [0, 1] =====
+[ENV VERIFIED] transformers=5.20.2
+[DNFIX] transformers đã có bản sửa chính thức cho denoising queries
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/764 [00:00<?, ?it/s]Loading weights:   0%|          | 0/764 [00:00<?, ?it/s]Loading weights:  41%|████      | 311/764 [00:00<00:00, 3087.02it/s]Loading weights:  36%|███▋      | 278/764 [00:00<00:00, 2738.34it/s]Loading weights:  72%|███████▏  | 552/764 [00:00<00:00, 2528.02it/s]Loading weights:  81%|████████  | 620/764 [00:00<00:00, 2745.80it/s]Loading weights: 100%|██████████| 764/764 [00:00<00:00, 2829.63it/s]
+Loading weights: 100%|██████████| 764/764 [00:00<00:00, 2644.56it/s]
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r50vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r50vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[raw_rtdetr50] RESUME from epoch 20 | 2 GPU x batch 8 x accum 1 = 16 ảnh / bước optimizer
+/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py:1641: UserWarning: Specified kernel cache directory could not be created! This disables kernel caching. Specified directory is /root/.cache/torch/kernels. This warning will appear only once per process. (Triggered internally at /pytorch/aten/src/ATen/native/cuda/jit_utils.cpp:1505.)
+  level_start_index = torch.cat((spatial_shapes.new_zeros((1,)), spatial_shapes.prod(1).cumsum(0)[:-1]))
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  epoch 20 step 200/1146 loss 10.7047 lr_head 6.84e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 20 step 400/1146 loss 10.7616 lr_head 6.84e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 20 step 600/1146 loss 10.7218 lr_head 6.84e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 20 step 800/1146 loss 10.7492 lr_head 6.84e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 20 step 1000/1146 loss 10.7497 lr_head 6.84e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 20 VAL mAP50 0.7393 mAP50-95 0.3943 MEAN_5 0.7031 P 0.8200 R 0.7052
+[raw_rtdetr50] epoch 20/50 train 10.7569 val 9.8325 (37.6 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 20 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 21 step 200/1146 loss 10.0657 lr_head 6.55e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 21 step 400/1146 loss 10.1679 lr_head 6.55e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 21 step 600/1146 loss 10.2020 lr_head 6.55e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 21 step 800/1146 loss 10.2442 lr_head 6.55e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 21 step 1000/1146 loss 10.2542 lr_head 6.55e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 21 VAL mAP50 0.7532 mAP50-95 0.4076 MEAN_5 0.7197 P 0.8382 R 0.7080
+[raw_rtdetr50] epoch 21/50 train 10.2822 val 9.8145 (37.7 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 21 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 22 step 200/1146 loss 9.7736 lr_head 6.25e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 22 step 400/1146 loss 9.7733 lr_head 6.25e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 22 step 600/1146 loss 9.7703 lr_head 6.25e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 22 step 800/1146 loss 9.8252 lr_head 6.25e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 22 step 1000/1146 loss 9.8537 lr_head 6.25e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 22 VAL mAP50 0.7554 mAP50-95 0.4050 MEAN_5 0.7244 P 0.8270 R 0.7227
+[raw_rtdetr50] epoch 22/50 train 9.8783 val 10.0836 (37.8 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 22 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 23 step 200/1146 loss 9.5262 lr_head 5.94e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 23 step 400/1146 loss 9.4821 lr_head 5.94e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 23 step 600/1146 loss 9.4575 lr_head 5.94e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 23 step 800/1146 loss 9.4600 lr_head 5.94e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 23 step 1000/1146 loss 9.4609 lr_head 5.94e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 23 VAL mAP50 0.7646 mAP50-95 0.4038 MEAN_5 0.7333 P 0.8280 R 0.7390
+[raw_rtdetr50] epoch 23/50 train 9.4224 val 10.0369 (37.7 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 23 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 24 step 200/1146 loss 8.9310 lr_head 5.63e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 24 step 400/1146 loss 9.0199 lr_head 5.63e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 24 step 600/1146 loss 9.0250 lr_head 5.63e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 24 step 800/1146 loss 9.0606 lr_head 5.63e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 24 step 1000/1146 loss 9.0830 lr_head 5.63e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 24 VAL mAP50 0.7662 mAP50-95 0.4089 MEAN_5 0.7366 P 0.8321 R 0.7471
+[raw_rtdetr50] epoch 24/50 train 9.0848 val 10.0004 (37.8 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 24 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 25 step 200/1146 loss 8.6569 lr_head 5.32e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 25 step 400/1146 loss 8.7457 lr_head 5.32e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 25 step 600/1146 loss 8.7234 lr_head 5.32e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 25 step 800/1146 loss 8.7589 lr_head 5.32e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 25 step 1000/1146 loss 8.7486 lr_head 5.32e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 25 VAL mAP50 0.7497 mAP50-95 0.4029 MEAN_5 0.7160 P 0.8344 R 0.7153
+[raw_rtdetr50] epoch 25/50 train 8.7686 val 10.0829 (37.7 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 25 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 8s)
+  epoch 26 step 200/1146 loss 8.3812 lr_head 5.00e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 26 step 400/1146 loss 8.3732 lr_head 5.00e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 26 step 600/1146 loss 8.3955 lr_head 5.00e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 26 step 800/1146 loss 8.4127 lr_head 5.00e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 26 step 1000/1146 loss 8.4003 lr_head 5.00e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 26 VAL mAP50 0.7537 mAP50-95 0.4067 MEAN_5 0.7213 P 0.8285 R 0.7154
+[raw_rtdetr50] epoch 26/50 train 8.3799 val 9.9905 (37.8 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 26 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 27 step 200/1146 loss 7.8666 lr_head 4.69e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 27 step 400/1146 loss 7.8883 lr_head 4.69e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 27 step 600/1146 loss 7.9600 lr_head 4.69e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 27 step 800/1146 loss 7.9732 lr_head 4.69e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 27 step 1000/1146 loss 7.9865 lr_head 4.69e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 27 VAL mAP50 0.7521 mAP50-95 0.4014 MEAN_5 0.7177 P 0.8551 R 0.7283
+[raw_rtdetr50] epoch 27/50 train 8.0146 val 10.2186 (37.7 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 27 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 28 step 200/1146 loss 7.6865 lr_head 4.38e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 28 step 400/1146 loss 7.6609 lr_head 4.38e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 28 step 600/1146 loss 7.6826 lr_head 4.38e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 28 step 800/1146 loss 7.6871 lr_head 4.38e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 28 step 1000/1146 loss 7.6812 lr_head 4.38e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 28 VAL mAP50 0.7431 mAP50-95 0.3969 MEAN_5 0.7097 P 0.8293 R 0.7328
+[raw_rtdetr50] epoch 28/50 train 7.7495 val 10.2222 (37.7 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 28 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 29 step 200/1146 loss 7.7503 lr_head 4.07e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 29 step 400/1146 loss 7.7405 lr_head 4.07e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 29 step 600/1146 loss 7.7853 lr_head 4.07e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 29 step 800/1146 loss 7.7380 lr_head 4.07e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 29 step 1000/1146 loss 7.6751 lr_head 4.07e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 29 VAL mAP50 0.7604 mAP50-95 0.4061 MEAN_5 0.7279 P 0.8308 R 0.7437
+[raw_rtdetr50] epoch 29/50 train 7.6377 val 10.0994 (37.6 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 29 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 30 step 200/1146 loss 6.9014 lr_head 3.76e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 30 step 400/1146 loss 6.9941 lr_head 3.76e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 30 step 600/1146 loss 6.9973 lr_head 3.76e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 30 step 800/1146 loss 7.0428 lr_head 3.76e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 30 step 1000/1146 loss 7.0465 lr_head 3.76e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 30 VAL mAP50 0.7570 mAP50-95 0.4052 MEAN_5 0.7223 P 0.8379 R 0.7352
+[raw_rtdetr50] epoch 30/50 train 7.0369 val 10.1214 (37.5 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 30 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 31 step 200/1146 loss 6.6893 lr_head 3.46e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 31 step 400/1146 loss 6.7146 lr_head 3.46e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 31 step 600/1146 loss 6.6940 lr_head 3.46e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 31 step 800/1146 loss 6.6739 lr_head 3.46e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 31 step 1000/1146 loss 6.7076 lr_head 3.46e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 31 VAL mAP50 0.7603 mAP50-95 0.4102 MEAN_5 0.7287 P 0.8265 R 0.7474
+[raw_rtdetr50] epoch 31/50 train 6.7354 val 10.1962 (37.5 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 31 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 32 step 200/1146 loss 6.5409 lr_head 3.17e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 32 step 400/1146 loss 6.4452 lr_head 3.17e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 32 step 600/1146 loss 6.3908 lr_head 3.17e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 32 step 800/1146 loss 6.3940 lr_head 3.17e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 32 step 1000/1146 loss 6.4229 lr_head 3.17e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 32 VAL mAP50 0.7585 mAP50-95 0.4072 MEAN_5 0.7265 P 0.8510 R 0.7321
+[raw_rtdetr50] epoch 32/50 train 6.4132 val 10.1850 (37.5 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 32 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 33 step 200/1146 loss 6.2641 lr_head 2.88e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 33 step 400/1146 loss 6.1518 lr_head 2.88e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 33 step 600/1146 loss 6.1272 lr_head 2.88e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 33 step 800/1146 loss 6.1045 lr_head 2.88e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 33 step 1000/1146 loss 6.0875 lr_head 2.88e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 33 VAL mAP50 0.7610 mAP50-95 0.4076 MEAN_5 0.7280 P 0.8350 R 0.7588
+[raw_rtdetr50] epoch 33/50 train 6.0862 val 10.1237 (37.6 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 33 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+  epoch 34 step 200/1146 loss 5.7325 lr_head 2.60e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 34 step 400/1146 loss 5.7004 lr_head 2.60e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 34 step 600/1146 loss 5.7698 lr_head 2.60e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 34 step 800/1146 loss 5.7789 lr_head 2.60e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 34 step 1000/1146 loss 5.7632 lr_head 2.60e-04 fp32_retry 2000 nan_skip 0 (31 min)
+[raw_rtdetr50] epoch 34 VAL mAP50 0.7743 mAP50-95 0.4087 MEAN_5 0.7439 P 0.8578 R 0.7468 *best mAP*
+[raw_rtdetr50] epoch 34/50 train 5.7638 val 10.1200 (37.8 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 34 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (5 file, 9s)
+  epoch 35 step 200/1146 loss 5.3613 lr_head 2.33e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 35 step 400/1146 loss 5.3522 lr_head 2.33e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 35 step 600/1146 loss 5.4235 lr_head 2.33e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 35 step 800/1146 loss 5.4601 lr_head 2.33e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 35 step 1000/1146 loss 5.4438 lr_head 2.33e-04 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 35 VAL mAP50 0.7673 mAP50-95 0.4125 MEAN_5 0.7344 P 0.8622 R 0.7480
+[raw_rtdetr50] epoch 35/50 train 5.4464 val 10.2220 (37.8 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[PAUSE] raw_rtdetr50: saved epoch 35, next epoch would exceed the session budget
+  [STASH] chờ upload epoch cuối xong trước khi thoát...
+  [STASH] epoch 35 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)
+
+===== session 2026-11-22 06:55:56 on GPU [0, 1] =====
+[ENV VERIFIED] transformers=5.20.2
+[DNFIX] transformers đã có bản sửa chính thức cho denoising queries
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/764 [00:00<?, ?it/s]Loading weights:   0%|          | 0/764 [00:00<?, ?it/s]Loading weights:  38%|███▊      | 290/764 [00:00<00:00, 2879.92it/s]Loading weights:  37%|███▋      | 281/764 [00:00<00:00, 2808.72it/s]Loading weights:  74%|███████▎  | 562/764 [00:00<00:00, 2510.92it/s]Loading weights:  76%|███████▌  | 578/764 [00:00<00:00, 2321.39it/s]Loading weights: 100%|██████████| 764/764 [00:00<00:00, 2664.52it/s]
+Loading weights: 100%|██████████| 764/764 [00:00<00:00, 2617.02it/s]
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r50vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r50vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[raw_rtdetr50] RESUME from epoch 36 | 2 GPU x batch 8 x accum 1 = 16 ảnh / bước optimizer
+/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py:1641: UserWarning: Specified kernel cache directory could not be created! This disables kernel caching. Specified directory is /root/.cache/torch/kernels. This warning will appear only once per process. (Triggered internally at /pytorch/aten/src/ATen/native/cuda/jit_utils.cpp:1505.)
+  level_start_index = torch.cat((spatial_shapes.new_zeros((1,)), spatial_shapes.prod(1).cumsum(0)[:-1]))
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  epoch 36 step 200/1146 loss 5.1770 lr_head 2.07e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 36 step 400/1146 loss 5.1678 lr_head 2.07e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 36 step 600/1146 loss 5.1660 lr_head 2.07e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 36 step 800/1146 loss 5.1308 lr_head 2.07e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 36 step 1000/1146 loss 5.1416 lr_head 2.07e-04 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 36 VAL mAP50 0.7674 mAP50-95 0.4110 MEAN_5 0.7355 P 0.8444 R 0.7470
+[raw_rtdetr50] epoch 36/50 train 5.1277 val 10.2387 (37.9 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 36 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 37 step 200/1146 loss 4.7403 lr_head 1.82e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 37 step 400/1146 loss 4.7881 lr_head 1.82e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 37 step 600/1146 loss 4.7898 lr_head 1.82e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 37 step 800/1146 loss 4.8128 lr_head 1.82e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 37 step 1000/1146 loss 4.8275 lr_head 1.82e-04 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 37 VAL mAP50 0.7623 mAP50-95 0.4089 MEAN_5 0.7303 P 0.8356 R 0.7506
+[raw_rtdetr50] epoch 37/50 train 4.8356 val 10.3377 (38.0 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 37 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 38 step 200/1146 loss 4.5382 lr_head 1.59e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 38 step 400/1146 loss 4.5174 lr_head 1.59e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 38 step 600/1146 loss 4.5548 lr_head 1.59e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 38 step 800/1146 loss 4.5852 lr_head 1.59e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 38 step 1000/1146 loss 4.5621 lr_head 1.59e-04 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 38 VAL mAP50 0.7690 mAP50-95 0.4116 MEAN_5 0.7381 P 0.8530 R 0.7604
+[raw_rtdetr50] epoch 38/50 train 4.5713 val 10.2871 (38.1 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 38 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 5s)
+  epoch 39 step 200/1146 loss 4.3668 lr_head 1.36e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 39 step 400/1146 loss 4.3567 lr_head 1.36e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 39 step 600/1146 loss 4.3486 lr_head 1.36e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 39 step 800/1146 loss 4.3235 lr_head 1.36e-04 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 39 step 1000/1146 loss 4.3068 lr_head 1.36e-04 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 39 VAL mAP50 0.7636 mAP50-95 0.4101 MEAN_5 0.7315 P 0.8343 R 0.7638
+[raw_rtdetr50] epoch 39/50 train 4.3290 val 10.3475 (38.2 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 39 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 5s)
+  epoch 40 step 200/1146 loss 4.1303 lr_head 1.16e-04 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 40 step 400/1146 loss 4.0844 lr_head 1.16e-04 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 40 step 600/1146 loss 4.1052 lr_head 1.16e-04 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 40 step 800/1146 loss 4.0993 lr_head 1.16e-04 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 40 step 1000/1146 loss 4.0849 lr_head 1.16e-04 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 40 VAL mAP50 0.7663 mAP50-95 0.4084 MEAN_5 0.7358 P 0.8334 R 0.7679
+[raw_rtdetr50] epoch 40/50 train 4.0719 val 10.5219 (38.2 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 40 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 41 step 200/1146 loss 3.6895 lr_head 9.64e-05 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 41 step 400/1146 loss 3.8138 lr_head 9.64e-05 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 41 step 600/1146 loss 3.8257 lr_head 9.64e-05 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 41 step 800/1146 loss 3.8213 lr_head 9.64e-05 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 41 step 1000/1146 loss 3.8421 lr_head 9.64e-05 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 41 VAL mAP50 0.7694 mAP50-95 0.4093 MEAN_5 0.7391 P 0.8454 R 0.7574
+[raw_rtdetr50] epoch 41/50 train 3.8324 val 10.5530 (38.2 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 41 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 42 step 200/1146 loss 3.5214 lr_head 7.88e-05 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 42 step 400/1146 loss 3.6063 lr_head 7.88e-05 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 42 step 600/1146 loss 3.6030 lr_head 7.88e-05 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 42 step 800/1146 loss 3.6187 lr_head 7.88e-05 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 42 step 1000/1146 loss 3.6276 lr_head 7.88e-05 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 42 VAL mAP50 0.7679 mAP50-95 0.4074 MEAN_5 0.7373 P 0.8310 R 0.7662
+[raw_rtdetr50] epoch 42/50 train 3.6392 val 10.6003 (38.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 42 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 43 step 200/1146 loss 3.3544 lr_head 6.28e-05 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 43 step 400/1146 loss 3.4510 lr_head 6.28e-05 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 43 step 600/1146 loss 3.4625 lr_head 6.28e-05 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 43 step 800/1146 loss 3.4426 lr_head 6.28e-05 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 43 step 1000/1146 loss 3.4557 lr_head 6.28e-05 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 43 VAL mAP50 0.7683 mAP50-95 0.4077 MEAN_5 0.7380 P 0.8551 R 0.7658
+[raw_rtdetr50] epoch 43/50 train 3.4483 val 10.6606 (38.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 43 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 44 step 200/1146 loss 3.3157 lr_head 4.85e-05 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 44 step 400/1146 loss 3.2637 lr_head 4.85e-05 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 44 step 600/1146 loss 3.2606 lr_head 4.85e-05 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 44 step 800/1146 loss 3.2598 lr_head 4.85e-05 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 44 step 1000/1146 loss 3.2555 lr_head 4.85e-05 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 44 VAL mAP50 0.7668 mAP50-95 0.4068 MEAN_5 0.7361 P 0.8468 R 0.7569
+[raw_rtdetr50] epoch 44/50 train 3.2578 val 10.7756 (38.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 44 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 45 step 200/1146 loss 3.1893 lr_head 3.61e-05 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 45 step 400/1146 loss 3.1970 lr_head 3.61e-05 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 45 step 600/1146 loss 3.1677 lr_head 3.61e-05 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 45 step 800/1146 loss 3.1593 lr_head 3.61e-05 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 45 step 1000/1146 loss 3.1338 lr_head 3.61e-05 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 45 VAL mAP50 0.7611 mAP50-95 0.4027 MEAN_5 0.7295 P 0.8552 R 0.7492
+[raw_rtdetr50] epoch 45/50 train 3.1287 val 10.8759 (38.2 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 45 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 5s)
+  epoch 46 step 200/1146 loss 2.9971 lr_head 2.54e-05 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 46 step 400/1146 loss 2.9426 lr_head 2.54e-05 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 46 step 600/1146 loss 2.9737 lr_head 2.54e-05 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 46 step 800/1146 loss 2.9932 lr_head 2.54e-05 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 46 step 1000/1146 loss 2.9978 lr_head 2.54e-05 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 46 VAL mAP50 0.7604 mAP50-95 0.4039 MEAN_5 0.7286 P 0.8365 R 0.7564
+[raw_rtdetr50] epoch 46/50 train 2.9987 val 10.8774 (38.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 46 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 47 step 200/1146 loss 2.8373 lr_head 1.67e-05 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 47 step 400/1146 loss 2.9122 lr_head 1.67e-05 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 47 step 600/1146 loss 2.9020 lr_head 1.67e-05 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 47 step 800/1146 loss 2.8924 lr_head 1.67e-05 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 47 step 1000/1146 loss 2.8843 lr_head 1.67e-05 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 47 VAL mAP50 0.7651 mAP50-95 0.4034 MEAN_5 0.7343 P 0.8634 R 0.7471
+[raw_rtdetr50] epoch 47/50 train 2.8967 val 10.8965 (38.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 47 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 48 step 200/1146 loss 2.8410 lr_head 9.85e-06 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 48 step 400/1146 loss 2.7974 lr_head 9.85e-06 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 48 step 600/1146 loss 2.8109 lr_head 9.85e-06 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 48 step 800/1146 loss 2.8285 lr_head 9.85e-06 fp32_retry 1600 nan_skip 0 (25 min)
+  epoch 48 step 1000/1146 loss 2.8200 lr_head 9.85e-06 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 48 VAL mAP50 0.7621 mAP50-95 0.4019 MEAN_5 0.7306 P 0.8330 R 0.7676
+[raw_rtdetr50] epoch 48/50 train 2.8179 val 10.9524 (38.2 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 48 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 49 step 200/1146 loss 2.7319 lr_head 4.94e-06 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 49 step 400/1146 loss 2.7653 lr_head 4.94e-06 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 49 step 600/1146 loss 2.7603 lr_head 4.94e-06 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 49 step 800/1146 loss 2.7458 lr_head 4.94e-06 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 49 step 1000/1146 loss 2.7470 lr_head 4.94e-06 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 49 VAL mAP50 0.7623 mAP50-95 0.4026 MEAN_5 0.7311 P 0.8388 R 0.7581
+[raw_rtdetr50] epoch 49/50 train 2.7621 val 10.9854 (38.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [STASH] epoch 49 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 6s)
+  epoch 50 step 200/1146 loss 2.6536 lr_head 1.99e-06 fp32_retry 400 nan_skip 0 (6 min)
+  epoch 50 step 400/1146 loss 2.7048 lr_head 1.99e-06 fp32_retry 800 nan_skip 0 (13 min)
+  epoch 50 step 600/1146 loss 2.7210 lr_head 1.99e-06 fp32_retry 1200 nan_skip 0 (19 min)
+  epoch 50 step 800/1146 loss 2.7205 lr_head 1.99e-06 fp32_retry 1600 nan_skip 0 (26 min)
+  epoch 50 step 1000/1146 loss 2.7333 lr_head 1.99e-06 fp32_retry 2000 nan_skip 0 (32 min)
+[raw_rtdetr50] epoch 50 VAL mAP50 0.7624 mAP50-95 0.4025 MEAN_5 0.7308 P 0.8320 R 0.7689
+[raw_rtdetr50] epoch 50/50 train 2.7374 val 11.0084 (38.3 min) | fp32_retry 2292 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+[raw_rtdetr50] COMPLETE
+  [STASH] chờ upload epoch cuối xong trước khi thoát...
+  [STASH] epoch 50 đã lưu lên stash://bunpmc/projects/finding_seed/seed85_rtdetr_officialfix/raw_rtdetr50 (4 file, 7s)

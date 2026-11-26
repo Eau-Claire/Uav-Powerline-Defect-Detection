@@ -1,0 +1,13 @@
+run,enabled,status,epochs,best_epoch,val_loss,best_map_epoch,val_mAP50,val_mAP50_95,val_MEAN_5,last_val_mAP50
+raw_yolo11n,False,pending,0/50,,,,,,,
+curated_yolo11n,False,pending,0/50,,,,,,,
+raw_yolo26n,False,pending,0/50,,,,,,,
+curated_yolo26n,False,pending,0/50,,,,,,,
+raw_rtdetr50,True,in progress,19/50,11.0,11.8687,11.0,0.1133,0.0419,0.0651,0.0249
+curated_rtdetr50,True,pending,0/50,,,,,,,
+raw_yolo11m,False,pending,0/50,,,,,,,
+curated_yolo11m,False,pending,0/50,,,,,,,
+raw_yolo26m,False,pending,0/50,,,,,,,
+curated_yolo26m,False,pending,0/50,,,,,,,
+raw_rtdetr100,True,pending,0/50,,,,,,,
+curated_rtdetr100,True,pending,0/50,,,,,,,

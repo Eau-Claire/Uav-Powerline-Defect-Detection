@@ -1,0 +1,104 @@
+
+===== session 2026-11-23 04:52:05 on GPU [0, 1] =====
+[ENV VERIFIED] transformers=5.20.2
+[DNFIX] transformers đã có bản sửa chính thức cho denoising queries
+Loading weights:   0%|          | 0/1019 [00:00<?, ?it/s]Loading weights:  35%|███▍      | 356/1019 [00:00<00:00, 3558.82it/s]Loading weights:   0%|          | 0/1019 [00:00<?, ?it/s]Loading weights:  70%|██████▉   | 712/1019 [00:00<00:00, 2920.48it/s]Loading weights:  32%|███▏      | 322/1019 [00:00<00:00, 3216.06it/s]Loading weights:  99%|█████████▉| 1012/1019 [00:00<00:00, 2783.16it/s]Loading weights: 100%|██████████| 1019/1019 [00:00<00:00, 2887.95it/s]
+Loading weights:  63%|██████▎   | 644/1019 [00:00<00:00, 2788.21it/s][transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r101vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+Loading weights:  91%|█████████ | 927/1019 [00:00<00:00, 2711.72it/s]Loading weights: 100%|██████████| 1019/1019 [00:00<00:00, 2801.30it/s]
+[transformers] [1mRTDetrForObjectDetection LOAD REPORT[0m from: PekingU/rtdetr_r101vd
+Key                                                 | Status   |                                                                                        
+----------------------------------------------------+----------+----------------------------------------------------------------------------------------
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.weight | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+model.decoder.class_embed.{0, 1, 2, 3, 4, 5}.bias   | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.enc_score_head.bias                           | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80]) vs model:torch.Size([6])          
+model.denoising_class_embed.weight                  | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([81, 256]) vs model:torch.Size([7, 256])
+model.enc_score_head.weight                         | MISMATCH | Reinit due to size mismatch - ckpt: torch.Size([80, 256]) vs model:torch.Size([6, 256])
+
+Notes:
+- MISMATCH:	ckpt weights were loaded, but they did not match the original empty weight shapes.
+[curated_rtdetr100] START seed=36 | 2 GPU x batch 4 x accum 2 = 16 ảnh / bước optimizer
+[curated_rtdetr100] warmup=2000 bước optimizer | AMP=True | VAL_AMP=True
+[DNFIX VERIFIED] main loss dùng đúng 300 query; calls=0
+  [SKIP] epoch 1 step 2: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 32768)
+  [SKIP] epoch 1 step 4: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 16384)
+  [SKIP] epoch 1 step 6: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 8192)
+  [SKIP] epoch 1 step 8: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 4096)
+  [SKIP] epoch 1 step 10: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 2048)
+  [SKIP] epoch 1 step 12: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 1024)
+  [SKIP] epoch 1 step 14: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 512)
+  [SKIP] epoch 1 step 16: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 256)
+  [SKIP] epoch 1 step 18: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 128)
+  [SKIP] epoch 1 step 20: bỏ 1 bước optimizer (batch tốt 4, batch NaN 0, scale 64)
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 692, in <module>
+    code = main()
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 573, in main
+    raise RuntimeError(f'Quá nhiều batch NaN kể cả sau khi thử lại fp32 '
+                       f'({int(tot["bad"])}/{int(seen)}), model đã phân kỳ')
+RuntimeError: Quá nhiều batch NaN kể cả sau khi thử lại fp32 (0/40), model đã phân kỳ
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 692, in <module>
+    code = main()
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 573, in main
+    raise RuntimeError(f'Quá nhiều batch NaN kể cả sau khi thử lại fp32 '
+                       f'({int(tot["bad"])}/{int(seen)}), model đã phân kỳ')
+RuntimeError: Quá nhiều batch NaN kể cả sau khi thử lại fp32 (0/40), model đã phân kỳ
+E1123 04:52:33.448000 358 torch/distributed/elastic/multiprocessing/api.py:986] failed (exitcode: 1) local_rank: 0 (pid: 361) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/run.py", line 994, in <module>
+    main()
+    ~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 362, in wrapper
+    return f(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/run.py", line 990, in main
+    run(args)
+    ~~~^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/run.py", line 981, in run
+    elastic_launch(
+    ~~~~~~~~~~~~~~~
+        config=config,
+        ~~~~~~~~~~~~~~
+        entrypoint=cmd,
+        ~~~~~~~~~~~~~~~
+    )(*cmd_args)
+    ~^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/launcher/api.py", line 170, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/launcher/api.py", line 317, in launch_agent
+    raise ChildFailedError(
+    ...<2 lines>...
+    )
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-11-23_04:52:33
+  host      : 085cd7d60a3f
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 362)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-23_04:52:33
+  host      : 085cd7d60a3f
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 361)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

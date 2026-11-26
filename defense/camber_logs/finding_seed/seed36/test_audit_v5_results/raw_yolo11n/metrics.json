@@ -1,0 +1,26 @@
+{
+  "run": "raw_yolo11n",
+  "seed": 36,
+  "dataset": "raw",
+  "model": "yolo11n",
+  "weight_sha256": "2cbf17057c30c85e567a24b62abac92376f229085cf947dc0824e87dc4f371a4",
+  "test_images": 1931,
+  "precision": 0.8061940121298496,
+  "recall": 0.6746647206505475,
+  "map50": 0.7330658794908614,
+  "map50_95": 0.3991600054946634,
+  "speed_ms": {
+    "preprocess": 0.6321246504544982,
+    "inference": 2.123736043502929,
+    "loss": 0.0008507508770123815,
+    "postprocess": 1.187067374422459
+  },
+  "per_class_map50_95": {
+    "insulator": 0.5593981935981915,
+    "insulator_broken": 0.39954236904134777,
+    "insulator_flashover": 0.22246184422922055,
+    "bird_nest": 0.4395634274235434,
+    "foreign_object": 0.44979322153163726,
+    "broken_strand": 0.32420097714403984
+  }
+}

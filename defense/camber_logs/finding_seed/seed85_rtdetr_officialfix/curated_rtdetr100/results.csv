@@ -1,0 +1,2 @@
+epoch,train_loss,val_loss,lr_backbone,lr_head,epoch_seconds
+1,38.02576,18.98965,0.0000999,0.0009990,3636

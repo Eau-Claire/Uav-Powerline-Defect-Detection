@@ -1,0 +1,9 @@
+{
+  "run_key": "curated_yolo26m",
+  "seed": 36,
+  "epochs": 50,
+  "best_epoch": 36,
+  "best_val_mAP50": 0.8322,
+  "best_val_mAP50_95": 0.46799,
+  "completed_at": "2026-11-15 09:04:16"
+}

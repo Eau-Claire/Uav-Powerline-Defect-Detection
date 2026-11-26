@@ -1,0 +1,434 @@
+
+===== session 2026-11-18 06:16:17 on GPU [0, 1] =====
+The cache for model files in Transformers v4.22.0 has been updated. Migrating your old cache. This is a one-time only operation. You can interrupt this and resume the migration later on by calling `transformers.utils.move_cache()`.
+The cache for model files in Transformers v4.22.0 has been updated. Migrating your old cache. This is a one-time only operation. You can interrupt this and resume the migration later on by calling `transformers.utils.move_cache()`.
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794982598.995531     281 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1794982598.995529     280 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+[DNFIX] đã vá loss RT-DETR: loss chính chỉ tính trên 300 query thật (bỏ query denoising)
+Could not load the custom kernel for multi-scale deformable attention: Error building extension 'MultiScaleDeformableAttention': [1/4] c++ -MMD -MF ms_deform_attn_cpu.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -fPIC -std=c++17 -DWITH_CUDA=1 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cpu/ms_deform_attn_cpu.cpp -o ms_deform_attn_cpu.o 
+[2/4] /usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+FAILED: [code=2] ms_deform_attn_cuda.cuda.o 
+/usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(69): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(140): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+2 errors detected in the compilation of "/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu".
+[3/4] c++ -MMD -MF vision.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -fPIC -std=c++17 -DWITH_CUDA=1 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/vision.cpp -o vision.o 
+In file included from /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/vision.cpp:11:
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h: In function ‘at::Tensor ms_deform_attn_forward(const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, int)’:
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h:29:19: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   29 |     if (value.type().is_cuda())
+      |         ~~~~~~~~~~^~
+In file included from /usr/local/lib/python3.13/dist-packages/torch/include/ATen/core/Tensor.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/ATen/Tensor.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/autograd/function_hook.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/autograd/cpp_hook.h:3,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/autograd/variable.h:7,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/autograd/autograd.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include/torch/autograd.h:4,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /usr/local/lib/python3.13/dist-packages/torch/include/torch/extension.h:6,
+                 from /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cpu/ms_deform_attn_cpu.h:12,
+                 from /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h:13:
+/usr/local/lib/python3.13/dist-packages/torch/include/ATen/core/TensorBody.h:231:30: note: declared here
+  231 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h: In function ‘std::vector<at::Tensor> ms_deform_attn_backward(const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, const at::Tensor&, int)’:
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/ms_deform_attn.h:51:19: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   51 |     if (value.type().is_cuda())
+      |         ~~~~~~~~~~^~
+/usr/local/lib/python3.13/dist-packages/torch/include/ATen/core/TensorBody.h:231:30: note: declared here
+  231 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+ninja: build stopped: subcommand failed.
+
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r50vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r50vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[raw_rtdetr50] START seed=36 | 2 GPU x batch 16 x accum 1 = 32 ảnh / bước optimizer
+/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py:1856: UserWarning: Specified kernel cache directory could not be created! This disables kernel caching. Specified directory is /root/.cache/torch/kernels. This warning will appear only once per process. (Triggered internally at /pytorch/aten/src/ATen/native/cuda/jit_utils.cpp:1505.)
+  level_start_index = torch.cat((spatial_shapes.new_zeros((1,)), spatial_shapes.prod(1).cumsum(0)[:-1]))
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 676, in <module>
+    code = main()
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 521, in main
+    loss, retried = try_loss(pixels, targets)
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 355, in try_loss
+    loss = forward_loss(pixels, targets, USE_AMP)
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 346, in forward_loss
+    loss = model(pixel_values=pixels, labels=targets).loss.mean()
+           ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 2094, in forward
+    outputs = self.model(
+        pixel_values,
+    ...<7 lines>...
+        return_dict=return_dict,
+    )
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 1927, in forward
+    decoder_outputs = self.decoder(
+        inputs_embeds=target,
+    ...<8 lines>...
+        return_dict=return_dict,
+    )
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 1523, in forward
+    layer_outputs = decoder_layer(
+        hidden_states,
+    ...<7 lines>...
+        output_attentions=output_attentions,
+    )
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 1093, in forward
+    hidden_states, cross_attn_weights = self.encoder_attn(
+                                        ~~~~~~~~~~~~~~~~~^
+        hidden_states=hidden_states,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+        output_attentions=output_attentions,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 875, in forward
+    output = multi_scale_deformable_attention(
+        value, spatial_shapes_list, sampling_locations, attention_weights
+    )
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 754, in multi_scale_deformable_attention
+    sampling_value_l_ = nn.functional.grid_sample(
+        value_l_, sampling_grid_l_, mode="bilinear", padding_mode="zeros", align_corners=False
+    )
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/functional.py", line 5242, in grid_sample
+    return torch.grid_sampler(input, grid, mode_enum, padding_mode_enum, align_corners)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 32.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 8.75 MiB is free. Including non-PyTorch memory, this process has 14.55 GiB memory in use. Of the allocated memory 14.34 GiB is allocated by PyTorch, and 78.68 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 676, in <module>
+    code = main()
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 521, in main
+    loss, retried = try_loss(pixels, targets)
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 355, in try_loss
+    loss = forward_loss(pixels, targets, USE_AMP)
+  File "/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py", line 346, in forward_loss
+    loss = model(pixel_values=pixels, labels=targets).loss.mean()
+           ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 2094, in forward
+    outputs = self.model(
+        pixel_values,
+    ...<7 lines>...
+        return_dict=return_dict,
+    )
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 1927, in forward
+    decoder_outputs = self.decoder(
+        inputs_embeds=target,
+    ...<8 lines>...
+        return_dict=return_dict,
+    )
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 1523, in forward
+    layer_outputs = decoder_layer(
+        hidden_states,
+    ...<7 lines>...
+        output_attentions=output_attentions,
+    )
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+[OOM] GPU 0: hết VRAM với batch 16/GPU  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 1093, in forward
+    hidden_states, cross_attn_weights = self.encoder_attn(
+                                        ~~~~~~~~~~~~~~~~~^
+        hidden_states=hidden_states,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+        output_attentions=output_attentions,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 875, in forward
+    output = multi_scale_deformable_attention(
+        value, spatial_shapes_list, sampling_locations, attention_weights
+    )
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/rt_detr/modeling_rt_detr.py", line 754, in multi_scale_deformable_attention
+    sampling_value_l_ = nn.functional.grid_sample(
+        value_l_, sampling_grid_l_, mode="bilinear", padding_mode="zeros", align_corners=False
+    )
+  File "/usr/local/lib/python3.13/dist-packages/torch/nn/functional.py", line 5242, in grid_sample
+    return torch.grid_sampler(input, grid, mode_enum, padding_mode_enum, align_corners)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 32.00 MiB. GPU 1 has a total capacity of 14.56 GiB of which 8.75 MiB is free. Including non-PyTorch memory, this process has 14.55 GiB memory in use. Of the allocated memory 14.34 GiB is allocated by PyTorch, and 78.68 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[OOM] GPU 1: hết VRAM với batch 16/GPU
+E1118 06:17:18.043000 277 torch/distributed/elastic/multiprocessing/api.py:986] failed (exitcode: 42) local_rank: 0 (pid: 280) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/run.py", line 994, in <module>
+    main()
+    ~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 362, in wrapper
+    return f(*args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/run.py", line 990, in main
+    run(args)
+    ~~~^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/run.py", line 981, in run
+    elastic_launch(
+    ~~~~~~~~~~~~~~~
+        config=config,
+        ~~~~~~~~~~~~~~
+        entrypoint=cmd,
+        ~~~~~~~~~~~~~~~
+    )(*cmd_args)
+    ~^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/launcher/api.py", line 170, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/usr/local/lib/python3.13/dist-packages/torch/distributed/launcher/api.py", line 317, in launch_agent
+    raise ChildFailedError(
+    ...<2 lines>...
+    )
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/kaggle/working/projects/finding_seed/seed_scripts/train_rtdetr.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-11-18_06:17:18
+  host      : 1804cb84f193
+  rank      : 1 (local_rank: 1)
+  exitcode  : 42 (pid: 281)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-18_06:17:18
+  host      : 1804cb84f193
+  rank      : 0 (local_rank: 0)
+  exitcode  : 42 (pid: 280)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+
+===== session 2026-11-18 06:17:29 on GPU [0, 1] =====
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794982657.868844     386 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794982657.869189     387 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+[DNFIX] đã vá loss RT-DETR: loss chính chỉ tính trên 300 query thật (bỏ query denoising)
+Could not load the custom kernel for multi-scale deformable attention: Error building extension 'MultiScaleDeformableAttention': [1/2] /usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+FAILED: [code=2] ms_deform_attn_cuda.cuda.o 
+/usr/local/cuda/bin/nvcc -MD -MF ms_deform_attn_cuda.cuda.o.d -DTORCH_EXTENSION_NAME=MultiScaleDeformableAttention -DTORCH_API_INCLUDE_EXTENSION_H -I/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr -isystem /usr/local/lib/python3.13/dist-packages/torch/include -isystem /usr/local/lib/python3.13/dist-packages/torch/include/torch/csrc/api/include -isystem /usr/local/cuda/include -isystem /usr/include/python3.13 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_75,code=compute_75 -gencode=arch=compute_75,code=sm_75 --compiler-options '-fPIC' -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -std=c++17 -c /usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu -o ms_deform_attn_cuda.cuda.o 
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu:19:9: warning: #pragma once in main file
+   19 | #pragma once
+      |         ^~~~
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(69): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu(140): error: no suitable conversion function from "const at::DeprecatedTypeProperties" to "c10::ScalarType" exists
+         ; torch::headeronly::ScalarType _st = ::detail::scalar_type(the_type); ; 
+                                                                     ^
+
+2 errors detected in the compilation of "/usr/local/lib/python3.13/dist-packages/transformers/kernels/deformable_detr/cuda/ms_deform_attn_cuda.cu".
+ninja: build stopped: subcommand failed.
+
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Could not load the custom kernel for multi-scale deformable attention: /root/.cache/torch_extensions/py313_cu130/MultiScaleDeformableAttention/MultiScaleDeformableAttention.so: cannot open shared object file: No such file or directory
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r50vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of RTDetrForObjectDetection were not initialized from the model checkpoint at PekingU/rtdetr_r50vd and are newly initialized because the shapes did not match:
+- model.decoder.class_embed.0.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.0.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.1.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.1.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.2.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.2.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.3.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.3.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.4.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.4.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.decoder.class_embed.5.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.decoder.class_embed.5.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+- model.denoising_class_embed.weight: found shape torch.Size([81, 256]) in the checkpoint and torch.Size([7, 256]) in the model instantiated
+- model.enc_score_head.bias: found shape torch.Size([80]) in the checkpoint and torch.Size([6]) in the model instantiated
+- model.enc_score_head.weight: found shape torch.Size([80, 256]) in the checkpoint and torch.Size([6, 256]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[raw_rtdetr50] START seed=36 | 2 GPU x batch 8 x accum 1 = 16 ảnh / bước optimizer
+  [SKIP] epoch 1 step 1: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 32768)
+  [SKIP] epoch 1 step 2: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 16384)
+  [SKIP] epoch 1 step 3: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 8192)
+  [SKIP] epoch 1 step 4: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 4096)
+  [SKIP] epoch 1 step 5: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 2048)
+  [SKIP] epoch 1 step 6: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 1024)
+  [SKIP] epoch 1 step 7: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 512)
+  [SKIP] epoch 1 step 8: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 256)
+  [SKIP] epoch 1 step 14: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 128)
+  [SKIP] epoch 1 step 18: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 64)
+  epoch 1 step 200/1146 loss 60.8942 lr_head 1.00e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 1 step 400/1146 loss 40.2875 lr_head 2.00e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 1 step 600/1146 loss 32.6503 lr_head 3.00e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 1 step 800/1146 loss 28.7034 lr_head 4.00e-04 fp32_retry 0 nan_skip 0 (12 min)
+  epoch 1 step 1000/1146 loss 26.3047 lr_head 5.00e-04 fp32_retry 0 nan_skip 0 (14 min)
+[raw_rtdetr50] epoch 1 VAL mAP50 0.1206 mAP50-95 0.0494 MEAN_5 0.0930 P 0.2116 R 0.1812 *best mAP*
+[raw_rtdetr50] epoch 1/50 train 25.1221 val 14.0103 *best* (17.9 min) | fp32_retry 0 nan_skip 0 opt_skip 10 val_nan 0 gpu_drift 0.0e+00
+  [STASH] epoch 1 đã lưu lên stash://bunpmc/projects/finding_seed/seed36_rtdetr_dnfix/raw_rtdetr50 (6 file, 13s)
+  epoch 2 step 200/1146 loss 16.8607 lr_head 6.72e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 2 step 400/1146 loss 17.1569 lr_head 7.72e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 2 step 600/1146 loss 17.2169 lr_head 8.72e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 2 step 800/1146 loss 17.2805 lr_head 9.72e-04 fp32_retry 0 nan_skip 0 (11 min)
+  epoch 2 step 1000/1146 loss 17.3360 lr_head 9.99e-04 fp32_retry 0 nan_skip 0 (14 min)
+[raw_rtdetr50] epoch 2 VAL mAP50 0.0365 mAP50-95 0.0132 MEAN_5 0.0316 P 0.1096 R 0.0661
+[raw_rtdetr50] epoch 2/50 train 17.3813 val 13.8371 *best* (17.5 min) | fp32_retry 0 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  [STASH] epoch 2 đã lưu lên stash://bunpmc/projects/finding_seed/seed36_rtdetr_dnfix/raw_rtdetr50 (5 file, 17s)
+  epoch 3 step 200/1146 loss 17.5557 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 3 step 400/1146 loss 17.3967 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 3 step 600/1146 loss 17.1831 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 3 step 800/1146 loss 17.0572 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (11 min)
+  epoch 3 step 1000/1146 loss 16.9209 lr_head 9.96e-04 fp32_retry 0 nan_skip 0 (14 min)
+[raw_rtdetr50] epoch 3 VAL mAP50 0.0217 mAP50-95 0.0068 MEAN_5 0.0207 P 0.2177 R 0.0695
+[raw_rtdetr50] epoch 3/50 train 16.8455 val 13.1855 *best* (17.5 min) | fp32_retry 0 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  [STASH] epoch 3 đã lưu lên stash://bunpmc/projects/finding_seed/seed36_rtdetr_dnfix/raw_rtdetr50 (5 file, 9s)
+  epoch 4 step 200/1146 loss 16.2189 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 4 step 400/1146 loss 16.0489 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 4 step 600/1146 loss 15.9780 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 4 step 800/1146 loss 16.0238 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (11 min)
+  epoch 4 step 1000/1146 loss 16.0190 lr_head 9.91e-04 fp32_retry 0 nan_skip 0 (14 min)
+[raw_rtdetr50] epoch 4 VAL mAP50 0.0155 mAP50-95 0.0047 MEAN_5 0.0155 P 0.5227 R 0.0179
+[raw_rtdetr50] epoch 4/50 train 16.0127 val 14.7327 (17.5 min) | fp32_retry 0 nan_skip 0 opt_skip 0 val_nan 0 gpu_drift 0.0e+00
+  [STASH] epoch 4 đã lưu lên stash://bunpmc/projects/finding_seed/seed36_rtdetr_dnfix/raw_rtdetr50 (4 file, 8s)
+  epoch 5 step 200/1146 loss 15.8034 lr_head 9.84e-04 fp32_retry 0 nan_skip 0 (3 min)
+  epoch 5 step 400/1146 loss 15.7804 lr_head 9.84e-04 fp32_retry 0 nan_skip 0 (6 min)
+  epoch 5 step 600/1146 loss 15.7408 lr_head 9.84e-04 fp32_retry 0 nan_skip 0 (9 min)
+  epoch 5 step 800/1146 loss 15.8485 lr_head 9.84e-04 fp32_retry 0 nan_skip 0 (11 min)
+  [SKIP] epoch 5 step 895: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 128)
+  [SKIP] epoch 5 step 974: bỏ 1 bước optimizer (batch tốt 2, batch NaN 0, scale 64)
+  epoch 5 step 1000/1146 loss 15.9928 lr_head 9.84e-04 fp32_retry 16 nan_skip 0 (14 min)
+[raw_rtdetr50] epoch 5 VAL mAP50 0.0436 mAP50-95 0.0190 MEAN_5 0.0233 P 0.4894 R 0.0573
+[raw_rtdetr50] epoch 5/50 train 16.0323 val 12.9548 *best* (19.2 min) | fp32_retry 200 nan_skip 0 opt_skip 2 val_nan 0 gpu_drift 0.0e+00
