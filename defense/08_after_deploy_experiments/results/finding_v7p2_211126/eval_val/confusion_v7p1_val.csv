@@ -1,0 +1,8 @@
+gt\pred,insulator,insulator_broken,insulator_flashover,bird_nest,foreign_object,broken_strand,missed
+insulator,980,0,0,0,0,0,107
+insulator_broken,0,640,0,0,0,0,170
+insulator_flashover,0,1,123,0,0,0,39
+bird_nest,0,0,0,754,0,0,76
+foreign_object,0,0,0,0,46,0,16
+broken_strand,0,0,0,0,1,182,69
+background_fp,179,160,37,91,24,45,

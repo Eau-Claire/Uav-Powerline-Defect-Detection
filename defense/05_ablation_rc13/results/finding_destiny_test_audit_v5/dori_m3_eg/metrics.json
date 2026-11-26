@@ -1,0 +1,24 @@
+{
+  "ablation": "dori_m3_eg",
+  "weight": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\weights\\finding_dori\\yolo26m_m3_e_g\\weights\\best.pt",
+  "weight_sha256": "4a7c51ab52b74c36913fa35f204a20e06e331da24aeb0e458da69fbd570821da",
+  "test_images": 1931,
+  "precision": 0.8424985809309561,
+  "recall": 0.745057606873655,
+  "map50": 0.791351555165333,
+  "map50_95": 0.43118045925234166,
+  "speed_ms": {
+    "preprocess": 0.7048981356782564,
+    "inference": 9.47823200414345,
+    "loss": 0.001192439151585998,
+    "postprocess": 1.279297928532739
+  },
+  "per_class_map50_95": {
+    "insulator": 0.5864782931245403,
+    "insulator_broken": 0.4295848526761354,
+    "insulator_flashover": 0.27262825007027686,
+    "bird_nest": 0.4834685550984461,
+    "foreign_object": 0.4634695350599195,
+    "broken_strand": 0.3514532694847317
+  }
+}

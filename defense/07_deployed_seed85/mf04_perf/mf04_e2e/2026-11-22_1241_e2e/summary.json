@@ -1,0 +1,127 @@
+{
+  "label": "e2e",
+  "run_at": "2026-11-22T12:42:21",
+  "mission": "db33eddc-41ba-43b2-9f91-f18fa1120cde",
+  "images": 10,
+  "upload_errors": [],
+  "concurrency": 1,
+  "preflight": {
+    "MockAI__Enabled": "false",
+    "ai.analysis.server.video.requested": {
+      "consumers": 1,
+      "messages": 0
+    },
+    "ai.analysis.result.retry": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.dead-letter": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.server.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.edge.image.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.result": {
+      "consumers": 1,
+      "messages": 0
+    },
+    "ai.analysis.result.dead-letter": {
+      "consumers": 0,
+      "messages": 14
+    },
+    "ai.analysis.server.image.requested": {
+      "consumers": 1,
+      "messages": 0
+    },
+    "ai.analysis.edge.video.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.edge.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "bridge": {
+      "name": "bridge-ai-bridge-1",
+      "state": "running"
+    }
+  },
+  "bridge_events": [],
+  "duplicate": {
+    "status": 200,
+    "returned_media": "ca10fd37-f1d7-4429-8d42-542337580ce2",
+    "original_media": "ca10fd37-f1d7-4429-8d42-542337580ce2",
+    "passed": true,
+    "body": null
+  },
+  "review": {
+    "status": 200,
+    "detection": "0c70b6d3-d9dc-4ed1-9c6b-00fe86446ba5",
+    "decision": "Rejected",
+    "body": "{\"success\":true,\"message\":\"AI detection review saved successfully.\",\"data\":{\"id\":\"0c70b6d3-d9dc-4ed1-9c6b-00fe86446ba5\",\"mediaId\":\"0fefe201-c783-4ee6-84cc-ff31c70802d1\",\"analysisRunId\":\"79d45666-87b8-4e8a-98a9-5a68329859ab\",\"executionLocation\":\"Cloud\",\"supersededById\":null,\"aiDetectionId\":\"06e4d79c-"
+  },
+  "timing_ms": {
+    "upload": {
+      "n": 10,
+      "mean": 62.9,
+      "p50": 28,
+      "p95": 338,
+      "max": 338
+    },
+    "e2e_upload_to_db_completed": {
+      "n": 10,
+      "mean": 13781.1,
+      "p50": 13252,
+      "p95": 22136,
+      "max": 22136
+    },
+    "queued_to_bridge_done": {
+      "n": 10,
+      "mean": 12275,
+      "p50": 11693,
+      "p95": 20420,
+      "max": 20420
+    },
+    "bridge_done_to_be_received": {
+      "n": 10,
+      "mean": 20,
+      "p50": 20,
+      "p95": 37,
+      "max": 37
+    }
+  },
+  "wall_s": 25.8,
+  "detections": 11,
+  "severity_by_class": {
+    "BROKEN_INSULATOR": {
+      "Medium": 6,
+      "High": 5
+    }
+  },
+  "logs": {
+    "unknown_category_skipped": 0,
+    "duplicate_result_skipped": 0,
+    "bridge_processing_failed": 0,
+    "bridge_publish_retry": 0,
+    "bridge_attempts_exhausted": 0
+  },
+  "checks": {
+    "all_uploads_accepted": true,
+    "all_runs_completed": true,
+    "exactly_one_run_per_media": true,
+    "real_model_not_mock": true,
+    "bbox_valid": true,
+    "grpc_severity_on_every_detection": true,
+    "analyst_sees_all_detections": true,
+    "duplicate_upload_idempotent": true,
+    "analyst_review_saved": true,
+    "no_detection_dropped_for_unknown_category": true
+  },
+  "result": "Passed"
+}

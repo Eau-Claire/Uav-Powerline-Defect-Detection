@@ -1,0 +1,9 @@
+model,split,area_bin,fo_gt,recall_at_conf,as_insulator_broken,as_other_class,missed
+seed85,val,small_lt1pct,10,0.9,0,0,1
+seed85,val,medium_1to5pct,12,0.5833,0,0,5
+seed85,val,large_ge5pct,40,0.825,0,0,7
+seed85,val,all,62,0.7903,0,0,13
+v7p1,val,small_lt1pct,10,0.7,0,0,3
+v7p1,val,medium_1to5pct,12,0.5,0,0,6
+v7p1,val,large_ge5pct,40,0.825,0,0,7
+v7p1,val,all,62,0.7419,0,0,16

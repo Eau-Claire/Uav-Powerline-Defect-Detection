@@ -1,0 +1,129 @@
+{
+  "label": "v2_concurrent",
+  "run_at": "2026-11-22T12:55:06",
+  "mission": "db33eddc-41ba-43b2-9f91-f18fa1120cde",
+  "images": 50,
+  "upload_errors": [],
+  "concurrency": 10,
+  "preflight": {
+    "MockAI__Enabled": "false",
+    "ai.analysis.server.video.requested": {
+      "consumers": 1,
+      "messages": 0
+    },
+    "ai.analysis.result.retry": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.dead-letter": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.server.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.edge.image.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.result": {
+      "consumers": 1,
+      "messages": 0
+    },
+    "ai.analysis.result.dead-letter": {
+      "consumers": 0,
+      "messages": 14
+    },
+    "ai.analysis.server.image.requested": {
+      "consumers": 1,
+      "messages": 0
+    },
+    "ai.analysis.edge.video.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.edge.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "bridge": {
+      "name": "bridge-ai-bridge-1",
+      "state": "running"
+    }
+  },
+  "bridge_events": [],
+  "duplicate": null,
+  "review": null,
+  "timing_ms": {
+    "upload": {
+      "n": 50,
+      "mean": 139.2,
+      "p50": 121,
+      "p95": 263,
+      "max": 305
+    },
+    "e2e_upload_to_db_completed": {
+      "n": 50,
+      "mean": 12827.1,
+      "p50": 12474,
+      "p95": 21186,
+      "max": 21240
+    },
+    "queued_to_bridge_done": {
+      "n": 50,
+      "mean": 8739.7,
+      "p50": 8350,
+      "p95": 14246,
+      "max": 15049
+    },
+    "bridge_done_to_be_received": {
+      "n": 50,
+      "mean": 18.4,
+      "p50": 18,
+      "p95": 27,
+      "max": 31
+    }
+  },
+  "wall_s": 25.0,
+  "detections": 43,
+  "severity_by_class": {
+    "BROKEN_INSULATOR": {
+      "Medium": 12,
+      "High": 13,
+      "Critical": 2
+    },
+    "BROKEN_STRAND": {
+      "High": 1,
+      "Medium": 3
+    },
+    "BIRD_NEST": {
+      "Low": 2
+    },
+    "FOREIGN_OBJECT": {
+      "High": 3
+    },
+    "FLASHOVER": {
+      "Medium": 2,
+      "High": 5
+    }
+  },
+  "logs": {
+    "unknown_category_skipped": 0,
+    "duplicate_result_skipped": 0,
+    "bridge_processing_failed": 0,
+    "bridge_publish_retry": 0,
+    "bridge_attempts_exhausted": 0
+  },
+  "checks": {
+    "all_uploads_accepted": true,
+    "all_runs_completed": true,
+    "exactly_one_run_per_media": true,
+    "real_model_not_mock": true,
+    "bbox_valid": true,
+    "grpc_severity_on_every_detection": true,
+    "analyst_sees_all_detections": true,
+    "no_detection_dropped_for_unknown_category": true
+  },
+  "result": "Passed"
+}

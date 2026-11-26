@@ -1,0 +1,14 @@
+{
+  "model": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\artifacts\\finding_nemo_selected_checkpoints\\yolo26m_epoch45.pt",
+  "dataset": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\data\\test_main_v1\\dataset.yaml",
+  "images": 1931,
+  "device": "0",
+  "conf": 0.1,
+  "audit_nms_iou": 0.5,
+  "matching": {
+    "TP": "same class IoU >= 0.5",
+    "CLASS_CONFUSION": "insulator vs insulator_broken IoU >= 0.3",
+    "LOCALIZATION": "same class 0.1 <= IoU < 0.5"
+  },
+  "severity": "2*FN + 1.5*CLASS_CONFUSION + FP + 0.5*LOCALIZATION"
+}

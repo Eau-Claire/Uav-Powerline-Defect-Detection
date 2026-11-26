@@ -1,0 +1,290 @@
+{
+  "nemo_yolo11n": {
+    "run_key": "nemo_yolo11n",
+    "checkpoint_path": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\yolo11n\\weights\\best.pt",
+    "evaluation_split": "test",
+    "evaluation_dataset_yaml": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_human_reviewed_6cls\\data.yaml",
+    "accuracy": {
+      "precision": 0.8148,
+      "recall": 0.6671,
+      "f1_score": 0.7336,
+      "mAP50": 0.7404,
+      "mAP50_95": 0.4051,
+      "MEAN_5_defect_ap50": 0.7053,
+      "per_class": {
+        "insulator": {
+          "ap50": 0.9155,
+          "ap50_95": 0.6739
+        },
+        "insulator_broken": {
+          "ap50": 0.7472,
+          "ap50_95": 0.3731
+        },
+        "insulator_flashover": {
+          "ap50": 0.5989,
+          "ap50_95": 0.2137
+        },
+        "bird_nest": {
+          "ap50": 0.8919,
+          "ap50_95": 0.4477
+        },
+        "foreign_object": {
+          "ap50": 0.6961,
+          "ap50_95": 0.4438
+        },
+        "broken_strand": {
+          "ap50": 0.5925,
+          "ap50_95": 0.2786
+        }
+      }
+    },
+    "hardware": {
+      "parameters_m": 2.59,
+      "gflops": 6.5,
+      "latency_ms": 12.72,
+      "fps": 78.6,
+      "inference_peak_vram_mb": 75.8
+    },
+    "evaluated_at": "2026-11-02 12:05:27"
+  },
+  "nemo_yolo11m": {
+    "run_key": "nemo_yolo11m",
+    "checkpoint_path": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\yolo11m\\weights\\best.pt",
+    "evaluation_split": "test",
+    "evaluation_dataset_yaml": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_human_reviewed_6cls\\data.yaml",
+    "accuracy": {
+      "precision": 0.7956,
+      "recall": 0.7236,
+      "f1_score": 0.7579,
+      "mAP50": 0.7717,
+      "mAP50_95": 0.4261,
+      "MEAN_5_defect_ap50": 0.7379,
+      "per_class": {
+        "insulator": {
+          "ap50": 0.9403,
+          "ap50_95": 0.6928
+        },
+        "insulator_broken": {
+          "ap50": 0.8046,
+          "ap50_95": 0.4103
+        },
+        "insulator_flashover": {
+          "ap50": 0.6804,
+          "ap50_95": 0.2396
+        },
+        "bird_nest": {
+          "ap50": 0.8915,
+          "ap50_95": 0.4544
+        },
+        "foreign_object": {
+          "ap50": 0.6957,
+          "ap50_95": 0.458
+        },
+        "broken_strand": {
+          "ap50": 0.6175,
+          "ap50_95": 0.3014
+        }
+      }
+    },
+    "hardware": {
+      "parameters_m": 20.06,
+      "gflops": 68.32,
+      "latency_ms": 14.45,
+      "fps": 69.2,
+      "inference_peak_vram_mb": 283.2
+    },
+    "evaluated_at": "2026-11-02 12:06:24"
+  },
+  "nemo_yolo26n": {
+    "run_key": "nemo_yolo26n",
+    "checkpoint_path": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\yolo26n\\weights\\best.pt",
+    "evaluation_split": "test",
+    "evaluation_dataset_yaml": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_human_reviewed_6cls\\data.yaml",
+    "accuracy": {
+      "precision": 0.8323,
+      "recall": 0.716,
+      "f1_score": 0.7698,
+      "mAP50": 0.774,
+      "mAP50_95": 0.4258,
+      "MEAN_5_defect_ap50": 0.7434,
+      "per_class": {
+        "insulator": {
+          "ap50": 0.9272,
+          "ap50_95": 0.68
+        },
+        "insulator_broken": {
+          "ap50": 0.8036,
+          "ap50_95": 0.397
+        },
+        "insulator_flashover": {
+          "ap50": 0.6515,
+          "ap50_95": 0.2352
+        },
+        "bird_nest": {
+          "ap50": 0.8653,
+          "ap50_95": 0.4527
+        },
+        "foreign_object": {
+          "ap50": 0.7488,
+          "ap50_95": 0.4796
+        },
+        "broken_strand": {
+          "ap50": 0.6476,
+          "ap50_95": 0.3102
+        }
+      }
+    },
+    "hardware": {
+      "parameters_m": 2.51,
+      "gflops": 5.9,
+      "latency_ms": 12.68,
+      "fps": 78.9,
+      "inference_peak_vram_mb": 74.5
+    },
+    "evaluated_at": "2026-11-02 12:07:02"
+  },
+  "nemo_yolo26m": {
+    "run_key": "nemo_yolo26m",
+    "checkpoint_path": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\yolo26m\\weights\\best.pt",
+    "evaluation_split": "test",
+    "evaluation_dataset_yaml": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_human_reviewed_6cls\\data.yaml",
+    "accuracy": {
+      "precision": 0.8639,
+      "recall": 0.7477,
+      "f1_score": 0.8016,
+      "mAP50": 0.8086,
+      "mAP50_95": 0.4516,
+      "MEAN_5_defect_ap50": 0.7807,
+      "per_class": {
+        "insulator": {
+          "ap50": 0.9485,
+          "ap50_95": 0.702
+        },
+        "insulator_broken": {
+          "ap50": 0.8303,
+          "ap50_95": 0.4191
+        },
+        "insulator_flashover": {
+          "ap50": 0.7627,
+          "ap50_95": 0.2762
+        },
+        "bird_nest": {
+          "ap50": 0.9249,
+          "ap50_95": 0.4936
+        },
+        "foreign_object": {
+          "ap50": 0.7419,
+          "ap50_95": 0.4974
+        },
+        "broken_strand": {
+          "ap50": 0.6435,
+          "ap50_95": 0.3217
+        }
+      }
+    },
+    "hardware": {
+      "parameters_m": 21.78,
+      "gflops": 75.0,
+      "latency_ms": 13.94,
+      "fps": 71.8,
+      "inference_peak_vram_mb": 289.8
+    },
+    "evaluated_at": "2026-11-02 12:07:54"
+  },
+  "nemo_rtdetr50": {
+    "run_key": "nemo_rtdetr50",
+    "checkpoint_path": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\rtdetr50\\weights\\best.pt",
+    "evaluation_split": "test",
+    "evaluation_dataset_yaml": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_human_reviewed_6cls\\data.yaml",
+    "accuracy": {
+      "precision": 0.8179,
+      "recall": 0.7338,
+      "f1_score": 0.7736,
+      "mAP50": 0.7814,
+      "mAP50_95": 0.4366,
+      "MEAN_5_defect_ap50": 0.7493,
+      "per_class": {
+        "insulator": {
+          "ap50": 0.942,
+          "ap50_95": 0.7094
+        },
+        "insulator_broken": {
+          "ap50": 0.8129,
+          "ap50_95": 0.3947
+        },
+        "insulator_flashover": {
+          "ap50": 0.6417,
+          "ap50_95": 0.2022
+        },
+        "bird_nest": {
+          "ap50": 0.9034,
+          "ap50_95": 0.4732
+        },
+        "foreign_object": {
+          "ap50": 0.7512,
+          "ap50_95": 0.518
+        },
+        "broken_strand": {
+          "ap50": 0.6373,
+          "ap50_95": 0.3222
+        }
+      }
+    },
+    "hardware": {
+      "parameters_m": 42.74,
+      "gflops": 137.72,
+      "latency_ms": 33.56,
+      "fps": 29.8,
+      "inference_peak_vram_mb": 437.3
+    },
+    "evaluated_at": "2026-11-02 12:09:47"
+  },
+  "nemo_rtdetr100": {
+    "run_key": "nemo_rtdetr100",
+    "checkpoint_path": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\runs\\finding_nemo\\rtdetr101\\weights\\best.pt",
+    "evaluation_split": "test",
+    "evaluation_dataset_yaml": "D:\\Data-Centric-UAV-Powerline-Defect-Detection\\Uav-Powerline-Defect-Detection\\benchmakring_transmission_line_defect_model\\data\\finding_nemo_human_reviewed_6cls\\data.yaml",
+    "accuracy": {
+      "precision": 0.8165,
+      "recall": 0.7592,
+      "f1_score": 0.7868,
+      "mAP50": 0.7942,
+      "mAP50_95": 0.4365,
+      "MEAN_5_defect_ap50": 0.7702,
+      "per_class": {
+        "insulator": {
+          "ap50": 0.9141,
+          "ap50_95": 0.6936
+        },
+        "insulator_broken": {
+          "ap50": 0.8391,
+          "ap50_95": 0.4072
+        },
+        "insulator_flashover": {
+          "ap50": 0.7175,
+          "ap50_95": 0.2551
+        },
+        "bird_nest": {
+          "ap50": 0.921,
+          "ap50_95": 0.477
+        },
+        "foreign_object": {
+          "ap50": 0.7487,
+          "ap50_95": 0.4964
+        },
+        "broken_strand": {
+          "ap50": 0.6246,
+          "ap50_95": 0.2899
+        }
+      }
+    },
+    "hardware": {
+      "parameters_m": 76.4,
+      "gflops": 260.61,
+      "latency_ms": 48.27,
+      "fps": 20.7,
+      "inference_peak_vram_mb": 570.8
+    },
+    "evaluated_at": "2026-11-02 12:12:02"
+  }
+}

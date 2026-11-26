@@ -1,0 +1,7 @@
+﻿Model,Description,Checkpoint,Precision,Recall,F1-Score,mAP@0.5,mAP@0.5:0.95,MEAN_5,Latency (ms),FPS,GFLOPS,Params (M),VRAM (MB),Source Stash
+yolo26n,YOLO26n (epoch 45 - Best validation mAP),yolo26n_epoch45.pt,0.8297,0.7267,0.7748,0.802,0.4411,0.7789,16.62,60.2,5.9,2.51,74.3,stash://bunpmc/projects/finding_nemo/yolo26n/weights/epoch45.pt
+yolo26m,YOLO26m (epoch 45),yolo26m_epoch45.pt,0.8286,0.7778,0.8024,0.8312,0.4726,0.8099,29.73,33.6,75.0,21.78,280.5,stash://bunpmc/projects/finding_nemo/yolo26m/weights/epoch45.pt
+yolo11n,YOLO11n (last epoch),yolo11n_last.pt,0.8141,0.7033,0.7547,0.7777,0.4308,0.7519,21.46,46.6,6.5,2.59,76.0,stash://bunpmc/projects/finding_nemo/yolo11n/weights/last.pt
+yolo11m,YOLO11m (epoch 45),yolo11m_epoch45.pt,0.8287,0.7493,0.787,0.8234,0.4636,0.8009,27.94,35.8,68.32,20.06,288.4,stash://bunpmc/projects/finding_nemo/yolo11m/weights/epoch45.pt
+rtdetr50,RT-DETR-R50vd (epoch 15),rtdetr50_epoch15.pt,0.8438,0.7517,0.7951,0.807,0.4541,0.7858,126.24,7.9,137.0,42.74,655.0,stash://bunpmc/projects/finding_nemo/rtdetr_training/finding_nemo_human_reviewed_6cls_20261101/r50vd/checkpoints/epoch15.pt
+rtdetr101,RT-DETR-R101vd (epoch 15),rtdetr101_epoch15.pt,0.8656,0.7809,0.8211,0.8269,0.472,0.8074,92.8,10.8,259.81,76.4,798.4,stash://bunpmc/projects/finding_nemo/rtdetr_training/finding_nemo_human_reviewed_6cls_20261101/r101vd/checkpoints/epoch15.pt

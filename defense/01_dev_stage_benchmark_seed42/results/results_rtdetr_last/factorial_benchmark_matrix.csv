@@ -1,0 +1,7 @@
+Architecture,Raw mAP50,Curated mAP50,Δ mAP50 (Data Gain),Raw mAP50:95,Curated mAP50:95,Δ mAP50:95,Params (M),FPS,Latency (ms)
+yolo11n,N/A,N/A,N/A,N/A,N/A,N/A,-,-,-
+yolo11m,N/A,N/A,N/A,N/A,N/A,N/A,-,-,-
+yolo26n,N/A,N/A,N/A,N/A,N/A,N/A,-,-,-
+yolo26m,N/A,N/A,N/A,N/A,N/A,N/A,-,-,-
+rtdetr_r50,N/A,N/A,N/A,N/A,N/A,N/A,-,-,-
+rtdetr_r101,N/A,N/A,N/A,N/A,N/A,N/A,-,-,-

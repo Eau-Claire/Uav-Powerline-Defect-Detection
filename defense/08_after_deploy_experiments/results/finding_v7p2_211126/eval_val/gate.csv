@@ -1,0 +1,4 @@
+model,baseline,d_mAP50,d_mAP50_95,d_FO_AP50_95,classes_improved,gate
+v7p1,seed85,-0.001,-0.0089,-0.0531,broken_strand,FAIL
+b_fo_large,seed85,0.0061,-0.0003,0.0084,foreign_object|broken_strand,FAIL
+c_fo_large_rep,seed85,0.0023,-0.0008,-0.0044,broken_strand,FAIL

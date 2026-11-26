@@ -1,0 +1,1025 @@
+{
+  "environment": {
+    "run_at": "2026-11-22_1424",
+    "endpoint": "Modal app powerline-yolo26m-benchmark / env main / Detector.predict_jpeg (SDK)",
+    "gpu": "Tesla T4 (Modal), max_containers=1, scaledown_window=60 s",
+    "model": "seed85_curated_yolo26m",
+    "checkpoint_sha256": "8682baa083ba5148d378762ddba5c5176cafaedd72b0c2eb369d3ea992924f16",
+    "thresholds_sha256": "e69a40318bba4a5b",
+    "dataset": "finding_nemo_human_reviewed_6cls",
+    "client": "Linux x86_64, Python 3.14.8, modal 1.5.5, Pillow 13.0.0",
+    "container_resources_at_start": {
+      "gpu": "Tesla T4",
+      "gpu_util_pct": 0.0,
+      "gpu_mem_used_mib": 491.0,
+      "gpu_mem_total_mib": 15360.0,
+      "torch_allocated_mib": 196.4,
+      "torch_max_allocated_mib": 277.1,
+      "rss_mib": 5062.9,
+      "max_rss_mib": 5062.9,
+      "served": 2,
+      "uptime_s": 112.3,
+      "model_load_s": 5.2
+    }
+  },
+  "tests": [
+    {
+      "id": "AI-PERF-00",
+      "title": "Cold start (container khởi động + nạp model + lần predict đầu)",
+      "criterion": "Chỉ đo, báo riêng; không tính vào trung bình",
+      "measured": {
+        "roundtrip_ms": 3131.5695669909474,
+        "predict_ms": 44.87779800000169,
+        "error": null,
+        "model_load_s": 5.215473890304565
+      },
+      "verdict": "Measured",
+      "notes": "Modal scale-to-zero sau 60 s không có request"
+    },
+    {
+      "id": "AI-PERF-01",
+      "title": "1 ảnh 640×640, 30 lần liên tiếp",
+      "criterion": "0 lỗi; xử lý AI p95 < 3000 ms; round-trip trung bình ≤ 5000 ms",
+      "measured": {
+        "size": "640x640",
+        "jpeg_kib": 43,
+        "errors": 0,
+        "server_ai_ms": {
+          "n": 30,
+          "mean": 43.12410663333376,
+          "p50": 42.98544749998712,
+          "p95": 43.26502394999707,
+          "min": 42.4614630000093,
+          "max": 47.98439900000062
+        },
+        "roundtrip_ms": {
+          "n": 30,
+          "mean": 603.3767398650525,
+          "p50": 594.7149784988142,
+          "p95": 660.9148125477077,
+          "min": 556.1624679976376,
+          "max": 886.186537987669
+        },
+        "stages_mean_ms": {
+          "decode_ms": 3.0040320333355908,
+          "preprocess_ms": 1.0123286000014293,
+          "inference_ms": 36.88596783333177,
+          "nms_ms": 0.6726083666644437,
+          "filter_ms": 0.009288266668268838
+        }
+      },
+      "verdict": "Passed",
+      "notes": ""
+    },
+    {
+      "id": "AI-PERF-02",
+      "title": "1 ảnh 1920×1080, 20 lần liên tiếp",
+      "criterion": "0 lỗi; xử lý AI p95 < 3000 ms; round-trip trung bình ≤ 5000 ms",
+      "measured": {
+        "size": "1920x1080",
+        "jpeg_kib": 135,
+        "errors": 0,
+        "server_ai_ms": {
+          "n": 20,
+          "mean": 55.92462854999951,
+          "p50": 55.48123949999706,
+          "p95": 58.11455445002309,
+          "min": 54.22732299996369,
+          "max": 60.8817419999923
+        },
+        "roundtrip_ms": {
+          "n": 20,
+          "mean": 791.5065551504085,
+          "p50": 870.6764814996859,
+          "p95": 978.4096514988051,
+          "min": 580.1641489961185,
+          "max": 1187.2219789947849
+        },
+        "stages_mean_ms": {
+          "decode_ms": 12.13419879999691,
+          "preprocess_ms": 1.9723700500023256,
+          "inference_ms": 36.891781950001246,
+          "nms_ms": 0.6686749999957442,
+          "filter_ms": 0.011687499997492523
+        }
+      },
+      "verdict": "Passed",
+      "notes": ""
+    },
+    {
+      "id": "AI-PERF-03",
+      "title": "1 ảnh 3840×2160, 20 lần liên tiếp",
+      "criterion": "0 lỗi; xử lý AI p95 < 3000 ms; round-trip trung bình ≤ 5000 ms",
+      "measured": {
+        "size": "3840x2160",
+        "jpeg_kib": 388,
+        "errors": 0,
+        "server_ai_ms": {
+          "n": 20,
+          "mean": 108.63362985000008,
+          "p50": 101.96235100001161,
+          "p95": 138.24365109998098,
+          "min": 98.3711069999913,
+          "max": 140.91419799999017
+        },
+        "roundtrip_ms": {
+          "n": 20,
+          "mean": 877.3459884017939,
+          "p50": 790.1200910055195,
+          "p95": 1336.363855501986,
+          "min": 642.1254559973022,
+          "max": 1338.00913199957
+        },
+        "stages_mean_ms": {
+          "decode_ms": 50.406612249997806,
+          "preprocess_ms": 2.3027076999980522,
+          "inference_ms": 36.90972179999932,
+          "nms_ms": 0.7186777000001143,
+          "filter_ms": 0.01044625000048427
+        }
+      },
+      "verdict": "Passed",
+      "notes": ""
+    },
+    {
+      "id": "AI-PERF-04",
+      "title": "10 ảnh khác nhau gửi liên tiếp",
+      "criterion": "0 lỗi; round-trip trung bình ≤ 5000 ms",
+      "measured": {
+        "images": 10,
+        "total_s": 6.314856097000302,
+        "images_per_s": 1.58356736026815,
+        "errors": 0,
+        "roundtrip_ms": {
+          "n": 10,
+          "mean": 631.2408692014287,
+          "p50": 605.1641840022057,
+          "p95": 790.1141439069763,
+          "min": 563.1939939921722,
+          "max": 901.6617090092041
+        }
+      },
+      "verdict": "Passed",
+      "notes": ""
+    },
+    {
+      "id": "AI-PERF-05",
+      "title": "50 ảnh gửi đồng thời",
+      "criterion": "0 lỗi; round-trip p95 ≤ 5000 ms",
+      "measured": {
+        "requests": 50,
+        "errors": 0,
+        "total_s": 5.109118107007816,
+        "throughput_img_s": 9.786424770924464,
+        "roundtrip_ms": {
+          "n": 50,
+          "mean": 3963.5013135604095,
+          "p50": 3671.364479494514,
+          "p95": 4978.895260552235,
+          "min": 3374.889095997787,
+          "max": 5063.000178008224
+        },
+        "est_queue_wait_ms": {
+          "n": 50,
+          "mean": 3371.902177018223,
+          "p50": 3080.414763493181,
+          "p95": 4387.300066600034,
+          "min": 2768.1757034995935,
+          "max": 4466.651625506045
+        },
+        "server_ai_ms": {
+          "n": 50,
+          "mean": 31.26922603999617,
+          "p50": 28.287683499996774,
+          "p95": 42.57729200001563,
+          "min": 22.806778999978405,
+          "max": 54.85544699999423
+        }
+      },
+      "verdict": "Passed",
+      "notes": "Một container GPU xử lý tuần tự; thời gian chờ hàng đợi ước lượng = round-trip − xử lý AI − overhead mạng đo ở AI-PERF-04"
+    },
+    {
+      "id": "AI-PERF-06",
+      "title": "100 ảnh liên tục",
+      "criterion": "0 lỗi; RSS tăng ≤ 10%; latency 10 ảnh cuối ≤ 1,2× 10 ảnh đầu",
+      "measured": {
+        "images": 100,
+        "errors": 0,
+        "total_s": 61.749504053004785,
+        "images_per_s": 1.6194462050118104,
+        "server_ai_ms": {
+          "n": 100,
+          "mean": 48.09058090999912,
+          "p50": 44.41704399999935,
+          "p95": 57.79567520001905,
+          "min": 41.168048000002955,
+          "max": 82.41413800001851
+        },
+        "first10_mean_ms": 52.779757200002564,
+        "last10_mean_ms": 46.89911920000043,
+        "rss_mib": [
+          5083.91796875,
+          5104.7890625
+        ],
+        "gpu_mem_used_mib": [
+          491.0,
+          491.0
+        ],
+        "torch_max_allocated_mib": 277.111328125
+      },
+      "verdict": "Passed",
+      "notes": ""
+    },
+    {
+      "id": "AI-ACC-VAL",
+      "title": "Độ chính xác endpoint đã deploy trên val (2271 ảnh)",
+      "criterion": "Chỉ đo (P/R/F1 @IoU 0.5, sau hậu xử lý); so với số offline trong thresholds.json",
+      "measured": {
+        "errors": 0,
+        "micro": {
+          "precision": 0.8914266799073155,
+          "recall": 0.8405118601747815,
+          "f1": 0.8652208835341365,
+          "tp": 2693,
+          "fp": 328,
+          "fn": 511,
+          "macro_f1": 0.8240945436496333
+        },
+        "per_class_f1": {
+          "insulator": 0.8933,
+          "insulator_broken": 0.8275,
+          "insulator_flashover": 0.781,
+          "bird_nest": 0.9131,
+          "foreign_object": 0.7478,
+          "broken_strand": 0.7819
+        },
+        "images_per_s": 8.934503825336721
+      },
+      "verdict": "Measured",
+      "notes": ""
+    },
+    {
+      "id": "AI-ACC-TEST",
+      "title": "Độ chính xác endpoint đã deploy trên test (1931 ảnh)",
+      "criterion": "Chỉ đo (P/R/F1 @IoU 0.5, sau hậu xử lý); so với số offline trong thresholds.json",
+      "measured": {
+        "errors": 0,
+        "micro": {
+          "precision": 0.8917682926829268,
+          "recall": 0.8210526315789474,
+          "f1": 0.8549506759225429,
+          "tp": 2340,
+          "fp": 284,
+          "fn": 510,
+          "macro_f1": 0.7964059447868516
+        },
+        "per_class_f1": {
+          "insulator": 0.9059,
+          "insulator_broken": 0.8124,
+          "insulator_flashover": 0.7583,
+          "bird_nest": 0.8812,
+          "foreign_object": 0.7647,
+          "broken_strand": 0.6559
+        },
+        "images_per_s": 5.66839996696861
+      },
+      "verdict": "Measured",
+      "notes": ""
+    },
+    {
+      "id": "AI-ROB-01",
+      "title": "Ảnh thiếu sáng (độ sáng × 0,35)",
+      "criterion": "Chỉ đo mức suy giảm so với ảnh gốc (có ground truth)",
+      "measured": {
+        "images": 150,
+        "original": {
+          "precision": 0.8951965065502183,
+          "recall": 0.8649789029535865,
+          "f1": 0.8798283261802575,
+          "tp": 205,
+          "fp": 24,
+          "fn": 32,
+          "macro_f1": 0.7883881007347471
+        },
+        "degraded": {
+          "precision": 0.9069767441860465,
+          "recall": 0.8227848101265823,
+          "f1": 0.8628318584070797,
+          "tp": 195,
+          "fp": 20,
+          "fn": 42,
+          "macro_f1": 0.7696586598691727
+        },
+        "delta_recall": -0.04219409282700415,
+        "delta_precision": 0.011780237635828139
+      },
+      "verdict": "Measured",
+      "notes": ""
+    },
+    {
+      "id": "AI-ROB-02",
+      "title": "Ảnh mờ chuyển động (kernel ngang 5 px)",
+      "criterion": "Chỉ đo mức suy giảm so với ảnh gốc (có ground truth)",
+      "measured": {
+        "images": 150,
+        "original": {
+          "precision": 0.8951965065502183,
+          "recall": 0.8649789029535865,
+          "f1": 0.8798283261802575,
+          "tp": 205,
+          "fp": 24,
+          "fn": 32,
+          "macro_f1": 0.7883881007347471
+        },
+        "degraded": {
+          "precision": 0.8938053097345132,
+          "recall": 0.8523206751054853,
+          "f1": 0.8725701943844492,
+          "tp": 202,
+          "fp": 24,
+          "fn": 35,
+          "macro_f1": 0.8226233625975411
+        },
+        "delta_recall": -0.012658227848101222,
+        "delta_precision": -0.001391196815705098
+      },
+      "verdict": "Measured",
+      "notes": ""
+    },
+    {
+      "id": "AI-ROB-03",
+      "title": "Background phức tạp",
+      "criterion": "Không thực hiện",
+      "measured": {},
+      "verdict": "Measured",
+      "notes": "Không có tập ảnh nền phức tạp được gán nhãn riêng; không tự tính mAP khi không có ground truth"
+    },
+    {
+      "id": "AI-ROB-04",
+      "title": "Vật thể nhỏ: recall theo kích thước box (cạnh ngắn ở 640 px), val",
+      "criterion": "Chỉ đo",
+      "measured": {
+        "broken_strand 16-32px": {
+          "recall": 0.286,
+          "n": 7
+        },
+        "broken_strand 32-64px": {
+          "recall": 0.5,
+          "n": 40
+        },
+        "broken_strand >=64px": {
+          "recall": 0.82,
+          "n": 205
+        },
+        "foreign_object 16-32px": {
+          "recall": 0.8,
+          "n": 5
+        },
+        "foreign_object 32-64px": {
+          "recall": 0.778,
+          "n": 9
+        },
+        "foreign_object >=64px": {
+          "recall": 0.667,
+          "n": 48
+        },
+        "insulator_broken 16-32px": {
+          "recall": 0.675,
+          "n": 166
+        },
+        "insulator_broken 32-64px": {
+          "recall": 0.864,
+          "n": 323
+        },
+        "insulator_broken <16px": {
+          "recall": 0.178,
+          "n": 45
+        },
+        "insulator_broken >=64px": {
+          "recall": 0.848,
+          "n": 276
+        },
+        "insulator_flashover 16-32px": {
+          "recall": 0.7,
+          "n": 10
+        },
+        "insulator_flashover 32-64px": {
+          "recall": 0.683,
+          "n": 60
+        },
+        "insulator_flashover >=64px": {
+          "recall": 0.806,
+          "n": 93
+        }
+      },
+      "verdict": "Measured",
+      "notes": ""
+    },
+    {
+      "id": "AI-ROB-05",
+      "title": "Ảnh không có đối tượng thuộc 6 class (ảnh nền trong val)",
+      "criterion": "Chỉ đo tỉ lệ ảnh có box sai",
+      "measured": {
+        "background_images": 174,
+        "images_with_detection": 17,
+        "false_boxes": 19,
+        "rate": 0.09770114942528736
+      },
+      "verdict": "Measured",
+      "notes": ""
+    },
+    {
+      "id": "AI-ROB-06",
+      "title": "Ảnh hỏng / sai định dạng / quá lớn",
+      "criterion": "File không hợp lệ bị từ chối có thông báo lỗi; request hợp lệ ngay sau vẫn thành công; container không khởi động lại",
+      "measured": {
+        "cases": [
+          {
+            "input": "truncated JPEG",
+            "bytes": 6902,
+            "accepted": false,
+            "expected_accept": false,
+            "error": "HTTPException: 415: Invalid or oversized image",
+            "worker_alive": true
+          },
+          {
+            "input": "text file",
+            "bytes": 1300,
+            "accepted": false,
+            "expected_accept": false,
+            "error": "HTTPException: 415: Invalid or oversized image",
+            "worker_alive": true
+          },
+          {
+            "input": "empty body",
+            "bytes": 0,
+            "accepted": false,
+            "expected_accept": false,
+            "error": "HTTPException: 415: Invalid or oversized image",
+            "worker_alive": true
+          },
+          {
+            "input": "GIF",
+            "bytes": 144,
+            "accepted": false,
+            "expected_accept": false,
+            "error": "HTTPException: 415: Use JPEG, MPO, PNG",
+            "worker_alive": true
+          },
+          {
+            "input": "JPEG > 60 MP",
+            "bytes": 945410,
+            "accepted": false,
+            "expected_accept": false,
+            "error": "HTTPException: 413: Image exceeds 60 MP",
+            "worker_alive": true
+          },
+          {
+            "input": "body > 50 MiB",
+            "bytes": 52428804,
+            "accepted": false,
+            "expected_accept": false,
+            "error": "HTTPException: 413: Image exceeds 50 MiB",
+            "worker_alive": true
+          },
+          {
+            "input": "valid PNG",
+            "bytes": 104132,
+            "accepted": true,
+            "expected_accept": true,
+            "error": "",
+            "worker_alive": true
+          },
+          {
+            "input": "valid MPO (DJI)",
+            "bytes": 12805,
+            "accepted": true,
+            "expected_accept": true,
+            "error": "",
+            "worker_alive": true
+          }
+        ],
+        "same_container": true
+      },
+      "verdict": "Passed",
+      "notes": ""
+    },
+    {
+      "id": "AI-PERF-07",
+      "title": "Chạy liên tục 30.0 phút",
+      "criterion": "Tỉ lệ lỗi < 1%; RSS cuối ≤ 1,1× RSS phút 2; p95 phút cuối ≤ 1,2× phút đầu; không khởi động lại container",
+      "measured": {
+        "minutes": 30.0,
+        "requests": 2933,
+        "errors": 0,
+        "error_rate": 0.0,
+        "images_per_s": 1.6294444444444445,
+        "server_ai_ms": {
+          "n": 2933,
+          "mean": 48.57617633106784,
+          "p50": 45.03290699994977,
+          "p95": 59.10734920007599,
+          "min": 40.235439999833034,
+          "max": 111.31356500027323
+        },
+        "p95_first_min": 66.55058700010841,
+        "p95_last_min": 58.466658249926695,
+        "rss_mib_min2": 5150.83984375,
+        "rss_mib_end": 5176.43359375,
+        "gpu_mem_used_mib_end": 491.0,
+        "gpu_util_pct_samples": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "container_restarts": 0,
+        "resource_samples": [
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5186.8046875,
+            "max_rss_mib": 5985.91015625,
+            "served": 4894,
+            "uptime_s": 1143.2615048885345,
+            "model_load_s": 5.215473890304565,
+            "t_min": 0.010237777233123779
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5150.0,
+            "max_rss_mib": 5985.91015625,
+            "served": 4990,
+            "uptime_s": 1203.5615015029907,
+            "model_load_s": 5.215473890304565,
+            "t_min": 1.0139183719952902
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.35595703125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5150.83984375,
+            "max_rss_mib": 5985.91015625,
+            "served": 5086,
+            "uptime_s": 1263.8124225139618,
+            "model_load_s": 5.215473890304565,
+            "t_min": 2.0189915537834167
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5155.08984375,
+            "max_rss_mib": 5985.91015625,
+            "served": 5182,
+            "uptime_s": 1323.3035988807678,
+            "model_load_s": 5.215473890304565,
+            "t_min": 3.0096433043479918
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5169.3046875,
+            "max_rss_mib": 5985.91015625,
+            "served": 5279,
+            "uptime_s": 1383.4997746944427,
+            "model_load_s": 5.215473890304565,
+            "t_min": 4.014088626702627
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5169.36328125,
+            "max_rss_mib": 5985.91015625,
+            "served": 5375,
+            "uptime_s": 1443.3197422027588,
+            "model_load_s": 5.215473890304565,
+            "t_min": 5.01079496939977
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5169.36328125,
+            "max_rss_mib": 5985.91015625,
+            "served": 5473,
+            "uptime_s": 1503.7756986618042,
+            "model_load_s": 5.215473890304565,
+            "t_min": 6.0177108407020565
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5169.36328125,
+            "max_rss_mib": 5985.91015625,
+            "served": 5569,
+            "uptime_s": 1563.618311882019,
+            "model_load_s": 5.215473890304565,
+            "t_min": 7.016122368971507
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.35595703125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5169.36328125,
+            "max_rss_mib": 5985.91015625,
+            "served": 5668,
+            "uptime_s": 1623.8409745693207,
+            "model_load_s": 5.215473890304565,
+            "t_min": 8.018582050005595
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5176.30078125,
+            "max_rss_mib": 5985.91015625,
+            "served": 5758,
+            "uptime_s": 1683.6231067180634,
+            "model_load_s": 5.215473890304565,
+            "t_min": 9.014964473247527
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5154.5546875,
+            "max_rss_mib": 5985.91015625,
+            "served": 5858,
+            "uptime_s": 1743.4282784461975,
+            "model_load_s": 5.215473890304565,
+            "t_min": 10.013031729062398
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5177.1015625,
+            "max_rss_mib": 5985.91015625,
+            "served": 5958,
+            "uptime_s": 1803.5490822792053,
+            "model_load_s": 5.215473890304565,
+            "t_min": 11.014051175117492
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5144.9140625,
+            "max_rss_mib": 5985.91015625,
+            "served": 6056,
+            "uptime_s": 1863.5537362098694,
+            "model_load_s": 5.215473890304565,
+            "t_min": 12.013745733102162
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5155.58984375,
+            "max_rss_mib": 5985.91015625,
+            "served": 6157,
+            "uptime_s": 1923.900991678238,
+            "model_load_s": 5.215473890304565,
+            "t_min": 13.020188542207082
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5163.58984375,
+            "max_rss_mib": 5985.91015625,
+            "served": 6257,
+            "uptime_s": 1983.5901834964752,
+            "model_load_s": 5.215473890304565,
+            "t_min": 14.014481830596925
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5163.58984375,
+            "max_rss_mib": 5985.91015625,
+            "served": 6358,
+            "uptime_s": 2043.5392467975616,
+            "model_load_s": 5.215473890304565,
+            "t_min": 15.013600174585978
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5166.83984375,
+            "max_rss_mib": 5985.91015625,
+            "served": 6456,
+            "uptime_s": 2103.6806185245514,
+            "model_load_s": 5.215473890304565,
+            "t_min": 16.0159321308136
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5166.83984375,
+            "max_rss_mib": 5985.91015625,
+            "served": 6555,
+            "uptime_s": 2163.789612531662,
+            "model_load_s": 5.215473890304565,
+            "t_min": 17.018939999739327
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.35595703125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5155.2265625,
+            "max_rss_mib": 5985.91015625,
+            "served": 6654,
+            "uptime_s": 2223.5660297870636,
+            "model_load_s": 5.215473890304565,
+            "t_min": 18.014065102736154
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5157.9765625,
+            "max_rss_mib": 5985.91015625,
+            "served": 6754,
+            "uptime_s": 2283.397511959076,
+            "model_load_s": 5.215473890304565,
+            "t_min": 19.012358530362448
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5178.625,
+            "max_rss_mib": 5985.91015625,
+            "served": 6841,
+            "uptime_s": 2343.573510169983,
+            "model_load_s": 5.215473890304565,
+            "t_min": 20.014162906010945
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5178.7421875,
+            "max_rss_mib": 5985.91015625,
+            "served": 6938,
+            "uptime_s": 2403.3200070858,
+            "model_load_s": 5.215473890304565,
+            "t_min": 21.010892462730407
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5143.35546875,
+            "max_rss_mib": 5985.91015625,
+            "served": 7036,
+            "uptime_s": 2463.6344199180603,
+            "model_load_s": 5.215473890304565,
+            "t_min": 22.015278192361198
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5158.41796875,
+            "max_rss_mib": 5985.91015625,
+            "served": 7133,
+            "uptime_s": 2523.4827921390533,
+            "model_load_s": 5.215473890304565,
+            "t_min": 23.01453876097997
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5158.41796875,
+            "max_rss_mib": 5985.91015625,
+            "served": 7231,
+            "uptime_s": 2583.5268065929413,
+            "model_load_s": 5.215473890304565,
+            "t_min": 24.01463687022527
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5165.35546875,
+            "max_rss_mib": 5985.91015625,
+            "served": 7329,
+            "uptime_s": 2643.4287779331207,
+            "model_load_s": 5.215473890304565,
+            "t_min": 25.012196306387583
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5157.30078125,
+            "max_rss_mib": 5985.91015625,
+            "served": 7429,
+            "uptime_s": 2703.633717060089,
+            "model_load_s": 5.215473890304565,
+            "t_min": 26.01647797425588
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5160.4375,
+            "max_rss_mib": 5985.91015625,
+            "served": 7527,
+            "uptime_s": 2763.3760969638824,
+            "model_load_s": 5.215473890304565,
+            "t_min": 27.01157833735148
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5160.49609375,
+            "max_rss_mib": 5985.91015625,
+            "served": 7630,
+            "uptime_s": 2823.6622688770294,
+            "model_load_s": 5.215473890304565,
+            "t_min": 28.01575541496277
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5163.12109375,
+            "max_rss_mib": 5985.91015625,
+            "served": 7731,
+            "uptime_s": 2883.4885103702545,
+            "model_load_s": 5.215473890304565,
+            "t_min": 29.012837767601013
+          },
+          {
+            "gpu": "Tesla T4",
+            "gpu_util_pct": 0.0,
+            "gpu_mem_used_mib": 491.0,
+            "gpu_mem_total_mib": 15360.0,
+            "torch_allocated_mib": 196.3564453125,
+            "torch_max_allocated_mib": 277.111328125,
+            "rss_mib": 5176.43359375,
+            "max_rss_mib": 5985.91015625,
+            "served": 7827,
+            "uptime_s": 2943.831713914871,
+            "model_load_s": 5.215473890304565
+          }
+        ]
+      },
+      "verdict": "Passed",
+      "notes": ""
+    },
+    {
+      "id": "AI-PERF-08",
+      "title": "Restart AI worker khi còn job",
+      "criterion": "Không thực hiện ở đây",
+      "measured": {},
+      "verdict": "Measured",
+      "notes": "Cần bridge + RabbitMQ trên VPS (job store SQLite, retry, dedup EventId)"
+    },
+    {
+      "id": "AI-OUT-01",
+      "title": "Kiểm tra output: class thuộc 6 class, confidence ∈ [0,1], bbox hợp lệ trong ảnh",
+      "criterion": "0 detection không hợp lệ trên mọi response thành công",
+      "measured": {
+        "responses_checked": 7815,
+        "problems": 0,
+        "examples": []
+      },
+      "verdict": "Passed",
+      "notes": ""
+    }
+  ]
+}

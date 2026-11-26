@@ -1,0 +1,5 @@
+Run,Dataset,Model,Evaluation Split,Precision,Recall,F1-Score,mAP@0.5,mAP@0.5:0.95,MEAN_5,Latency (ms),FPS,GFLOPS,Params (M),VRAM (MB)
+curated_rtdetr50,CURATED,rtdetr50,test,0.8765,0.8,0.8365,0.8017,0.4392,0.7778,38.31,26.1,137.72,42.74,413.7
+curated_rtdetr100,CURATED,rtdetr100,test,0.885,0.804,0.8426,0.8157,0.4505,0.7915,54.63,18.3,260.61,76.4,546.3
+raw_rtdetr50,RAW,rtdetr50,test,0.8227,0.7958,0.809,0.7823,0.4301,0.7525,37.44,26.7,137.72,42.74,414.3
+raw_rtdetr100,RAW,rtdetr100,test,0.8384,0.7937,0.8154,0.7875,0.4351,0.7602,54.94,18.2,260.61,76.4,546.1

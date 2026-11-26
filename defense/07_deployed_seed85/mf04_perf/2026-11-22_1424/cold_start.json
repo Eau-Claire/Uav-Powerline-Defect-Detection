@@ -1,0 +1,18 @@
+[
+  {
+    "roundtrip_s": 10.54,
+    "predict_ms": 2366,
+    "served": 1,
+    "uptime_s": 5.9,
+    "model_load_s": 2.71,
+    "waited_for_scaledown_s": 101
+  },
+  {
+    "roundtrip_s": 9.31,
+    "predict_ms": 2361,
+    "served": 1,
+    "uptime_s": 5.9,
+    "model_load_s": 2.73,
+    "waited_for_scaledown_s": 101
+  }
+]

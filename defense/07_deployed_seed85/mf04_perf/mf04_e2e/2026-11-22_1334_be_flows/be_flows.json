@@ -1,0 +1,194 @@
+{
+  "TKT-1": {
+    "anomaly": "1a113f8b-422a-4b7e-bb89-3479d43a5159",
+    "link_tower": 200,
+    "confirm": [
+      200,
+      {
+        "success": true,
+        "message": "Anomaly validated successfully.",
+        "errorCode": null
+      }
+    ],
+    "status_after": "Confirmed",
+    "second_confirm": [
+      400,
+      {
+        "success": false,
+        "message": "ANOMALY_NOT_IN_REVIEW: Detection is 'Confirmed'; only detections in review can be confirmed or rejected.",
+        "errorCode": "ANOMALY_NOT_IN_REVIEW"
+      }
+    ],
+    "tickets": 1,
+    "passed": true
+  },
+  "TKT-2": {
+    "anomaly": "07808479-d914-41eb-a778-3c2d0ec51468",
+    "link_tower": 200,
+    "review": [
+      200,
+      {
+        "success": true,
+        "message": "AI detection review saved successfully.",
+        "errorCode": null
+      }
+    ],
+    "status_after": "Confirmed",
+    "tickets": 1,
+    "ops_log_errors": 30,
+    "ops_log_sample": [
+      "[13:33:25 ERR] Failed executing DbCommand (1ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?' (DbType = DateTime), @p3='?', @p4='?' (DbType = Object), @p5='?' (DbType = Object), @p6='?' (DbType = Guid), @p7='?',",
+      "[13:33:25 ERR] An exception occurred in the database while saving changes for context type 'UavPms.OperationsService.Infrastructure.Persistence.ApplicationDbContext'.",
+      "Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.",
+      " ---> Npgsql.PostgresException (0x80004005): 22P02: invalid input syntax for type json"
+    ],
+    "passed": true
+  },
+  "TKT-3": {
+    "anomaly": "53e5cec8-378a-4685-94f8-cf6fb9c3add8",
+    "first": [
+      200,
+      {
+        "success": true,
+        "message": "AI detection review saved successfully",
+        "errorCode": null
+      }
+    ],
+    "second": [
+      400,
+      {
+        "success": false,
+        "message": "ANOMALY_NOT_IN_REVIEW: Khuy\u1ebft t\u1eadt \u0111ang \u1edf tr\u1ea1ng th\u00e1i 'Confirmed', ch\u1ec9 \u0111\u01b0\u1ee3c th\u1ea9m \u0111\u1ecbnh khi \u0111ang ch\u1edd duy\u1ec7t.",
+        "errorCode": "ANOMALY_NOT_IN_REVIEW"
+      }
+    ],
+    "status_after": "Confirmed",
+    "tickets": 1,
+    "passed": true
+  },
+  "TKT-4": {
+    "anomaly": "a9f54053-66af-42b9-957e-d264a5d7074f",
+    "statuses": [
+      400,
+      200,
+      400,
+      400,
+      400
+    ],
+    "tickets": 1,
+    "passed": true
+  },
+  "TKT-5": {
+    "anomaly": "4c077862-fd04-4128-9066-626ddb212471",
+    "statuses": [
+      200,
+      400,
+      400,
+      400,
+      400
+    ],
+    "accepted": 1,
+    "status_after": "Confirmed",
+    "passed": true
+  },
+  "RE-1": {
+    "media": "7b0540ba-7768-41e3-b2c3-f5adec198828",
+    "first": [
+      200,
+      {
+        "success": true,
+        "message": "AI analysis request created and queued for processing.",
+        "errorCode": null
+      }
+    ],
+    "second_while_pending": [
+      409,
+      {
+        "success": false,
+        "message": "An equivalent AI analysis request is already active.",
+        "errorCode": "DUPLICATE_REQUEST"
+      }
+    ],
+    "runs_before": 1,
+    "runs_after": 2,
+    "active_detections_before": 1,
+    "active_detections_after": 2,
+    "per_run": [
+      [
+        "Completed",
+        "2026-11-22 12:57:18.905909+00:00",
+        1
+      ],
+      [
+        "Completed",
+        "2026-11-22 13:33:45.548401+00:00",
+        1
+      ]
+    ],
+    "checks": {
+      "new_run_created": true,
+      "duplicate_request_409": true,
+      "detections_not_duplicated": false
+    },
+    "passed": false
+  },
+  "RPT-1": {
+    "create": [
+      201,
+      {
+        "success": true,
+        "message": "T\u1ea1o b\u00e1o c\u00e1o th\u00e0nh c\u00f4ng.",
+        "errorCode": null
+      }
+    ],
+    "report_id": "62f9a7fc-4a99-4a8d-a662-510a1b4437c0",
+    "db_in_scope": 204,
+    "db_rejected": 2,
+    "db_confirmed": 6,
+    "detail_keys": [
+      "id",
+      "code",
+      "title",
+      "type",
+      "status",
+      "description",
+      "createdAt",
+      "updatedAt",
+      "region",
+      "creator",
+      "defectCount",
+      "dateFrom",
+      "dateTo",
+      "rejectionReason",
+      "approvedBy",
+      "approvedAt",
+      "missions",
+      "hasSnapshot"
+    ],
+    "detail": {
+      "defectCount": 204,
+      "hasSnapshot": false
+    },
+    "exports": {
+      "excel": {
+        "status": 200,
+        "bytes": 12385,
+        "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sheets": {
+          "xl/worksheets/sheet1.xml": 12,
+          "xl/worksheets/sheet2.xml": 2,
+          "xl/worksheets/sheet3.xml": 205
+        },
+        "mentions_rejected": false
+      },
+      "pdf": {
+        "status": 200,
+        "bytes": 93136,
+        "type": "application/pdf",
+        "is_pdf": true
+      }
+    },
+    "delete_draft": 200,
+    "passed": null
+  }
+}

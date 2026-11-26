@@ -1,0 +1,651 @@
+{
+  "DEF-009_mpo": {
+    "images": 6,
+    "passed": 6,
+    "result": "Passed",
+    "rows": [
+      {
+        "image": "2272790c5d67153f4f910afdd305189508eedd745f3295ccb9534b23c1d314a5.jpg",
+        "mib": 2.3,
+        "size": "3568x2902",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 200.7
+      },
+      {
+        "image": "2a0cdfa3afdd82548d091747ed17c1806c4cf25c62219a17e78ffe1e71cc7b88.jpg",
+        "mib": 4.4,
+        "size": "4124x3047",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 183.2
+      },
+      {
+        "image": "513b3c019ab143b843d929bf165bfc113ef6b86eb5d948411dc2fc14ed6afadd.jpg",
+        "mib": 2.3,
+        "size": "3417x2385",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 129.2
+      },
+      {
+        "image": "8ff6faa7218d7f4511e79dac21754f07ecc2f759d7ac42cafe49a597c36610ce.jpg",
+        "mib": 1.5,
+        "size": "3607x2374",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 104.8
+      },
+      {
+        "image": "9b3d814d9bbbcb1433040d94602fdd3f45ef93be78651bc68617671e68ca1317.jpg",
+        "mib": 0.8,
+        "size": "3102x2207",
+        "ok": true,
+        "error": null,
+        "detections": 0,
+        "server_ms": 94.4
+      },
+      {
+        "image": "fc2f37a175a63e6f05d168a0458c547fd823a318228870c91c2afd5054aba338.jpg",
+        "mib": 1.8,
+        "size": "4269x3014",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 137.1
+      }
+    ]
+  },
+  "DEF-010_large": {
+    "images": 23,
+    "passed": 23,
+    "result": "Passed",
+    "rows": [
+      {
+        "image": "03b90932bfc4a382c13e751b503b22e3a0f92b1ca2c1804736ce71cb0a95892d.jpg",
+        "mib": 26.6,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 793.0
+      },
+      {
+        "image": "0e6fbfbbb6b11ebfc53e95cffd366fb2c2306fbfd547130b018eb9361293f459.jpg",
+        "mib": 32.6,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 848.8
+      },
+      {
+        "image": "0f3a95a0aa69d30de8a840d3e755d8990e2d80621b06e2e1d14f938e4d44cf35.jpg",
+        "mib": 19.4,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 639.1
+      },
+      {
+        "image": "2145313a05b1579a382fbf30664c27585f7a745329b408bd2987ccb12c767f74.jpg",
+        "mib": 2.8,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 409.5
+      },
+      {
+        "image": "315698caa3a615fa5def0b2edcefa3bfb0f459c349b1417ea2909e2cbd183aca.jpg",
+        "mib": 26.1,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 771.6
+      },
+      {
+        "image": "4654b629e0da7bb3b566138bbfdc6e3f3bce1a32e1fab273d7ce4e5afdbfbde6.jpg",
+        "mib": 19.2,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 626.3
+      },
+      {
+        "image": "50939cb33a47cbbe685a7c8d7d88a6f8ce20725171fe797805a4a0ac47837b73.jpg",
+        "mib": 2.2,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 409.1
+      },
+      {
+        "image": "613a5fc59e482c6a764b70adf8e3d030d2cc844b7f2346a54d61bbf5ff091d10.jpg",
+        "mib": 23.5,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 740.4
+      },
+      {
+        "image": "641cbbe7b5546a4ad2130b81840c934a9753100fd6653df2dc0ed8ed286c5fbb.jpg",
+        "mib": 46.5,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 0,
+        "server_ms": 953.0
+      },
+      {
+        "image": "74baff7341f48077829b03a99c2329b54185d0c9e43772ac81b65e7f13ae3b3a.jpg",
+        "mib": 19.3,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 641.3
+      },
+      {
+        "image": "76bd134c48f3df80b6f8c9f4dcbfa3c559516b1d4e7add90afbd6f6db4e8cd79.jpg",
+        "mib": 2.5,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 408.1
+      },
+      {
+        "image": "77628d01bba36a1161f11c05ab973766a646cd175011a2a914f88796e55553a6.jpg",
+        "mib": 2.9,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 424.8
+      },
+      {
+        "image": "86c406d3f374cdb367a033fc394828658dc214d3dda5811017abb12dc977be53.jpg",
+        "mib": 4.1,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 2,
+        "server_ms": 429.5
+      },
+      {
+        "image": "999baa52cb93560687a19b5cc60df8a35116b24b38341fad6f4ab8396fd3e205.jpg",
+        "mib": 27.6,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 792.8
+      },
+      {
+        "image": "9dd457077ca03f179a4cd395d42ff01461fba9f4e2407cb884cec382fc324395.jpg",
+        "mib": 3.6,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 429.4
+      },
+      {
+        "image": "a18c4b449b551e751728fb897294aae6d4ee805dae8c7ff023d635870f5ec9a3.jpg",
+        "mib": 27.3,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 795.3
+      },
+      {
+        "image": "d30f27a48c3c4a7f3b86ef313eb286a843a82ff68f3e3f49922d366512537fdc.jpg",
+        "mib": 19.5,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 636.4
+      },
+      {
+        "image": "d9b6ff7dee122aa317e1b4b9f327e741be6a75aac6f9008ded4b2d6d58f1e401.jpg",
+        "mib": 4.1,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 440.9
+      },
+      {
+        "image": "d9e0faa65ee0ef745c9bbaba05de748f2d472ff740fd2891f1078c4d47b3c0d9.jpg",
+        "mib": 3.0,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 431.8
+      },
+      {
+        "image": "e3799b3a88934a8df7f5ed42a4afc82915c35f554fc9fd229aebeded04deee50.jpg",
+        "mib": 2.3,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 416.7
+      },
+      {
+        "image": "f3d5e07d91686fa0d1108ad108d6cadbfc2ac75493981153f038c65149f65833.jpg",
+        "mib": 19.2,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 637.1
+      },
+      {
+        "image": "f6c514bf3e86abce2d0314a771f551cc34fd668297b620853b72043409c8270c.jpg",
+        "mib": 19.3,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 635.5
+      },
+      {
+        "image": "fca8bafbfb6621c65c5a6353ae1a3dece01f7d000185110d86c35731ff2e3d62.jpg",
+        "mib": 3.5,
+        "size": "8688x5792",
+        "ok": true,
+        "error": null,
+        "detections": 1,
+        "server_ms": 415.4
+      }
+    ]
+  },
+  "DEF-011_letterbox": {
+    "deployed_rect": false,
+    "images": 40,
+    "endpoint_matches_square": 40,
+    "endpoint_matches_rect": 19,
+    "rect_differs_from_square": 4,
+    "result": "Passed",
+    "rows": [
+      {
+        "image": "001f25aaa99e51a8_019495.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "004a1373b943d1e4_019496.jpg",
+        "error": null,
+        "endpoint": 0,
+        "local_square": 0,
+        "local_rect": 0,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "004bcc84c18ccd8e_019497.jpg",
+        "error": null,
+        "endpoint": 0,
+        "local_square": 0,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "00cc0824dc0fb5fe_019499.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "0112e8bf295b7245_019500.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "0118ab7061c9d18a_019501.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 2,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "01b7850c598657bf_019502.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "01d74bc996204246_019503.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "01dcc8646a559899_019504.jpg",
+        "error": null,
+        "endpoint": 0,
+        "local_square": 0,
+        "local_rect": 0,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "02182622113aa59b_019505.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "02335114456e3cf7_019506.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 2,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "0239248a9bf5a426_019507.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "0251a4fc6539d9d4_019508.jpg",
+        "error": null,
+        "endpoint": 3,
+        "local_square": 3,
+        "local_rect": 4,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "0258360113ad3614_019509.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "0281207d0aa203ae_019510.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 2,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "02b66f1d338f29d0_019511.jpg",
+        "error": null,
+        "endpoint": 5,
+        "local_square": 5,
+        "local_rect": 5,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "02cd67fea4a978df_019512.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "02ef4f7aa83d0b20_019513.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "030607a14a20623c_019514.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 2,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "032d8aebb04b06fc_019515.jpg",
+        "error": null,
+        "endpoint": 0,
+        "local_square": 0,
+        "local_rect": 0,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "0345fa7172b6d56f_019516.jpg",
+        "error": null,
+        "endpoint": 0,
+        "local_square": 0,
+        "local_rect": 0,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "0346acf2eb97e9f8_019517.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "0390081d90b4f434_019518.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 2,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "039f4e436d505741_019519.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "0408f4b7c56e1633_019520.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 2,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "041fbed077902891_019521.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 2,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "048a9acca2c8e676_019522.jpg",
+        "error": null,
+        "endpoint": 0,
+        "local_square": 0,
+        "local_rect": 0,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "04adfe1be4fb2729_019524.jpg",
+        "error": null,
+        "endpoint": 4,
+        "local_square": 4,
+        "local_rect": 4,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "04c852341a592898_019525.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "04e64c5d66cde215_019526.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "04eaf4ff2667d466_019527.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "04ef285692da2ba1_019528.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "052f62fdba76afe5_019529.jpg",
+        "error": null,
+        "endpoint": 0,
+        "local_square": 0,
+        "local_rect": 0,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "053b45925879d48f_019531.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "05477c9475dd5fe1_019532.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "05957cda1ad64c30_019534.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "05abab3d2912e190_019535.jpg",
+        "error": null,
+        "endpoint": 0,
+        "local_square": 0,
+        "local_rect": 0,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "05f67ba0d15778b0_019537.jpg",
+        "error": null,
+        "endpoint": 1,
+        "local_square": 1,
+        "local_rect": 1,
+        "match_square": true,
+        "match_rect": true
+      },
+      {
+        "image": "060a2ab66d619f63_019538.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 2,
+        "match_square": true,
+        "match_rect": false
+      },
+      {
+        "image": "066614237a80f953_019540.jpg",
+        "error": null,
+        "endpoint": 2,
+        "local_square": 2,
+        "local_rect": 2,
+        "match_square": true,
+        "match_rect": false
+      }
+    ]
+  },
+  "_env": {
+    "checkpoint_sha256": "8682baa083ba5148d378762ddba5c5176cafaedd72b0c2eb369d3ea992924f16",
+    "note": "local predict on CPU; endpoint on Modal T4 (FP32). Match = same class, IoU >= 0.98, confidence within 0.01."
+  }
+}

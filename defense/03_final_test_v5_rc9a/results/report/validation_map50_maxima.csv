@@ -1,0 +1,13 @@
+Model,Train,Max validation mAP50 epoch,Max validation mAP50,Source log
+YOLO11n,Raw,50,0.75643,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/raw/yolo11n/results.csv
+YOLO11n,Curated,50,0.77845,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/curated_latest/yolo11n/results.csv
+YOLO11m,Raw,50,0.79827,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/raw/yolo11m/results.csv
+YOLO11m,Curated,44,0.82595,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/curated_latest/yolo11m/results.csv
+YOLO26n,Raw,36,0.78643,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/raw/yolo26n/results.csv
+YOLO26n,Curated,44,0.8025999999999999,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/curated_latest/yolo26n/results.csv
+YOLO26m,Raw,39,0.81209,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/raw/yolo26m/results.csv
+YOLO26m,Curated,45,0.8320399999999999,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/curated_latest/yolo26m/results.csv
+RT-DETR-R50,Raw,13,0.8078,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/raw/rtdetr50/result.csv
+RT-DETR-R50,Curated,9,0.7533999999999998,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/curated_latest/r50vd/result.csv
+RT-DETR-R101,Raw,16,0.8126000000000001,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/raw/rtdetr101/result.csv
+RT-DETR-R101,Curated,7,0.8355,/home/minhchau/RiderProjects/SEP490/yolov11/camber/artifacts/benchmark/curated_latest/r101vd/result.csv

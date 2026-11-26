@@ -1,0 +1,52 @@
+{
+  "run_key": "yolo26m",
+  "model_key": "yolo26m",
+  "checkpoint_path": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\artifacts\\raw_curated_fixed_checkpoints\\curated\\yolo26m\\weights\\best.pt",
+  "evaluation_split": "test",
+  "evaluation_dataset_yaml": "C:\\Users\\intern\\Documents\\SEP490\\train\\benchmakring_transmission_line_defect_model\\data\\test_operational_min8_v5_full_consensus_assisted\\dataset.yaml",
+  "images_evaluated": "all",
+  "accuracy": {
+    "precision": 0.8584,
+    "recall": 0.7673,
+    "f1_score": 0.8103,
+    "mAP50": 0.8284,
+    "mAP50_95": 0.478,
+    "MEAN_5_defect_ap50": 0.7999,
+    "per_class": {
+      "insulator": {
+        "ap50": 0.9713,
+        "ap50_95": 0.7781
+      },
+      "insulator_broken": {
+        "ap50": 0.8324,
+        "ap50_95": 0.419
+      },
+      "insulator_flashover": {
+        "ap50": 0.7569,
+        "ap50_95": 0.271
+      },
+      "bird_nest": {
+        "ap50": 0.933,
+        "ap50_95": 0.5046
+      },
+      "foreign_object": {
+        "ap50": 0.737,
+        "ap50_95": 0.4979
+      },
+      "broken_strand": {
+        "ap50": 0.7402,
+        "ap50_95": 0.3976
+      }
+    }
+  },
+  "hardware": {
+    "parameters_m": 21.78,
+    "gflops": 75.0,
+    "latency_ms": 31.34,
+    "fps": 31.9,
+    "inference_peak_vram_mb": 658.1
+  },
+  "evaluated_at": "2026-11-19 17:09:13",
+  "regime": "Curated",
+  "protocol": "test_operational_min8_v5_full_consensus_assisted/test (1871 images, 2467 boxes; model-assisted)"
+}

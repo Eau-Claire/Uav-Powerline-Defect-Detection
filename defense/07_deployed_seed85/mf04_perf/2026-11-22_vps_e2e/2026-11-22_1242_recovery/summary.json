@@ -1,0 +1,120 @@
+{
+  "label": "recovery",
+  "run_at": "2026-11-22T12:43:35",
+  "mission": "db33eddc-41ba-43b2-9f91-f18fa1120cde",
+  "images": 20,
+  "upload_errors": [],
+  "concurrency": 1,
+  "preflight": {
+    "MockAI__Enabled": "false",
+    "ai.analysis.server.video.requested": {
+      "consumers": 1,
+      "messages": 0
+    },
+    "ai.analysis.result.retry": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.dead-letter": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.server.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.edge.image.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.result": {
+      "consumers": 1,
+      "messages": 0
+    },
+    "ai.analysis.result.dead-letter": {
+      "consumers": 0,
+      "messages": 14
+    },
+    "ai.analysis.server.image.requested": {
+      "consumers": 1,
+      "messages": 0
+    },
+    "ai.analysis.edge.video.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "ai.analysis.edge.requested": {
+      "consumers": 0,
+      "messages": 0
+    },
+    "bridge": {
+      "name": "bridge-ai-bridge-1",
+      "state": "running"
+    }
+  },
+  "bridge_events": [
+    {
+      "at_s": 15.0,
+      "action": "docker restart bridge"
+    }
+  ],
+  "duplicate": null,
+  "review": null,
+  "timing_ms": {
+    "upload": {
+      "n": 20,
+      "mean": 29.4,
+      "p50": 28,
+      "p95": 38,
+      "max": 52
+    },
+    "e2e_upload_to_db_completed": {
+      "n": 20,
+      "mean": 24293.7,
+      "p50": 23379,
+      "p95": 41204,
+      "max": 44186
+    },
+    "queued_to_bridge_done": {
+      "n": 20,
+      "mean": 22533.2,
+      "p50": 21686,
+      "p95": 39471,
+      "max": 42891
+    },
+    "bridge_done_to_be_received": {
+      "n": 20,
+      "mean": 18.1,
+      "p50": 18,
+      "p95": 24,
+      "max": 33
+    }
+  },
+  "wall_s": 47.8,
+  "detections": 18,
+  "severity_by_class": {
+    "BROKEN_INSULATOR": {
+      "Medium": 8,
+      "High": 8,
+      "Critical": 2
+    }
+  },
+  "logs": {
+    "unknown_category_skipped": 0,
+    "duplicate_result_skipped": 0,
+    "bridge_processing_failed": 0,
+    "bridge_publish_retry": 0,
+    "bridge_attempts_exhausted": 0
+  },
+  "checks": {
+    "all_uploads_accepted": true,
+    "all_runs_completed": true,
+    "exactly_one_run_per_media": true,
+    "real_model_not_mock": true,
+    "bbox_valid": true,
+    "grpc_severity_on_every_detection": true,
+    "analyst_sees_all_detections": true,
+    "no_detection_dropped_for_unknown_category": true
+  },
+  "result": "Passed"
+}

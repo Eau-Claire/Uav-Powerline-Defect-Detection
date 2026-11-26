@@ -1,0 +1,315 @@
+{
+  "all": {
+    "images": 2271,
+    "per_class": {
+      "insulator": {
+        "precision": 0.9008,
+        "recall": 0.8859,
+        "f1": 0.8933,
+        "tp": 963,
+        "fp": 106,
+        "fn": 124
+      },
+      "insulator_broken": {
+        "precision": 0.8792,
+        "recall": 0.7815,
+        "f1": 0.8275,
+        "tp": 633,
+        "fp": 87,
+        "fn": 177
+      },
+      "insulator_flashover": {
+        "precision": 0.8092,
+        "recall": 0.7546,
+        "f1": 0.781,
+        "tp": 123,
+        "fp": 29,
+        "fn": 40
+      },
+      "bird_nest": {
+        "precision": 0.9344,
+        "recall": 0.8928,
+        "f1": 0.9131,
+        "tp": 741,
+        "fp": 52,
+        "fn": 89
+      },
+      "foreign_object": {
+        "precision": 0.8113,
+        "recall": 0.6935,
+        "f1": 0.7478,
+        "tp": 43,
+        "fp": 10,
+        "fn": 19
+      },
+      "broken_strand": {
+        "precision": 0.812,
+        "recall": 0.754,
+        "f1": 0.7819,
+        "tp": 190,
+        "fp": 44,
+        "fn": 62
+      }
+    },
+    "micro": {
+      "precision": 0.8914,
+      "recall": 0.8405,
+      "f1": 0.8652,
+      "tp": 2693,
+      "fp": 328,
+      "fn": 511,
+      "macro_f1": 0.8241
+    }
+  },
+  "exclude_train_near_dup_d<=0": {
+    "images": 2266,
+    "excluded": 5,
+    "per_class": {
+      "insulator": {
+        "precision": 0.9008,
+        "recall": 0.8859,
+        "f1": 0.8933,
+        "tp": 963,
+        "fp": 106,
+        "fn": 124
+      },
+      "insulator_broken": {
+        "precision": 0.8792,
+        "recall": 0.7815,
+        "f1": 0.8275,
+        "tp": 633,
+        "fp": 87,
+        "fn": 177
+      },
+      "insulator_flashover": {
+        "precision": 0.8092,
+        "recall": 0.7546,
+        "f1": 0.781,
+        "tp": 123,
+        "fp": 29,
+        "fn": 40
+      },
+      "bird_nest": {
+        "precision": 0.9341,
+        "recall": 0.8923,
+        "f1": 0.9127,
+        "tp": 737,
+        "fp": 52,
+        "fn": 89
+      },
+      "foreign_object": {
+        "precision": 0.8077,
+        "recall": 0.6885,
+        "f1": 0.7434,
+        "tp": 42,
+        "fp": 10,
+        "fn": 19
+      },
+      "broken_strand": {
+        "precision": 0.812,
+        "recall": 0.754,
+        "f1": 0.7819,
+        "tp": 190,
+        "fp": 44,
+        "fn": 62
+      }
+    },
+    "micro": {
+      "precision": 0.8912,
+      "recall": 0.8403,
+      "f1": 0.865,
+      "tp": 2688,
+      "fp": 328,
+      "fn": 511,
+      "macro_f1": 0.8233
+    }
+  },
+  "exclude_train_near_dup_d<=2": {
+    "images": 2236,
+    "excluded": 35,
+    "per_class": {
+      "insulator": {
+        "precision": 0.9004,
+        "recall": 0.8854,
+        "f1": 0.8928,
+        "tp": 958,
+        "fp": 106,
+        "fn": 124
+      },
+      "insulator_broken": {
+        "precision": 0.8778,
+        "recall": 0.7803,
+        "f1": 0.8262,
+        "tp": 625,
+        "fp": 87,
+        "fn": 176
+      },
+      "insulator_flashover": {
+        "precision": 0.8188,
+        "recall": 0.7578,
+        "f1": 0.7871,
+        "tp": 122,
+        "fp": 27,
+        "fn": 39
+      },
+      "bird_nest": {
+        "precision": 0.9377,
+        "recall": 0.8903,
+        "f1": 0.9133,
+        "tp": 722,
+        "fp": 48,
+        "fn": 89
+      },
+      "foreign_object": {
+        "precision": 0.8,
+        "recall": 0.678,
+        "f1": 0.7339,
+        "tp": 40,
+        "fp": 10,
+        "fn": 19
+      },
+      "broken_strand": {
+        "precision": 0.8087,
+        "recall": 0.75,
+        "f1": 0.7782,
+        "tp": 186,
+        "fp": 44,
+        "fn": 62
+      }
+    },
+    "micro": {
+      "precision": 0.8918,
+      "recall": 0.839,
+      "f1": 0.8646,
+      "tp": 2653,
+      "fp": 322,
+      "fn": 509,
+      "macro_f1": 0.8219
+    }
+  },
+  "exclude_train_near_dup_d<=4": {
+    "images": 2191,
+    "excluded": 80,
+    "per_class": {
+      "insulator": {
+        "precision": 0.9,
+        "recall": 0.8866,
+        "f1": 0.8933,
+        "tp": 954,
+        "fp": 106,
+        "fn": 122
+      },
+      "insulator_broken": {
+        "precision": 0.8748,
+        "recall": 0.7765,
+        "f1": 0.8227,
+        "tp": 608,
+        "fp": 87,
+        "fn": 175
+      },
+      "insulator_flashover": {
+        "precision": 0.8201,
+        "recall": 0.755,
+        "f1": 0.7862,
+        "tp": 114,
+        "fp": 25,
+        "fn": 37
+      },
+      "bird_nest": {
+        "precision": 0.9357,
+        "recall": 0.8871,
+        "f1": 0.9107,
+        "tp": 699,
+        "fp": 48,
+        "fn": 89
+      },
+      "foreign_object": {
+        "precision": 0.7959,
+        "recall": 0.6724,
+        "f1": 0.729,
+        "tp": 39,
+        "fp": 10,
+        "fn": 19
+      },
+      "broken_strand": {
+        "precision": 0.8036,
+        "recall": 0.7438,
+        "f1": 0.7725,
+        "tp": 180,
+        "fp": 44,
+        "fn": 62
+      }
+    },
+    "micro": {
+      "precision": 0.8902,
+      "recall": 0.8373,
+      "f1": 0.8629,
+      "tp": 2594,
+      "fp": 320,
+      "fn": 504,
+      "macro_f1": 0.8191
+    }
+  },
+  "only_flagged_d<=4": {
+    "images": 80,
+    "per_class": {
+      "insulator": {
+        "precision": 1.0,
+        "recall": 0.8182,
+        "f1": 0.9,
+        "tp": 9,
+        "fp": 0,
+        "fn": 2
+      },
+      "insulator_broken": {
+        "precision": 1.0,
+        "recall": 0.9259,
+        "f1": 0.9615,
+        "tp": 25,
+        "fp": 0,
+        "fn": 2
+      },
+      "insulator_flashover": {
+        "precision": 0.6923,
+        "recall": 0.75,
+        "f1": 0.72,
+        "tp": 9,
+        "fp": 4,
+        "fn": 3
+      },
+      "bird_nest": {
+        "precision": 0.913,
+        "recall": 1.0,
+        "f1": 0.9545,
+        "tp": 42,
+        "fp": 4,
+        "fn": 0
+      },
+      "foreign_object": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "tp": 4,
+        "fp": 0,
+        "fn": 0
+      },
+      "broken_strand": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "tp": 10,
+        "fp": 0,
+        "fn": 0
+      }
+    },
+    "micro": {
+      "precision": 0.9252,
+      "recall": 0.934,
+      "f1": 0.9296,
+      "tp": 99,
+      "fp": 8,
+      "fn": 7,
+      "macro_f1": 0.9227
+    }
+  }
+}
