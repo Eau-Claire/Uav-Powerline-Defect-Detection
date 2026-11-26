@@ -1,0 +1,81 @@
+{
+  "note": "Deployed model on the Finding Nemo V5 test (locked final test). Same model.val call as src/evaluator.py, run on CPU (2026-11-26). Reproduction check: the RC-9a seed-42 YOLO26m checkpoint re-evaluated the same way gives mAP50 0.8284 and MEAN_5 0.7999, identical to Table RC-9a (mAP50-95 0.4778 vs 0.4780; P/R within 0.001: CPU vs GPU numerics).",
+  "source_bundle": "stash://bunpmc/projects/finding_nemo/audits/finding_nemo_test_audit_v5_bundle.tar (sha256 5b9c59de...)",
+  "seed85_deployed": {
+    "model": "seed85_curated_yolo26m (deployed)",
+    "weights_sha256": "8682baa083ba5148d378762ddba5c5176cafaedd72b0c2eb369d3ea992924f16",
+    "dataset": "test_operational_min8_v5_full_consensus_assisted (1,871 images, 2,467 boxes)",
+    "manifest_sha256": "e8e2bb2ccf18205c63a734cfd57d162dfd23e4008e3483378426f7fc5dd9ea8b",
+    "call": "YOLO(w).val(data, split='test', imgsz=640, device='cpu', plots=False) - same as src/evaluator.py",
+    "precision": 0.8411,
+    "recall": 0.7625,
+    "f1": 0.7998,
+    "mAP50": 0.8253,
+    "mAP50_95": 0.4757,
+    "MEAN_5": 0.7954,
+    "per_class": {
+      "insulator": {
+        "ap50": 0.9751,
+        "ap50_95": 0.7781
+      },
+      "insulator_broken": {
+        "ap50": 0.8357,
+        "ap50_95": 0.4195
+      },
+      "insulator_flashover": {
+        "ap50": 0.7309,
+        "ap50_95": 0.2643
+      },
+      "bird_nest": {
+        "ap50": 0.9136,
+        "ap50_95": 0.4917
+      },
+      "foreign_object": {
+        "ap50": 0.7705,
+        "ap50_95": 0.5275
+      },
+      "broken_strand": {
+        "ap50": 0.7262,
+        "ap50_95": 0.3734
+      }
+    }
+  },
+  "reproduction_check_seed42_yolo26m_epoch45": {
+    "weights_sha256": "a1fc47b7fa1cbdbfd1ba430a67bd91bf4203fafae78e52bf75125c17c12e9089",
+    "dataset": "test_operational_min8_v5_full_consensus_assisted (1,871 images, 2,467 boxes)",
+    "manifest_sha256": "e8e2bb2ccf18205c63a734cfd57d162dfd23e4008e3483378426f7fc5dd9ea8b",
+    "call": "YOLO(w).val(data, split='test', imgsz=640, device='cpu', plots=False) - same as src/evaluator.py",
+    "precision": 0.8591,
+    "recall": 0.7678,
+    "f1": 0.8109,
+    "mAP50": 0.8284,
+    "mAP50_95": 0.4778,
+    "MEAN_5": 0.7999,
+    "per_class": {
+      "insulator": {
+        "ap50": 0.9713,
+        "ap50_95": 0.7781
+      },
+      "insulator_broken": {
+        "ap50": 0.8325,
+        "ap50_95": 0.4195
+      },
+      "insulator_flashover": {
+        "ap50": 0.7568,
+        "ap50_95": 0.2709
+      },
+      "bird_nest": {
+        "ap50": 0.9333,
+        "ap50_95": 0.5039
+      },
+      "foreign_object": {
+        "ap50": 0.7371,
+        "ap50_95": 0.4972
+      },
+      "broken_strand": {
+        "ap50": 0.7396,
+        "ap50_95": 0.3972
+      }
+    }
+  }
+}

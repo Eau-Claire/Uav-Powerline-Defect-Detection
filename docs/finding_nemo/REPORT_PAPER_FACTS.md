@@ -72,6 +72,12 @@ trên **nhãn cross-labelled, 1.931 ảnh** (`uavpms-server/modal/perf/results/2
 
 **Raw vs Curated, 12 checkpoint cố định, operational V5 (1.871 ảnh / 2.467 box)** — Table RC-9a, Figure RC-3, Table RC-11 (branch `finding_nemo_v5_results`). Checkpoint, SHA-256, evaluator và hai điểm cần công khai (curated không phải `best.pt`; 4 YOLO curated là model đề xuất box V5): [VERIFICATION_2026-11-23.md](VERIFICATION_2026-11-23.md) §3–4.
 
+**Model deploy `seed85_curated_yolo26m` trên test cuối (Finding Nemo V5, 1.871 ảnh / 2.467 box)** — chấm 26/11/2026, cùng lệnh `model.val` của `src/evaluator.py` (CPU); chi tiết [seed85_v5_test_eval.json](seed85_v5_test_eval.json):
+- P 0,8411 · R 0,7625 · F1 0,7998 · mAP50 0,8253 · mAP50-95 0,4757 · **MEAN_5 0,7954**.
+- AP50 theo lớp: insulator 0,9751 · insulator_broken 0,8357 · flashover 0,7309 · bird_nest 0,9136 · foreign_object 0,7705 · broken_strand 0,7262.
+- Kiểm chứng: chấm lại checkpoint YOLO26m seed 42 của RC-9a cùng cách → mAP50 0,8284, MEAN_5 0,7999 (trùng RC-9a).
+- seed85 không nằm trong 4 model đề xuất 215 box insulator của V5.
+
 **Model deploy `seed85_curated_yolo26m`**:
 - Val Finding Nemo (640): P 0,878 · R 0,771 · mAP50 0,841 · mAP50-95 0,480.
 - Endpoint (IoU 0,5, sau hậu xử lý): val P 0,891 / R 0,841 / F1 0,865 / macro-F1 0,824; **test cross-labelled** P 0,892 / R 0,821 / F1 0,855 / macro-F1 0,796.
